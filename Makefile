@@ -1,12 +1,11 @@
 CFLAGS = -I ./include
 LFLAGS = -lrt -lX11 -lGL
 
-all: background
+all: srcfile
 
-background: background.cpp
-	g++ $(CFLAGS) background.cpp libggfonts.a -Wall $(LFLAGS) -lX11 -lGL -lGLU -lm
+srcfile: srcfile.cpp
+	g++ $(CFLAGS) srcfile.cpp alecS.cpp guillermoR.cpp joseV.cpp ianT.cpp libggfonts.a -Wall $(LFLAGS) -osrcfile -lX11 -lGL -lGLU -lm
 
 clean:
-	rm -f background a.out
-
+	rm -f srcfile
 
