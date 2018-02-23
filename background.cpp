@@ -61,7 +61,7 @@ class Image {
 	    unlink(ppmname);
 	}
 };
-Image img[1] = {"road2.jpeg"};
+Image img[1] = {"./Sprites/road2.jpeg"};
 
 class Texture {
     public:
