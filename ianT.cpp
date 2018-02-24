@@ -10,11 +10,14 @@ void renderText()
 {
     Rect r;
     r.bot = 984;
-    r.left = 10;
+    r.left = 20;
     r.center = 0;
     ggprint8b(&r, 16, 0x00ff0000, "Jesus Take");
     ggprint8b(&r, 16, 0x00ff0000, "the Wheel");
-    ggprint8b(&r, 10, 0x00ff0000, "- rendered by");
+    glEnd();
+    r.bot = 500;
+    r.left = 430;
+    r.center = 0;
     ggprint8b(&r, 16, 0x00ff0000, "Ian Thomas");
     glEnd();
 }
