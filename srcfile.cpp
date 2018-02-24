@@ -18,6 +18,7 @@
 #include "fonts.h"
 #include "guillermoR.h"
 #include "ianT.h"
+#include "jorgeZ.h"
 
 class Image {
 	public:
@@ -291,6 +292,7 @@ void render()
 	glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
 	glEnd();    
 	drawBox();
+	screenPrint();	
 	renderText();
 }
 
