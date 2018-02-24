@@ -1,5 +1,6 @@
 #ifndef GUILLERMO_R
 #define GUILLERMO_R
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
