@@ -16,5 +16,7 @@ void renderText()
     ggprint8b(&r, 16, 0x00ff0000, "Take");
     ggprint8b(&r, 16, 0x00ff0000, "the");
     ggprint8b(&r, 16, 0x00ff0000, "Wheel");
+    ggprint8b(&r, 10, 0x00ff0000, "- rendered by");
+    ggprint8b(&r, 16, 0x00ff0000, "Ian Thomas");
     glEnd();
 }
