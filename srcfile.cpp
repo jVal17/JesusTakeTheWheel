@@ -16,6 +16,7 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "fonts.h"
+#include "guillermoR.h"
 
 class Image {
     public:
@@ -293,7 +294,8 @@ void render()
     glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(100, g.yres);
     glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres - 100, g.yres);
     glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
-    glEnd();
+    glEnd();    
+    drawBox();
 }
 
 
