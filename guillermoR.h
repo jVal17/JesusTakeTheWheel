@@ -1,3 +1,6 @@
+// Guillermo Ramirez
+// Header file
+
 #ifndef GUILLERMO_R
 #define GUILLERMO_R
 
