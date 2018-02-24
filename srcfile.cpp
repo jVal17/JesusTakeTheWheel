@@ -19,6 +19,7 @@
 #include "guillermoR.h"
 #include "ianT.h"
 #include "jorgeZ.h"
+#include "joseV.h"
 
 class Image {
 	public:
@@ -77,9 +78,12 @@ class Texture {
 class Global {
 	public:
 		int xres, yres;
+		bool pause;
 		Texture tex;
+
 		Global() {
 			xres=256, yres=1024;
+			pause=false;
 		}
 } g;
 
@@ -269,15 +273,27 @@ int check_keys(XEvent *e)
 		if (key == XK_Escape) {
 			return 1;
 		}
+		if (key == XK_p) {
+			if (g.pause)
+				g.pause = false;
+			else
+				g.pause = true;
+		}
+
 	}
 	return 0;
 }
 
 void physics()
 {
-	//move the background
-	g.tex.yc[0] -= 0.01;
-	g.tex.yc[1] -= 0.01;
+	if (g.pause)
+		pauseGame(g.tex.yc); //Function from joseV.cpp
+	else{
+		//move the background
+		g.tex.yc[0] -= 0.01;
+		g.tex.yc[1] -= 0.01;
+	}
+
 }
 
 void render()

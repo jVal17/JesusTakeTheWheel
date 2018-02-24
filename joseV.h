@@ -1,8 +1,8 @@
-// Guillermo Ramirez
+// Jose Valenzuela
 // Header file
 
-#ifndef GUILLERMO_R
-#define GUILLERMO_R
+#ifndef JOSE_V
+#define JOSE_V
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,9 +11,8 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
-#include "fonts.h"
 using namespace std;
 
-void drawBox(); 
+void pauseGame(float y[]); 
 
 #endif
