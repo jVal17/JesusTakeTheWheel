@@ -17,6 +17,7 @@
 #include <GL/glx.h>
 #include "fonts.h"
 #include "guillermoR.h"
+#include "ianT.h"
 
 class Image {
 	public:
@@ -280,13 +281,7 @@ void physics()
 
 void render()
 {
-	Rect r;
 	glClear(GL_COLOR_BUFFER_BIT);
-	r.bot = g.yres - 20;
-	r.left = 10;
-	r.center = 0;
-	ggprint8b(&r, 16, 0x00ff0000, "Jesus");
-	ggprint8b(&r, 16, 0x00ff0000, "Score");
 	glColor3f(1.0, 1.0, 1.0);
 	glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);
 	glBegin(GL_QUADS);
@@ -296,6 +291,7 @@ void render()
 	glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
 	glEnd();    
 	drawBox();
+	renderText();
 }
 
 
