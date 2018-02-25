@@ -20,6 +20,7 @@
 #include "ianT.h"
 #include "jorgeZ.h"
 #include "joseV.h"
+#include "alecS.h"
 
 class Image {
 	public:
@@ -310,6 +311,7 @@ void render()
 	drawBox();
 	screenPrint();	
 	renderText();
+	printText();
 }
 
 
