@@ -3,7 +3,7 @@ LFLAGS = -lrt -lX11 -lGL
 
 all: srcfile
 
-srcfile: srcfile.cpp
+srcfile: srcfile.cpp alecS.cpp jorgeZ.cpp guillermoR.cpp joseV.cpp ianT.cpp
 	g++ $(CFLAGS) srcfile.cpp alecS.cpp jorgeZ.cpp guillermoR.cpp joseV.cpp ianT.cpp libggfonts.a -Wall $(LFLAGS) -osrcfile -lX11 -lGL -lGLU -lm
 
 clean:

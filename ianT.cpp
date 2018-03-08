@@ -6,6 +6,22 @@
 
 #include "ianT.h"
 
+void profileFunction()
+{
+    int i, sum = 0;
+    clock_t startTime = clock();
+    float timeElapsed = 0;
+    for (i = 0; i < 3000000; i++) {
+	i *= i;
+        timeElapsed += (float)(clock() - startTime)/CLOCKS_PER_SEC;
+    }
+    sum += (i / 2 * 3 % 4);
+    Rect r;
+    r.bot = 490;
+    r.left = 430;
+    r.center = 0;
+    ggprint8b(&r, 16, 0x0000ffff, "%f", timeElapsed);
+}
 void renderText()
 {
     Rect r;

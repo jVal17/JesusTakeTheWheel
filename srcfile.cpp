@@ -312,6 +312,7 @@ void render()
 	screenPrint();	
 	renderText();
 	printText();
+	profileFunction();
 }
 
 

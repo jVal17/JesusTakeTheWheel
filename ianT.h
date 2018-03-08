@@ -8,9 +8,12 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "fonts.h"
+#include <ctime>
+
 using namespace std;
 
 void renderText();
+void profileFunction();
 
 #endif
 
