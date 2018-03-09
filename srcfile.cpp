@@ -313,6 +313,8 @@ void render()
 	renderText();
 	printText();
 	profileFunction();
+	drawDatBox1();
+	drawDatBox2();
 }
 
 
