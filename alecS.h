@@ -17,7 +17,6 @@
 
 using namespace std;
 //-------------------
-const double OOBILLION = 1.0/1e9;
 extern struct timespec timeStart, timeCurrent;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
