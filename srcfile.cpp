@@ -316,6 +316,7 @@ void render()
 	function2();
 	drawDatBox1();
 	drawDatBox2();
+	totalTimeFunction();
 }
 
 
