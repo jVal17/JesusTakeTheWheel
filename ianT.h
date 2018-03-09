@@ -13,7 +13,6 @@
 using namespace std;
 
 void renderText();
-double profileFunction();
 
 #endif
 
