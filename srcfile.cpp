@@ -312,17 +312,10 @@ void render()
 	screenPrint();	
 	renderText();
 	printText();
-<<<<<<< HEAD
-	profileFunction();
-<<<<<<< HEAD
 	function1();
 	function2();
-=======
 	drawDatBox1();
 	drawDatBox2();
-=======
->>>>>>> de0f692d790b3a27f563b86f6bef345d5206d0ad
->>>>>>> f2fcf3b62e387d142c687665eb2e75bc519096a3
 }
 
 
