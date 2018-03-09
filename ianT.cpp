@@ -6,24 +6,18 @@
 
 #include "ianT.h"
 
-void profileFunction()
+double profileFunction(clock_t start, clock_t end)
 {
-    int i, sum = 0;
-    clock_t startTime = clock();
-    float timeElapsed = 0;
-    for (i = 0; i < 3000000; i++) {
-	i *= i;
-        timeElapsed += (float)(clock() - startTime)/CLOCKS_PER_SEC;
-    }
-    sum += (i / 2 * 3 % 4);
-    Rect r;
-    r.bot = 490;
-    r.left = 430;
-    r.center = 0;
-    ggprint8b(&r, 16, 0x0000ffff, "%f", timeElapsed);
+    start = clock();
+    static double timeElapsed = 0.0;
+    end = clock();
+    timeElapsed += (double)(end - start)/CLOCKS_PER_SEC;
+    return timeElapsed;
 }
 void renderText()
 {
+    clock_t startTime = clock();
+    double timeElapsed;
     Rect r;
     r.bot = 984;
     r.left = 20;
@@ -37,5 +31,8 @@ void renderText()
     r.left = 430;
     r.center = 0;
     ggprint8b(&r, 16, 0x00ff0000, "Ian Thomas");
+    clock_t endTime = clock();
+    timeElapsed = profileFunction(startTime, endTime);
+    ggprint8b(&r, 16, 0x00ff0000, "%f", timeElapsed);
     glEnd();
 }
