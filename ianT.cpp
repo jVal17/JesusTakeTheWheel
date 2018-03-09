@@ -1,29 +1,19 @@
 //
 //Name: Ian Thomas
 //My source file
-//Date: 2/23/2018
+//Date modified: 03/09/2018
 //
 
 #include "ianT.h"
+#include <math.h>
 
-void profileFunction()
-{
-    int i, sum = 0;
-    clock_t startTime = clock();
-    float timeElapsed = 0;
-    for (i = 0; i < 3000000; i++) {
-	i *= i;
-        timeElapsed += (float)(clock() - startTime)/CLOCKS_PER_SEC;
-    }
-    sum += (i / 2 * 3 % 4);
-    Rect r;
-    r.bot = 490;
-    r.left = 430;
-    r.center = 0;
-    ggprint8b(&r, 16, 0x0000ffff, "%f", timeElapsed);
-}
+extern double timeDiff(struct timespec *start, struct timespec *end);
+
 void renderText()
 {
+    timespec startTime, endTime;
+    static double t = 0.0;
+    clock_gettime(CLOCK_REALTIME, &startTime);
     Rect r;
     r.bot = 984;
     r.left = 20;
@@ -38,4 +28,10 @@ void renderText()
     r.center = 0;
     ggprint8b(&r, 16, 0x00ff0000, "Ian Thomas");
     glEnd();
+    clock_gettime(CLOCK_REALTIME, &endTime);
+    t += timeDiff(&startTime, &endTime);
+    r.bot = 490;
+    r.left = 420;
+    r.center = 0;
+    ggprint8b(&r, 16, 0x00ff0000, "Timer 1: %.5f", t);
 }
