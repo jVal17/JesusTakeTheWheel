@@ -5,7 +5,6 @@
 //
 
 #include "ianT.h"
-#include <math.h>
 
 extern double timeDiff(struct timespec *start, struct timespec *end);
 
