@@ -3,7 +3,9 @@
 
 #include "jorgeZ.h"
 #include <ctime>
+#include <iostream>
 
+using namespace std;
 void screenPrint () 
 {
     Rect r;
@@ -18,6 +20,7 @@ void screenPrint ()
 void checkpoint (float &scrSpd)
 {
     int i;
+    //cout << "hello" << endl;
     static double t = 0.0;
     struct timespec ftimeStart, ftimeEnd;
     clock_gettime(CLOCK_REALTIME, &ftimeStart);
@@ -28,7 +31,9 @@ void checkpoint (float &scrSpd)
     clock_gettime(CLOCK_REALTIME, &ftimeEnd);
     t += timeDiff(&ftimeStart, &ftimeEnd);
     if(t > .0008)
-	scrSpd -= .1;
+	scrSpd += .015;
+    else
+	scrSpd = .01;
     //ggprint8b(&r, 16, 0x00ff0000, "%f", t);
 }
 

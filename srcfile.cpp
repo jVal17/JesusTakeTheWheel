@@ -299,12 +299,13 @@ void physics()
 	//g.tex.yc[1] -= 0.01;
     }
 
-void checkpoint();
+checkpoint(g.scrSpd);
 }
 
 
 void render()
 {
+    glClearColor(0.9294, 0.788, 0.686, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);
@@ -313,11 +314,6 @@ void render()
     glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(100, g.yres);
     glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres - 100, g.yres);
     glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
-    if( g.tex.xc[0] < 100 && g.tex.yc[1] == 0)
-	glColor3f( 0.6, 0.6, 0.6);
-
-    if( g.tex.xc[0] < 100 && g.tex.yc[0] == g.yres)
-	glColor3f( 0.6, 0.6, 0.6);
     
     glEnd();    
     //drawBox();
