@@ -30,8 +30,12 @@ void checkpoint (float &scrSpd)
     
     clock_gettime(CLOCK_REALTIME, &ftimeEnd);
     t += timeDiff(&ftimeStart, &ftimeEnd);
-    if(t > .0008)
-	scrSpd += .015;
+    if(t > .0007 && t <= .0014)
+	scrSpd = .015;
+    else if(t > .0014 && t <= .0021)
+	scrSpd = .02;
+    else if(t > .0021)
+	scrSpd = .025;
     else
 	scrSpd = .01;
     //ggprint8b(&r, 16, 0x00ff0000, "%f", t);

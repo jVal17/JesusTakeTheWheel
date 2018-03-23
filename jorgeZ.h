@@ -27,6 +27,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 using namespace std;
 
 void screenPrint();
+void checkpoint(float&);
 void function1();
 void function2();
 
