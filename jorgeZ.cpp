@@ -17,27 +17,38 @@ void screenPrint ()
     glEnd();
 }
 
-void checkpoint (float &scrSpd)
+//double pauseTimer()
+//{
+
+//}
+
+int checkpoint (float &scrSpd)
 {
     int i;
-    //cout << "hello" << endl;
+    static int level = 0;
     static double t = 0.0;
-    struct timespec ftimeStart, ftimeEnd;
-    clock_gettime(CLOCK_REALTIME, &ftimeStart);
-    
-    for ( i = 1; i < 100; i++) 
+    static struct timespec ftimeStart, ftimeEnd;
+    static double t2 = 10.0, setSpd = 0.01125;
+    if(t == 0)
+	clock_gettime(CLOCK_REALTIME, &ftimeStart);
+    for ( i = 1; i < 100; i++){ 
 	pow(i,2);
-    
+    }
     clock_gettime(CLOCK_REALTIME, &ftimeEnd);
-    t += timeDiff(&ftimeStart, &ftimeEnd);
-    if(t > .0007 && t <= .0014)
-	scrSpd = .015;
-    else if(t > .0014 && t <= .0021)
-	scrSpd = .02;
-    else if(t > .0021)
-	scrSpd = .025;
-    else
-	scrSpd = .01;
+    t = timeDiff(&ftimeStart, &ftimeEnd);
+
+    if(t > t2 + 10){
+	t2 += 10;
+	setSpd += 0.0025;
+    }
+    if(t > t2){
+	if(scrSpd < setSpd){
+	    scrSpd += 0.000025;
+	}
+    }
+
+    cout << "scrSpd: " << scrSpd << endl;
+    return level++;
     //ggprint8b(&r, 16, 0x00ff0000, "%f", t);
 }
 

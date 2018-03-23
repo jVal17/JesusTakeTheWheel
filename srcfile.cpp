@@ -78,7 +78,7 @@ class Texture {
 
 class Global {
     public:
-	int xres, yres;
+	int xres, yres, level;
 	bool pause;
 	Texture tex;
 	float scrSpd;
@@ -87,6 +87,7 @@ class Global {
 	    xres=256, yres=1024;
 	    pause=false;
 	    scrSpd = .01;
+	    level = 0;
 	}
 } g;
 
@@ -289,17 +290,14 @@ int check_keys(XEvent *e)
 
 void physics()
 {
-    if (g.pause)
-	pauseGame(g.tex.yc); //Function from joseV.cpp
-    else{
-	//move the background
-	g.tex.yc[0] -= g.scrSpd;
-	g.tex.yc[1] -= g.scrSpd;
-	//g.tex.yc[0] -= 0.01;
-	//g.tex.yc[1] -= 0.01;
+    if(g.pause){		
+	main();
     }
+    //move the background
+    g.tex.yc[0] -= g.scrSpd;
+    g.tex.yc[1] -= g.scrSpd;
 
-checkpoint(g.scrSpd);
+    g.level = checkpoint(g.scrSpd);
 }
 
 
@@ -314,7 +312,7 @@ void render()
     glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(100, g.yres);
     glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres - 100, g.yres);
     glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
-    
+
     glEnd();    
     //drawBox();
     //screenPrint();	
