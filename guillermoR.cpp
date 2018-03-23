@@ -23,11 +23,11 @@ void totalTimeFunction()
     ggprint8b(&r, 16, 0xFFFF00, "%lf", t);
 }
 
-void drawBox(){
+void drawBox(float x, float y, float x2, float y2){
 	glColor3f(0.0, 0.0, 0.0);
 	// Translates the black box beforehand
 	glPushMatrix();
-	glTranslatef(-206.0,512.0,0.0);
+	glTranslatef(-x, y, 0.0);
 	// Creates the black square in the middle of the screen
 	glBegin(GL_QUADS);
 	glVertex2i( 412,  -50);
@@ -37,14 +37,13 @@ void drawBox(){
 	glEnd();
 	glPopMatrix();
 
+	Rect r;	
 	// Aligns and draws the text 
-	Rect r;
-	r.bot = 520;
-	r.left = 215;
+	r.bot = (int)y2;
+	r.left = (int)x2;
 	r.center = 0;
-	ggprint8b(&r, 16, 0x00ff0000, "Black Box &");
-	ggprint8b(&r, 16, 0x00ff0000, "Text From");
-	ggprint8b(&r, 16, 0x00ff0000, "guillermoR.cpp");
+	ggprint8b(&r, 16, 0x00ff0000, "CAR");
+	
 	glEnd();
 }
 

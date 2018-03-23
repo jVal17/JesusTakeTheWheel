@@ -21,6 +21,10 @@
 #include "jorgeZ.h"
 #include "joseV.h"
 #include "alecS.h"
+using namespace std;
+
+typedef float Flt;
+typedef float Vec[3];
 
 class Image {
     public:
@@ -76,20 +80,50 @@ class Texture {
 	float yc[2];
 };
 
+class Car {
+    public:
+	Vec pos;
+	int dir[4];
+    public:
+	Car() {
+
+	}
+};
+
+
+
 class Global {
     public:
 	int xres, yres, level;
+	float txtposx;
+	float txtposy;
 	bool pause;
 	Texture tex;
 	float scrSpd;
+	char keys[65536];
 
 	Global() {
 	    xres=256, yres=1024;
 	    pause=false;
 	    scrSpd = .01;
 	    level = 0;
+            memset(keys, 0, 10000);
 	}
 } g;
+
+class Game {
+    public:
+	Car car;
+	int ncars;
+    public:
+	Game() {
+	    car.pos[0]= 206.0;
+	    car.pos[1]= 512.0;
+	    ncars = 1;
+	}
+
+} ga;
+
 
 class X11_wrapper {
     private:
@@ -271,9 +305,9 @@ void check_mouse(XEvent *e)
 
 int check_keys(XEvent *e)
 {
+    int key = XLookupKeysym(&e->xkey, 0);
     //Was there input from the keyboard?
     if (e->type == KeyPress) {
-	int key = XLookupKeysym(&e->xkey, 0);
 	if (key == XK_Escape) {
 	    return 1;
 	}
@@ -283,8 +317,12 @@ int check_keys(XEvent *e)
 	    else
 		g.pause = true;
 	}
-
     }
+    if (e->type == KeyRelease) {
+	g.keys[key]=0;
+	return 0;
+    }
+    g.keys[key]=1;
     return 0;
 }
 
@@ -298,6 +336,21 @@ void physics()
     g.tex.yc[1] -= g.scrSpd;
 
     g.level = checkpoint(g.scrSpd);
+
+    //moves main car using w,a,s,d keys
+    if (g.keys[XK_w])
+	ga.car.pos[1] += 8;
+    if (g.keys[XK_d]) {
+	ga.car.pos[0] -= 8;
+	g.txtposx+=8;
+    }
+    if (g.keys[XK_a]) {
+	ga.car.pos[0] += 8;
+	g.txtposy-=8;
+    }
+    if (g.keys[XK_s])
+	ga.car.pos[1] -= 8;
+
 }
 
 
@@ -314,7 +367,7 @@ void render()
     glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
 
     glEnd();    
-    //drawBox();
+    drawBox(ga.car.pos[0], ga.car.pos[1], g.txtposx, g.txtposy);
     //screenPrint();	
     renderText();
     //printText();

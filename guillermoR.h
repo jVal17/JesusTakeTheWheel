@@ -24,7 +24,8 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 
 
-void drawBox(); 
+void drawBox(float x, float y, float x2, float y2); 
+void moveBox(float x, float y); 
 void totalTimeFunction();
 
 #endif
