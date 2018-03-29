@@ -4,6 +4,16 @@
 
 #include "alecS.h"
 
+ALuint alSource[5];
+ALuint alBuffer[5];
+
+//create volume
+static float Volume = 1.0f;
+void getVolume(float V)
+{
+		Volume = V;
+}
+
 void printText()
 {
     Rect r;
@@ -78,4 +88,120 @@ void drawDatBox2()
     ggprint8b(&r, 16, 0x00aa00aa, "Box w/o pow");
 
 
+}
+//----------------------------------------------------------
+
+//Starting Open AL stuff.
+
+void initSounds() {
+    // catch errors and set up listener 
+    alutInit( 0, NULL );
+    if (alGetError() != AL_NO_ERROR){
+        printf("Error: alutInit()\n")
+    }
+    alGetError();
+    
+    float orientVec[6] = {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f};
+    alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+    alListener3fv(AL_ORIENTATION, orientVec);
+    alListenerf(AL_GAIN, 1.0f);
+
+}
+
+void clearSounds() {
+
+    //  clear the sources and buffers
+        alDeleteSources(1, &alSource[0]);
+        alDeleteSources(1, &alSource[1]);
+        alDeleteSources(1, &alSource[2]);
+        alDeleteBuffers(1, &alBuffer[0]);
+        alDeleteBuffers(1, &alBuffer[1]);
+        alDeleteBuffers(1, &alBuffer[2]);
+
+    // get context and device
+
+        ALCcontext *Context = alcGetCurrentContext();
+        ALCdevice *Device = alcGetContextsDevice(Context);
+
+    //make null and destroy
+        alcMakeContextCurrent(NULL);
+        alcDestroyContext(Context);
+
+    //close
+        alcCloseDevice(Device);
+}
+
+void bringInSounds(){
+    //car crashing sounds
+    alBuffer[0] = alutCreateBufferFromFile("./sounds/car-crash.wav");
+    alGenSources(1, &alSource[0]);
+    alSourcei(alSource[0], AL_BUFFER, alBuffer[0]);
+
+    //in game music
+    alBuffer[1] = alutCreateBufferFromFile("./sounds/inGame.wav");
+    alGenSources(1, &alSource[1]);
+    alSourcei(alSource[1], AL_BUFFER, alBuffer[1]);
+
+    // main menu music
+
+    alBuffer[2] = alutCreateBufferFromFile("./sounds/mainMenue.wav");
+    alGenSources(1, &alSource[2]);
+    alSourcei(alSource[2], AL_BUFFER, alBuffer[2]);
+
+    // pause music
+    alBuffer[3] = alutCreateBufferFromFile("./sounds/pause.wav");
+    alGenSources(1, &alSource[0]);
+    alSourcei(alSource[3], AL_BUFFER, alBuffer[3]);
+
+    //car starting sound
+    alBuffer[4] = alutCreateBufferFromFile("./sounds/startCar.wav");
+    alGenSources(1, &alSource[4]);
+    alSourcei(alSource[4], AL_BUFFER, alBuffer[4]);
+
+}
+
+void play_sounds(int soundOption)
+{
+    //Set volume and pitch.
+    alSourcef(alSource[soundOption], AL_GAIN, Volume);
+    alSourcef(alSource[soundOption], AL_PITCH, 1.0f);
+    alSourcei(alSource[soundOption], AL_LOOPING, AL_FALSE);
+
+    
+    if (alGetError() != AL_NO_ERROR) {
+        printf("Error: Setting Source\n");
+    }
+    alSourcePlay(alSource[soundOption]);
+}
+
+
+
+//play sound over loop
+void play_sounds(int soundOption, int loop)
+{
+    //Set volume and pitch.
+    alSourcef(alSource[soundOption], AL_GAIN, Volume);
+    alSourcef(alSource[soundOption], AL_PITCH, 1.0f);
+    alSourcei(alSource[soundOption], AL_LOOPING, AL_TRUE);
+
+    
+    if (alGetError() != AL_NO_ERROR) {
+        printf("Error: Setting Source\n");
+    }
+    alSourcePlay(alSource[soundOption]);
+}
+
+//mute sounds
+void play_sounds(int soundOption, char mute)
+{
+    //Set volume and pitch.
+    alSourcef(alSource[soundOption], AL_GAIN, 0.0f);
+    alSourcef(alSource[soundOption], AL_PITCH, 0.0f);
+    alSourcei(alSource[soundOption], AL_LOOPING, AL_FALSE);
+
+    
+    if (alGetError() != AL_NO_ERROR) {
+        printf("Error: Setting Source\n");
+    }
+    alSourcePlay(alSource[soundOption]);
 }
