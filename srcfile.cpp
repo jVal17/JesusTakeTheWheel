@@ -70,7 +70,10 @@ class Image {
 	    unlink(ppmname);
 	}
 };
-Image img[1] = {"./Sprites/road2.jpeg"};
+Image img[2] = {
+	"./Sprites/road2.jpeg", 
+	"./Sprites/Car.png"
+};
 
 class Texture {
     public:
@@ -90,14 +93,12 @@ class Car {
 	}
 };
 
-
-
 class Global {
     public:
 	int xres, yres, level;
-	float txtposx;
-	float txtposy;
 	bool pause;
+	GLuint carTexture;
+	GLuint silhouetteTexture;
 	Texture tex;
 	float scrSpd;
 	char keys[65536];
@@ -115,15 +116,16 @@ class Game {
     public:
 	Car car;
 	int ncars;
+	int carSize;
     public:
 	Game() {
 	    car.pos[0]= 206.0;
 	    car.pos[1]= 512.0;
+	    carSize = 50;
 	    ncars = 1;
 	}
 
 } ga;
-
 
 class X11_wrapper {
     private:
@@ -212,6 +214,38 @@ class X11_wrapper {
 	}
 } x11;
 
+
+unsigned char *buildAlphaData(Image *img)
+{
+        //add 4th component to RGB stream...
+        int i;
+        unsigned char *newdata, *ptr;
+        unsigned char *data = (unsigned char *)img->data;
+        newdata = (unsigned char *)malloc(img->width * img->height * 4);
+        ptr = newdata;
+        unsigned char a,b,c;
+        //use the first pixel in the image as the transparent color.
+        unsigned char t0 = *(data+0);
+        unsigned char t1 = *(data+1);
+        unsigned char t2 = *(data+2);
+        for (i=0; i<img->width * img->height * 3; i+=3) {
+                a = *(data+0);
+                b = *(data+1);
+                c = *(data+2);
+                *(ptr+0) = a;
+                *(ptr+1) = b;
+                *(ptr+2) = c;
+                *(ptr+3) = 1;
+                if (a==t0 && b==t1 && c==t2)
+                        *(ptr+3) = 0;
+                //-----------------------------------------------
+                ptr += 4;
+                data += 3;
+        }
+        return newdata;
+}
+
+
 void init_opengl(void);
 void check_mouse(XEvent *e);
 int check_keys(XEvent *e);
@@ -260,6 +294,9 @@ void init_opengl(void)
     g.tex.backImage = &img[0];
     //create opengl texture elements
     glGenTextures(1, &g.tex.backTexture);
+    glGenTextures(1, &g.carTexture);
+    glGenTextures(1, &g.silhouetteTexture);
+    //-----------------------------------------------------------------------------------
     int w =  g.tex.backImage->width; //grabs a set number of pixels and scales them---------------------------------
     int h =  g.tex.backImage->height; //grabs a set number of pixels and scales them-----------------------------------
     glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);
@@ -276,6 +313,29 @@ void init_opengl(void)
     g.tex.yc[0] = 0.0;
     g.tex.yc[1] = 1.0;
     //----------------------------------------------------------
+    //car
+    w = img[1].width;
+    h = img[1].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.carTexture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+	    GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
+
+    //silhouette
+        //
+        glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+        //
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+        //
+        //must build a new set of data...
+        unsigned char *silhouetteData = buildAlphaData(&img[1]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                                                        GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+        free(silhouetteData); 
+    
 }
 
 void check_mouse(XEvent *e)
@@ -340,14 +400,10 @@ void physics()
     //moves main car using w,a,s,d keys
     if (g.keys[XK_w])
 	ga.car.pos[1] += 8;
-    if (g.keys[XK_d]) {
-	ga.car.pos[0] -= 8;
-	g.txtposx+=8;
-    }
-    if (g.keys[XK_a]) {
+    if (g.keys[XK_d]) 
 	ga.car.pos[0] += 8;
-	g.txtposy-=8;
-    }
+    if (g.keys[XK_a]) 
+	ga.car.pos[0] -= 8;
     if (g.keys[XK_s])
 	ga.car.pos[1] -= 8;
 
@@ -356,6 +412,7 @@ void physics()
 
 void render()
 {
+    int s = ga.carSize;
     glClearColor(0.9294, 0.788, 0.686, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1.0, 1.0, 1.0);
@@ -365,9 +422,36 @@ void render()
     glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(100, g.yres);
     glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres - 100, g.yres);
     glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
-
-    glEnd();    
-    drawBox(ga.car.pos[0], ga.car.pos[1], g.txtposx, g.txtposy);
+    glEnd();  
+     
+    //car texture
+     glPushMatrix();
+                glTranslatef(ga.car.pos[0], ga.car.pos[1], 0);
+                //if (!g.silhouette) {
+                //        glBindTexture(GL_TEXTURE_2D, g.bigfootTexture);
+                //} else {
+                    //    glBindTexture(GL_TEXTURE_2D, g.carTexture);
+                        glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+                        glEnable(GL_ALPHA_TEST);
+                        glAlphaFunc(GL_GREATER, 0.0f);
+                        glColor4ub(255,255,255,255);
+                //}
+                glBegin(GL_QUADS);
+                       // if (bigfoot.vel[0] > 0.0) {
+                                glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+                                glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+                                glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+                                glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+                      //  } else {
+                       //         glTexCoord2f(1.0f, 1.0f); glVertex2i(-wid,-wid);
+                       //         glTexCoord2f(1.0f, 0.0f); glVertex2i(-wid, wid);
+                       //         glTexCoord2f(0.0f, 0.0f); glVertex2i( wid, wid);
+                       //         glTexCoord2f(0.0f, 1.0f); glVertex2i( wid,-wid);
+                       // }
+    glEnd();
+    glPopMatrix();
+    
+    drawBox(ga.car.pos[0], ga.car.pos[1], ga.carSize);
     //screenPrint();	
     renderText();
     //printText();
