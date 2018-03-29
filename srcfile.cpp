@@ -15,6 +15,7 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include </usr/include/AL/alut.h>
 #include "fonts.h"
 #include "guillermoR.h"
 #include "ianT.h"

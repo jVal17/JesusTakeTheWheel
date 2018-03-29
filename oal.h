@@ -1,8 +1,8 @@
 #ifndef _OALSOUND_H_
 #define _OALSOUND_H_
 
-//#include "al.h"
-//#include "alc.h"
+#include "al.h"
+#include "alc.h"
 #ifdef GGWINDOWS
 #include <al/alut.h>
 #endif //GGWINDOWS

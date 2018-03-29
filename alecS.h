@@ -13,8 +13,7 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include <ctime>
-#include <AL/al.h>
-#include <AL/alc.h>
+#include </usr/include/AL/alut.h>
 #include "fonts.h"
 
 using namespace std;
