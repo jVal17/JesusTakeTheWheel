@@ -7,6 +7,7 @@
 //Just the texture coordinates change.
 //In this example, only the x coordinates change.
 //
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -297,15 +298,26 @@ void physics()
 	g.level = checkpoint(g.scrSpd);
 
 	//moves main car using w,a,s,d keys
-	if (g.keys[XK_w])
+	if (g.keys[XK_w]) {
 		ga.car.pos[1] += 8;
-	if (g.keys[XK_d]) 
+		if (ga.car.pos[1] > 976.0)
+			ga.car.pos[1] = 976.0;
+	}
+	if (g.keys[XK_d]) {
 		ga.car.pos[0] += 8;
-	if (g.keys[XK_a]) 
+		if (ga.car.pos[0] > 395.0)
+			ga.car.pos[0] = 395.0;
+	}
+	if (g.keys[XK_a]) {
 		ga.car.pos[0] -= 8;
-	if (g.keys[XK_s])
+		if (ga.car.pos[0] < 118.0)
+			ga.car.pos[0] = 118.0;
+	}
+	if (g.keys[XK_s]) {
 		ga.car.pos[1] -= 8;
-
+		if (ga.car.pos[1] < 40.0)
+			ga.car.pos[1] = 40.0;
+	}
 }
 
 
@@ -325,6 +337,7 @@ void render()
 	//---------------------------------------------------------------------------- 
 	//car texture
 	renderCar(ga.carSize, ga.car.pos[0], ga.car.pos[1]);
+	cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 	//screenPrint();	
 	renderText();
 	//printText();

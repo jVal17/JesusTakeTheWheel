@@ -45,7 +45,6 @@ unsigned char *buildAlphaData(Image *img)
 	return newdata;
 }
 
-
 void initCar() {
 	glGenTextures(1, &ct.carTexture);
         glGenTextures(1, &ct.silhouetteTexture);

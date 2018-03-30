@@ -47,7 +47,7 @@ int checkpoint (float &scrSpd)
 	}
     }
 
-    cout << "scrSpd: " << scrSpd << endl;
+//    cout << "scrSpd: " << scrSpd << endl;
     return level++;
     //ggprint8b(&r, 16, 0x00ff0000, "%f", t);
 }
