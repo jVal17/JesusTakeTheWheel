@@ -14,7 +14,11 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "fonts.h"
+#include "img.h"
 using namespace std;
+
+typedef float Flt;
+typedef float Vec[3];
 
 //-----------------------------------------------------------------------------
 //Setup timers
@@ -26,6 +30,8 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 
 void drawBox(float x, float y, int s); 
 void moveBox(float x, float y); 
+void renderCar(int s, float x, float y);
+void initCar();
 void totalTimeFunction();
 
 #endif

@@ -4,6 +4,7 @@
 
 #include "alecS.h"
 
+/*
 ALuint alSource[5];
 ALuint alBuffer[5];
 
@@ -205,3 +206,4 @@ void play_sounds(int soundOption, char mute)
     }
     alSourcePlay(alSource[soundOption]);
 }
+*/
