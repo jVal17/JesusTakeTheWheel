@@ -81,6 +81,10 @@ class Game {
 
 } ga;
 
+bool inMainMenu = true;
+bool inGame = false;
+int menuPosition = 1;
+
 class X11_wrapper {
 	private:
 		Display *dpy;
@@ -277,6 +281,24 @@ int check_keys(XEvent *e)
 			else
 				g.pause = true;
 		}
+		if (inMainMenu) {
+			if (key == XK_Return) {
+				if (menuPosition == 1) {
+					inMainMenu = false;
+					inGame = true;
+				}
+			}
+			if (key == XK_Down || key == XK_s) {
+				if (menuPosition != 2) {
+					menuPosition++;
+				}
+			}
+			if (key == XK_Up || key == XK_w) {
+				if (menuPosition != 1) {
+					menuPosition--;
+				}
+			}
+		}
 	}
 	if (e->type == KeyRelease) {
 		g.keys[key]=0;
@@ -288,35 +310,37 @@ int check_keys(XEvent *e)
 
 void physics()
 {
-	if(g.pause){		
-		main();
-	}
-	//move the background
-	g.tex.yc[0] -= g.scrSpd;
-	g.tex.yc[1] -= g.scrSpd;
+	if(inGame) {
+		if(g.pause){		
+			main();
+		}
+		//move the background
+		g.tex.yc[0] -= g.scrSpd;
+		g.tex.yc[1] -= g.scrSpd;
 
-	g.level = checkpoint(g.scrSpd);
+		g.level = checkpoint(g.scrSpd);
 
-	//moves main car using w,a,s,d keys
-	if (g.keys[XK_w]) {
-		ga.car.pos[1] += 8;
-		if (ga.car.pos[1] > 976.0)
-			ga.car.pos[1] = 976.0;
-	}
-	if (g.keys[XK_d]) {
-		ga.car.pos[0] += 8;
-		if (ga.car.pos[0] > 395.0)
-			ga.car.pos[0] = 395.0;
-	}
-	if (g.keys[XK_a]) {
-		ga.car.pos[0] -= 8;
-		if (ga.car.pos[0] < 118.0)
-			ga.car.pos[0] = 118.0;
-	}
-	if (g.keys[XK_s]) {
-		ga.car.pos[1] -= 8;
-		if (ga.car.pos[1] < 40.0)
-			ga.car.pos[1] = 40.0;
+		//moves main car using w,a,s,d keys
+		if (g.keys[XK_w]) {
+			ga.car.pos[1] += 8;
+			if (ga.car.pos[1] > 976.0)
+				ga.car.pos[1] = 976.0;
+		}
+		if (g.keys[XK_d]) {
+			ga.car.pos[0] += 8;
+			if (ga.car.pos[0] > 395.0)
+				ga.car.pos[0] = 395.0;
+		}
+		if (g.keys[XK_a]) {
+			ga.car.pos[0] -= 8;
+			if (ga.car.pos[0] < 118.0)
+				ga.car.pos[0] = 118.0;
+		}
+		if (g.keys[XK_s]) {
+			ga.car.pos[1] -= 8;
+			if (ga.car.pos[1] < 40.0)
+				ga.car.pos[1] = 40.0;
+		}
 	}
 }
 
@@ -325,27 +349,31 @@ void render()
 {
 	glClearColor(0.9294, 0.788, 0.686, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glColor3f(1.0, 1.0, 1.0);
-	glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);
-	glBegin(GL_QUADS);
-	glTexCoord2f(g.tex.xc[0], g.tex.yc[1]); glVertex2i(100, 0);
-	glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(100, g.yres);
-	glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres - 100, g.yres);
-	glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
-	glEnd();  
+	if (inMainMenu) {
+		mainMenu(g.xres, g.yres);
+	} else if (inGame) {
+		glColor3f(1.0, 1.0, 1.0);
+		glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);
+		glBegin(GL_QUADS);
+		glTexCoord2f(g.tex.xc[0], g.tex.yc[1]); glVertex2i(100, 0);
+		glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(100, g.yres);
+		glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres - 100, g.yres);
+		glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
+		glEnd();  
 
-	//---------------------------------------------------------------------------- 
-	//car texture
-	renderCar(ga.carSize, ga.car.pos[0], ga.car.pos[1]);
-	cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
-	//screenPrint();	
-	renderText();
-	//printText();
-	function1();
-	//function2();
-	//drawDatBox1();
-	//drawDatBox2();
-	//totalTimeFunction();
+		//---------------------------------------------------------------------------- 
+		//car texture
+		renderCar(ga.carSize, ga.car.pos[0], ga.car.pos[1]);
+		cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
+		//screenPrint();	
+		renderText();
+		//printText();
+		function1();
+		//function2();
+		//drawDatBox1();
+		//drawDatBox2();
+		//totalTimeFunction();
+	}
 }
 
 
