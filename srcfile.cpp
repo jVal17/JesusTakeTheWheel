@@ -323,8 +323,8 @@ void physics()
 		//moves main car using w,a,s,d keys
 		if (g.keys[XK_w]) {
 			ga.car.pos[1] += 8;
-			if (ga.car.pos[1] > 976.0)
-				ga.car.pos[1] = 976.0;
+			if (ga.car.pos[1] > 672.0)
+				ga.car.pos[1] = 672.0;
 		}
 		if (g.keys[XK_d]) {
 			ga.car.pos[0] += 8;
