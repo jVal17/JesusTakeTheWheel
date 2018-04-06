@@ -83,6 +83,7 @@ class Game {
 
 bool inMainMenu = true;
 bool inGame = false;
+bool inPauseMenu = false;
 int menuPosition = 1;
 
 class X11_wrapper {
@@ -272,8 +273,12 @@ int check_keys(XEvent *e)
 	int key = XLookupKeysym(&e->xkey, 0);
 	//Was there input from the keyboard?
 	if (e->type == KeyPress) {
-		if (key == XK_Escape) {
+		if (key == XK_Escape && !inGame) {
 			return 1;
+		}
+		if (key == XK_Escape && inGame) {
+		    inGame = false;
+		    inPauseMenu = true;
 		}
 		if (key == XK_p) {
 			if (g.pause)
@@ -287,18 +292,35 @@ int check_keys(XEvent *e)
 					inMainMenu = false;
 					inGame = true;
 				}
-			}
-			if (key == XK_Down || key == XK_s) {
+			} else if (key == XK_Down || key == XK_s) {
 				if (menuPosition != 2) {
 					menuPosition++;
 				}
-			}
-			if (key == XK_Up || key == XK_w) {
+			} else if (key == XK_Up || key == XK_w) {
 				if (menuPosition != 1) {
 					menuPosition--;
 				}
 			}
 		}
+		if (inPauseMenu) {
+		    if (key == XK_Return) {
+			if (menuPosition == 1) {
+			    inPauseMenu = false;
+			    inGame = true;
+			} else if (menuPosition == 4) {
+				return 1;
+			}
+		    } else if (key == XK_Down || key == XK_s) {
+			if (menuPosition != 4) {
+			    menuPosition++;
+			}
+		    } else if (key == XK_Up || key == XK_w) {
+			if (menuPosition != 1) {
+			    menuPosition--;
+			}
+		    }
+		}
+
 	}
 	if (e->type == KeyRelease) {
 		g.keys[key]=0;
@@ -351,6 +373,8 @@ void render()
 	glClear(GL_COLOR_BUFFER_BIT);
 	if (inMainMenu) {
 		mainMenu(g.xres, g.yres);
+	} else if (inPauseMenu) {
+		pauseMenu(g.xres, g.yres);
 	} else if (inGame) {
 		glColor3f(1.0, 1.0, 1.0);
 		glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);

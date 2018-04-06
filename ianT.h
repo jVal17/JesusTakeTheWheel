@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <X11/Xlib.h>
+#include <X11/keysym.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glx.h>
@@ -20,11 +21,12 @@ extern double timeDiff(struct timespec *start, struct timespec *end);
 extern bool inGame;
 extern bool inMainMenu;
 extern int menuPosition;
-extern char keys[];
+extern int key;
 
 
 void renderText();
 void mainMenu(const int, const int);
-
+void pauseMenu(const int, const int);
+void menuKeys(bool gameState);
 #endif
 
