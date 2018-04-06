@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include <math.h>
 #include <X11/Xlib.h>
-#include <X11/keysym.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glx.h>
@@ -27,6 +26,4 @@ extern int key;
 void renderText();
 void mainMenu(const int, const int);
 void pauseMenu(const int, const int);
-void menuKeys(bool gameState);
 #endif
-
