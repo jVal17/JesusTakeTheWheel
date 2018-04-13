@@ -16,6 +16,25 @@ GLuint silhouetteMainCarTexture;
 GLuint silhouetteAudiTexture;
 GLuint silhouetteMiniVanTexture;
 
+void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
+		float &ec2X, float &ec2Y, float yres){
+	int randnum = rand() % 2;
+	scr = .01;
+	mcX = 206.0;
+	mcY = 512.0;
+	ecY = yres;
+	ec2Y = ecY+(yres/2.0);
+	if(randnum)
+		ecX = 180.0;
+	else 
+		ecX = 340.0;
+	randnum = rand() % 2;
+	if(randnum)
+		ec2X = 180.0;
+	else 
+		ec2X = 340.0;
+}
+
 unsigned char *buildAlphaData(Image *img)
 {
 	//add 4th component to RGB stream...
@@ -76,7 +95,7 @@ void initImages() {
 
 	//audi Image
 	w = audiImage.width;
-        h = audiImage.height;
+	h = audiImage.height;
 
 	glBindTexture(GL_TEXTURE_2D, audiTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -87,14 +106,14 @@ void initImages() {
 	glBindTexture(GL_TEXTURE_2D, silhouetteAudiTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-        unsigned char *silhouetteData2 = buildAlphaData(&audiImage);
+	unsigned char *silhouetteData2 = buildAlphaData(&audiImage);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData2);
 	free(silhouetteData2);
 
 	//Init enemy mini Van Image
 	w = miniVanImage.width;
-        h = miniVanImage.height;
+	h = miniVanImage.height;
 
 	glBindTexture(GL_TEXTURE_2D, miniVanTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -105,7 +124,7 @@ void initImages() {
 	glBindTexture(GL_TEXTURE_2D, silhouetteMiniVanTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-        unsigned char *silhouetteData3 = buildAlphaData(&miniVanImage);
+	unsigned char *silhouetteData3 = buildAlphaData(&miniVanImage);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData3);
 	free(silhouetteData3);	

@@ -36,5 +36,6 @@ void renderMiniVan(int s, float x, float y);
 void generateTextures();
 void initImages();
 void totalTimeFunction();
-
+void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
+	       float &ec2X, float &ec2Y, float yres);
 #endif

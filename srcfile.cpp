@@ -81,13 +81,17 @@ class Game {
 		Game() {
 			mainCar.pos[0]= 206.0;
 			mainCar.pos[1]= 512.0;
-			enemyCar[0].pos[0]= 180.0;
+			for(int i=0; i < 2; i++) {
+				enemySideSpawn = rand() % 2;
+				if (enemySideSpawn)
+					enemyCar[i].pos[0]= 180.0;
+				else
+					enemyCar[i].pos[0]= 340.0;
+			}
 			enemyCar[0].pos[1]= g.fyres;
-			enemyCar[0].pos[0]= 340.0;
-			enemyCar[0].pos[1]= g.fyres+600;
+			enemyCar[1].pos[1]= g.fyres+(g.fyres/2.0);
 			carSize = 50;
 			totalEnemyCars = 2;
-			enemySideSpawn = 0;
 		}
 
 } ga;
@@ -363,8 +367,11 @@ void physics()
 					ga.enemyCar[i].pos[1]+75.0 > ga.mainCar.pos[1] &&
 					ga.enemyCar[i].pos[0]-30.0 < ga.mainCar.pos[0] &&
 					ga.enemyCar[i].pos[0]+30.0 > ga.mainCar.pos[0]
-			   ) {
-				inPauseMenu = true;	
+			){ 
+				cout << "You have crashed. Game has reset" << endl;
+				resetGame(g.scrSpd, ga.mainCar.pos[0],	ga.mainCar.pos[1],	
+				ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], ga.enemyCar[1].pos[1],
+				ga.enemyCar[1].pos[0], g.fyres);	
 			}
 		}
 		if (ga.enemyCar[0].pos[1] < 0.0) {
@@ -377,7 +384,7 @@ void physics()
 
 		}
 		if (ga.enemyCar[1].pos[1] < 0.0) {
-			ga.enemyCar[1].pos[1] = g.fyres+40.0;
+			ga.enemyCar[1].pos[1] = ga.enemyCar[0].pos[1]+(g.fyres/2.0);
 			ga.enemySideSpawn = rand() % 2;
 			if (ga.enemySideSpawn)
 				ga.enemyCar[1].pos[0] = 180.0;
