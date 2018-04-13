@@ -36,6 +36,7 @@ void renderMiniVan(int s, float x, float y);
 void generateTextures();
 void initImages();
 void totalTimeFunction();
+//void increaseCarSpeedY(float enemy, float scr);
 void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
-	       float &ec2X, float &ec2Y, float yres);
+	       float &ec2X, float &ec2Y, float xres, float yres);
 #endif

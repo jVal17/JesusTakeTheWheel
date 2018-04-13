@@ -25,6 +25,9 @@
 #include "alecS.h"
 using namespace std;
 
+#define X_MIN 125
+#define X_MAX 390
+
 GLuint backTexture;
 
 
@@ -53,7 +56,7 @@ class Car {
 class Global {
 	public:
 		int xres, yres, level;
-		float fyres;
+		float fyres, fxres;
 		bool pause;
 		GLuint carTexture;
 		GLuint silhouetteTexture;
@@ -62,7 +65,7 @@ class Global {
 		char keys[65536];
 
 		Global() {
-			xres=256, yres=1024, fyres = yres;
+			xres=256, yres=1024, fyres = yres, fxres = xres;
 			pause=false;
 			scrSpd = .01;
 			level = 0;
@@ -76,17 +79,14 @@ class Game {
 
 		int carSize;
 		int totalEnemyCars;
-		int enemySideSpawn;
+		int carSpawnPos;
 	public:
 		Game() {
-			mainCar.pos[0]= 206.0;
-			mainCar.pos[1]= 512.0;
+			mainCar.pos[0]= g.fxres;
+			mainCar.pos[1]= 80.0;
 			for(int i=0; i < 2; i++) {
-				enemySideSpawn = rand() % 2;
-				if (enemySideSpawn)
-					enemyCar[i].pos[0]= 180.0;
-				else
-					enemyCar[i].pos[0]= 340.0;
+				carSpawnPos = rand() % (X_MAX - X_MIN) + X_MIN;
+				enemyCar[i].pos[0] = carSpawnPos;
 			}
 			enemyCar[0].pos[1]= g.fyres;
 			enemyCar[1].pos[1]= g.fyres+(g.fyres/2.0);
@@ -359,6 +359,7 @@ void physics()
 		g.tex.yc[1] -= g.scrSpd;
 
 		g.level = checkpoint(g.scrSpd);
+		
 		ga.enemyCar[0].pos[1] -= (g.scrSpd*600.0);
 		ga.enemyCar[1].pos[1] -= (g.scrSpd*600.0);
 
@@ -371,26 +372,29 @@ void physics()
 				cout << "You have crashed. Game has reset" << endl;
 				resetGame(g.scrSpd, ga.mainCar.pos[0],	ga.mainCar.pos[1],	
 				ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], ga.enemyCar[1].pos[1],
-				ga.enemyCar[1].pos[0], g.fyres);	
+				ga.enemyCar[1].pos[0], g.fxres, g.fyres);	
 			}
 		}
 		if (ga.enemyCar[0].pos[1] < 0.0) {
+			ga.carSpawnPos = rand() % (X_MAX-X_MIN) + X_MIN;
+			ga.enemyCar[0].pos[0]= ga.carSpawnPos;
 			ga.enemyCar[0].pos[1] = g.fyres+40.0;
-			ga.enemySideSpawn = rand() % 2;
-			if (ga.enemySideSpawn)
+
+		/*	if (ga.enemySideSpawn)
 				ga.enemyCar[0].pos[0] = 180.0;
 			else
 				ga.enemyCar[0].pos[0] = 340.0;
-
+		*/
 		}
 		if (ga.enemyCar[1].pos[1] < 0.0) {
 			ga.enemyCar[1].pos[1] = ga.enemyCar[0].pos[1]+(g.fyres/2.0);
-			ga.enemySideSpawn = rand() % 2;
-			if (ga.enemySideSpawn)
+			ga.carSpawnPos = rand() % (X_MAX-X_MIN) + X_MIN;
+			ga.enemyCar[1].pos[0]= ga.carSpawnPos;
+		/*	if (ga.enemySideSpawn)
 				ga.enemyCar[1].pos[0] = 180.0;
 			else
 				ga.enemyCar[1].pos[0] = 340.0;
-
+		*/
 		}
 
 		//moves main car using w,a,s,d keys

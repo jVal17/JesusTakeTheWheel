@@ -17,11 +17,11 @@ GLuint silhouetteAudiTexture;
 GLuint silhouetteMiniVanTexture;
 
 void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
-		float &ec2X, float &ec2Y, float yres){
+		float &ec2X, float &ec2Y, float xres, float yres){
 	int randnum = rand() % 2;
 	scr = .01;
-	mcX = 206.0;
-	mcY = 512.0;
+	mcX = xres;
+	mcY = 80.0;
 	ecY = yres;
 	ec2Y = ecY+(yres/2.0);
 	if(randnum)
@@ -34,6 +34,13 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 	else 
 		ec2X = 340.0;
 }
+
+/*
+void increaseCarSpeedY(float enemy, float scr) {
+	enemy[0].pos[1] -= (scr*600.0)
+	enemy[1].pos[1] -= (scr*600.0)
+}
+*/
 
 unsigned char *buildAlphaData(Image *img)
 {
