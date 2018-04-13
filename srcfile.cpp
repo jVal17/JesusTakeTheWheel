@@ -25,6 +25,9 @@
 #include "alecS.h"
 using namespace std;
 
+GLuint backTexture;
+
+
 Image img[1] = {
 	"./Sprites/road2.jpeg"
 };
@@ -32,7 +35,7 @@ Image img[1] = {
 class Texture {
 	public:
 		Image *backImage;
-		GLuint backTexture;
+		//GLuint backTexture;
 		float xc[2];
 		float yc[2];
 };
@@ -220,13 +223,16 @@ void init_opengl(void)
 	//
 	g.tex.backImage = &img[0];
 	//create opengl texture elements
-	glGenTextures(1, &g.tex.backTexture);
+	glGenTextures(1, &backTexture);
+	generateTextures(); 
+
+	
 	//glGenTextures(1, &g.carTexture);
 	//glGenTextures(1, &g.silhouetteTexture);
 	//-----------------------------------------------------------------------------------
 	int w =  g.tex.backImage->width; //grabs a set number of pixels and scales them---------------------------------
 	int h =  g.tex.backImage->height; //grabs a set number of pixels and scales them-----------------------------------
-	glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);
+	glBindTexture(GL_TEXTURE_2D, backTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
@@ -240,7 +246,7 @@ void init_opengl(void)
 	g.tex.yc[0] = 0.0;
 	g.tex.yc[1] = 1.0;
 	//----------------------------------------------------------
-	initCar();
+	initImages();
 }
 
 void check_mouse(XEvent *e)
@@ -345,8 +351,8 @@ void physics()
 		//moves main car using w,a,s,d keys
 		if (g.keys[XK_w]) {
 			ga.car.pos[1] += 8;
-			if (ga.car.pos[1] > 672.0)
-				ga.car.pos[1] = 672.0;
+			if (ga.car.pos[1] > g.yres-40)
+				ga.car.pos[1] = g.yres-40;
 		}
 		if (g.keys[XK_d]) {
 			ga.car.pos[0] += 8;
@@ -377,7 +383,7 @@ void render()
 		pauseMenu(g.xres, g.yres);
 	} else if (inGame) {
 		glColor3f(1.0, 1.0, 1.0);
-		glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);
+		glBindTexture(GL_TEXTURE_2D, backTexture);
 		glBegin(GL_QUADS);
 		glTexCoord2f(g.tex.xc[0], g.tex.yc[1]); glVertex2i(100, 0);
 		glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(100, g.yres);
@@ -387,7 +393,8 @@ void render()
 
 		//---------------------------------------------------------------------------- 
 		//car texture
-		renderCar(ga.carSize, ga.car.pos[0], ga.car.pos[1]);
+		renderMainCar(ga.carSize, ga.car.pos[0], ga.car.pos[1]);
+		renderEnemyCar(ga.carSize, 200, 200);
 		cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 		//screenPrint();	
 		renderText();
