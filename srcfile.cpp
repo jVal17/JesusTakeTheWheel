@@ -74,7 +74,6 @@ class Game {
 	public:
 		Car car, enemyCar[2];
 			
-		int ncars;
 		int carSize;
 		int enemySideSpawn;
 	public:
@@ -83,8 +82,9 @@ class Game {
 			car.pos[1]= 512.0;
 			enemyCar[0].pos[0]= 180.0;
 			enemyCar[0].pos[1]= g.fyres;
+			enemyCar[0].pos[0]= 340.0;
+			enemyCar[0].pos[1]= g.fyres+600;
 			carSize = 50;
-			ncars = 1;
 			enemySideSpawn = 0;;
 		}
 
@@ -354,6 +354,7 @@ void physics()
 
 		g.level = checkpoint(g.scrSpd);
 		ga.enemyCar[0].pos[1] -= (g.scrSpd*600.0);
+		ga.enemyCar[1].pos[1] -= (g.scrSpd*600.0);
 		if (ga.enemyCar[0].pos[1] < 0.0) {
 			ga.enemyCar[0].pos[1] = g.fyres+40.0;
 			ga.enemySideSpawn = rand() % 2;
@@ -363,6 +364,16 @@ void physics()
 					ga.enemyCar[0].pos[0] = 340.0;
 					
 		}
+		if (ga.enemyCar[1].pos[1] < 0.0) {
+			ga.enemyCar[1].pos[1] = g.fyres+40.0;
+			ga.enemySideSpawn = rand() % 2;
+				if (ga.enemySideSpawn)
+					ga.enemyCar[1].pos[0] = 180.0;
+				else
+					ga.enemyCar[1].pos[0] = 340.0;
+					
+		}
+
 		//moves main car using w,a,s,d keys
 		if (g.keys[XK_w]) {
 			ga.car.pos[1] += 8;
@@ -409,7 +420,8 @@ void render()
 		//---------------------------------------------------------------------------- 
 		//car texture
 		renderMainCar(ga.carSize, ga.car.pos[0], ga.car.pos[1]);
-		renderEnemyCar(ga.carSize, ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1]);
+		renderAudi(ga.carSize, ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1]);
+		renderMiniTruck(ga.carSize, ga.enemyCar[1].pos[0], ga.enemyCar[1].pos[1]);
 		//cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 		//screenPrint();	
 		renderText();

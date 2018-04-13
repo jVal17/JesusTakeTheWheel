@@ -6,12 +6,15 @@
 //Function is found in the bottom of render() in our main file, "srcfile.cpp".
 
 Image mainCarImage = "./Sprites/Car.png";
-Image enemyCarImage = "./Sprites/Audi.png";
+Image audiImage = "./Sprites/Audi.png";
+Image miniTruckImage = "./Sprites/Mini_truck.png";
 
 GLuint mainCarTexture;
-GLuint enemyCarTexture;
+GLuint audiTexture;
+GLuint miniTruckTexture;
 GLuint silhouetteMainCarTexture;
-GLuint silhouetteEnemyCarTexture;
+GLuint silhouetteAudiTexture;
+GLuint silhouetteMiniTruckTexture;
 
 unsigned char *buildAlphaData(Image *img)
 {
@@ -45,9 +48,11 @@ unsigned char *buildAlphaData(Image *img)
 
 void generateTextures(){
 	glGenTextures(1, &mainCarTexture);
-	glGenTextures(1, &enemyCarTexture);
+	glGenTextures(1, &audiTexture);
+	glGenTextures(1, &miniTruckTexture);
 	glGenTextures(1, &silhouetteMainCarTexture);
-	glGenTextures(1, &silhouetteEnemyCarTexture);
+	glGenTextures(1, &silhouetteAudiTexture);
+	glGenTextures(1, &silhouetteMiniTruckTexture);
 }
 
 void initImages() {
@@ -69,23 +74,41 @@ void initImages() {
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
 	free(silhouetteData);
 
-	//Init enemy car Image
-	w = enemyCarImage.width;
-        h = enemyCarImage.height;
+	//audi Image
+	w = audiImage.width;
+        h = audiImage.height;
 
-	glBindTexture(GL_TEXTURE_2D, enemyCarTexture);
+	glBindTexture(GL_TEXTURE_2D, audiTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-			GL_RGB, GL_UNSIGNED_BYTE, enemyCarImage.data);
+			GL_RGB, GL_UNSIGNED_BYTE, audiImage.data);
 	//silhouette
-	glBindTexture(GL_TEXTURE_2D, silhouetteEnemyCarTexture);
+	glBindTexture(GL_TEXTURE_2D, silhouetteAudiTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-        unsigned char *silhouetteData2 = buildAlphaData(&enemyCarImage);
+        unsigned char *silhouetteData2 = buildAlphaData(&audiImage);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData2);
-	free(silhouetteData2);		
+	free(silhouetteData2);
+
+	//Init enemy mini truck Image
+	w = miniTruckImage.width;
+        h = miniTruckImage.height;
+
+	glBindTexture(GL_TEXTURE_2D, miniTruckTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+			GL_RGB, GL_UNSIGNED_BYTE, miniTruckImage.data);
+	//silhouette
+	glBindTexture(GL_TEXTURE_2D, silhouetteMiniTruckTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+        unsigned char *silhouetteData3 = buildAlphaData(&miniTruckImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData3);
+	free(silhouetteData3);	
 }
 
 void renderMainCar(int s, float x, float y) {
@@ -104,10 +127,26 @@ void renderMainCar(int s, float x, float y) {
 	glPopMatrix();
 }
 
-void renderEnemyCar(int s, float x, float y) {
+void renderAudi(int s, float x, float y) {
 	glPushMatrix();
 	glTranslatef(x, y, 0);
-	glBindTexture(GL_TEXTURE_2D, silhouetteEnemyCarTexture);
+	glBindTexture(GL_TEXTURE_2D, silhouetteAudiTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+	glEnd();
+	glPopMatrix();
+}
+
+void renderMiniTruck(int s, float x, float y) {
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glBindTexture(GL_TEXTURE_2D, silhouetteMiniTruckTexture);
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);
