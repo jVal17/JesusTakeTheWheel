@@ -5,15 +5,13 @@
 
 //Function is found in the bottom of render() in our main file, "srcfile.cpp".
 
-Image car[1] = {
-	"./Sprites/Car.png"
-};
+Image mainCarImage = "./Sprites/Car.png";
+Image enemyCarImage = "./Sprites/Audi.png";
 
-class carTexture {
-	public: 
-		GLuint carTexture;
-		GLuint silhouetteTexture;
-} ct;
+GLuint mainCarTexture;
+GLuint enemyCarTexture;
+GLuint silhouetteMainCarTexture;
+GLuint silhouetteEnemyCarTexture;
 
 unsigned char *buildAlphaData(Image *img)
 {
@@ -45,37 +43,71 @@ unsigned char *buildAlphaData(Image *img)
 	return newdata;
 }
 
-void initCar() {
-	glGenTextures(1, &ct.carTexture);
-        glGenTextures(1, &ct.silhouetteTexture);
-	//car
-	int w = car[0].width;
-	int h = car[0].height;
+void generateTextures(){
+	glGenTextures(1, &mainCarTexture);
+	glGenTextures(1, &enemyCarTexture);
+	glGenTextures(1, &silhouetteMainCarTexture);
+	glGenTextures(1, &silhouetteEnemyCarTexture);
+}
 
-	glBindTexture(GL_TEXTURE_2D, ct.carTexture);
+void initImages() {
+	//Initialize main car Image
+	int w = mainCarImage.width;
+	int h = mainCarImage.height;
+
+	glBindTexture(GL_TEXTURE_2D, mainCarTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-			GL_RGB, GL_UNSIGNED_BYTE, car[0].data);
-
+			GL_RGB, GL_UNSIGNED_BYTE, mainCarImage.data);
 	//silhouette
-	//
-	glBindTexture(GL_TEXTURE_2D, ct.silhouetteTexture);
-	//
+	glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	//
-	//must build a new set of data...
-	unsigned char *silhouetteData = buildAlphaData(&car[0]);
+	unsigned char *silhouetteData = buildAlphaData(&mainCarImage);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
-	free(silhouetteData);	
+	free(silhouetteData);
+
+	//Init enemy car Image
+	w = enemyCarImage.width;
+        h = enemyCarImage.height;
+
+	glBindTexture(GL_TEXTURE_2D, enemyCarTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+			GL_RGB, GL_UNSIGNED_BYTE, enemyCarImage.data);
+	//silhouette
+	glBindTexture(GL_TEXTURE_2D, silhouetteEnemyCarTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+        unsigned char *silhouetteData2 = buildAlphaData(&enemyCarImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData2);
+	free(silhouetteData2);		
 }
 
-void renderCar(int s, float x, float y) {
+void renderMainCar(int s, float x, float y) {
 	glPushMatrix();
 	glTranslatef(x, y, 0);
-	glBindTexture(GL_TEXTURE_2D, ct.silhouetteTexture);
+	glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+	glEnd();
+	glPopMatrix();
+}
+
+void renderEnemyCar(int s, float x, float y) {
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glBindTexture(GL_TEXTURE_2D, silhouetteEnemyCarTexture);
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);

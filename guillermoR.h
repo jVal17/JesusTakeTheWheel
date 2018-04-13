@@ -30,8 +30,10 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 
 void drawBox(float x, float y, int s); 
 void moveBox(float x, float y); 
-void renderCar(int s, float x, float y);
-void initCar();
+void renderMainCar(int s, float x, float y);
+void renderEnemyCar(int s, float x, float y);
+void generateTextures();
+void initImages();
 void totalTimeFunction();
 
 #endif
