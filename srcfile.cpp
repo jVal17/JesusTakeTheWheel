@@ -53,6 +53,7 @@ class Car {
 class Global {
 	public:
 		int xres, yres, level;
+		float fyres;
 		bool pause;
 		GLuint carTexture;
 		GLuint silhouetteTexture;
@@ -61,7 +62,7 @@ class Global {
 		char keys[65536];
 
 		Global() {
-			xres=256, yres=1024;
+			xres=256, yres=1024, fyres = yres;
 			pause=false;
 			scrSpd = .01;
 			level = 0;
@@ -71,15 +72,20 @@ class Global {
 
 class Game {
 	public:
-		Car car;
+		Car car, enemyCar[2];
+			
 		int ncars;
 		int carSize;
+		int enemySideSpawn;
 	public:
 		Game() {
 			car.pos[0]= 206.0;
 			car.pos[1]= 512.0;
+			enemyCar[0].pos[0]= 180.0;
+			enemyCar[0].pos[1]= g.fyres;
 			carSize = 50;
 			ncars = 1;
+			enemySideSpawn = 0;;
 		}
 
 } ga;
@@ -347,12 +353,21 @@ void physics()
 		g.tex.yc[1] -= g.scrSpd;
 
 		g.level = checkpoint(g.scrSpd);
-
+		ga.enemyCar[0].pos[1] -= (g.scrSpd*600.0);
+		if (ga.enemyCar[0].pos[1] < 0.0) {
+			ga.enemyCar[0].pos[1] = g.fyres+40.0;
+			ga.enemySideSpawn = rand() % 2;
+				if (ga.enemySideSpawn)
+					ga.enemyCar[0].pos[0] = 180.0;
+				else
+					ga.enemyCar[0].pos[0] = 340.0;
+					
+		}
 		//moves main car using w,a,s,d keys
 		if (g.keys[XK_w]) {
 			ga.car.pos[1] += 8;
-			if (ga.car.pos[1] > g.yres-40)
-				ga.car.pos[1] = g.yres-40;
+			if (ga.car.pos[1] > g.fyres-40.0)
+				ga.car.pos[1] = g.fyres-40.0;
 		}
 		if (g.keys[XK_d]) {
 			ga.car.pos[0] += 8;
@@ -394,8 +409,8 @@ void render()
 		//---------------------------------------------------------------------------- 
 		//car texture
 		renderMainCar(ga.carSize, ga.car.pos[0], ga.car.pos[1]);
-		renderEnemyCar(ga.carSize, 200, 200);
-		cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
+		renderEnemyCar(ga.carSize, ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1]);
+		//cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 		//screenPrint();	
 		renderText();
 		//printText();
