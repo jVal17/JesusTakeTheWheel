@@ -32,7 +32,7 @@ void drawBox(float x, float y, int s);
 void moveBox(float x, float y); 
 void renderMainCar(int s, float x, float y);
 void renderAudi(int s, float x, float y);
-void renderMiniTruck(int s, float x, float y);
+void renderMiniVan(int s, float x, float y);
 void generateTextures();
 void initImages();
 void totalTimeFunction();

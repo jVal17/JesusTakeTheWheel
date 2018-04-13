@@ -7,14 +7,14 @@
 
 Image mainCarImage = "./Sprites/Car.png";
 Image audiImage = "./Sprites/Audi.png";
-Image miniTruckImage = "./Sprites/Mini_truck.png";
+Image miniVanImage = "./Sprites/Mini_van.png";
 
 GLuint mainCarTexture;
 GLuint audiTexture;
-GLuint miniTruckTexture;
+GLuint miniVanTexture;
 GLuint silhouetteMainCarTexture;
 GLuint silhouetteAudiTexture;
-GLuint silhouetteMiniTruckTexture;
+GLuint silhouetteMiniVanTexture;
 
 unsigned char *buildAlphaData(Image *img)
 {
@@ -49,10 +49,10 @@ unsigned char *buildAlphaData(Image *img)
 void generateTextures(){
 	glGenTextures(1, &mainCarTexture);
 	glGenTextures(1, &audiTexture);
-	glGenTextures(1, &miniTruckTexture);
+	glGenTextures(1, &miniVanTexture);
 	glGenTextures(1, &silhouetteMainCarTexture);
 	glGenTextures(1, &silhouetteAudiTexture);
-	glGenTextures(1, &silhouetteMiniTruckTexture);
+	glGenTextures(1, &silhouetteMiniVanTexture);
 }
 
 void initImages() {
@@ -92,20 +92,20 @@ void initImages() {
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData2);
 	free(silhouetteData2);
 
-	//Init enemy mini truck Image
-	w = miniTruckImage.width;
-        h = miniTruckImage.height;
+	//Init enemy mini Van Image
+	w = miniVanImage.width;
+        h = miniVanImage.height;
 
-	glBindTexture(GL_TEXTURE_2D, miniTruckTexture);
+	glBindTexture(GL_TEXTURE_2D, miniVanTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-			GL_RGB, GL_UNSIGNED_BYTE, miniTruckImage.data);
+			GL_RGB, GL_UNSIGNED_BYTE, miniVanImage.data);
 	//silhouette
-	glBindTexture(GL_TEXTURE_2D, silhouetteMiniTruckTexture);
+	glBindTexture(GL_TEXTURE_2D, silhouetteMiniVanTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-        unsigned char *silhouetteData3 = buildAlphaData(&miniTruckImage);
+        unsigned char *silhouetteData3 = buildAlphaData(&miniVanImage);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData3);
 	free(silhouetteData3);	
@@ -143,10 +143,10 @@ void renderAudi(int s, float x, float y) {
 	glPopMatrix();
 }
 
-void renderMiniTruck(int s, float x, float y) {
+void renderMiniVan(int s, float x, float y) {
 	glPushMatrix();
 	glTranslatef(x, y, 0);
-	glBindTexture(GL_TEXTURE_2D, silhouetteMiniTruckTexture);
+	glBindTexture(GL_TEXTURE_2D, silhouetteMiniVanTexture);
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);

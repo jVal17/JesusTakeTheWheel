@@ -72,20 +72,22 @@ class Global {
 
 class Game {
 	public:
-		Car car, enemyCar[2];
-			
+		Car mainCar, enemyCar[2];
+
 		int carSize;
+		int totalEnemyCars;
 		int enemySideSpawn;
 	public:
 		Game() {
-			car.pos[0]= 206.0;
-			car.pos[1]= 512.0;
+			mainCar.pos[0]= 206.0;
+			mainCar.pos[1]= 512.0;
 			enemyCar[0].pos[0]= 180.0;
 			enemyCar[0].pos[1]= g.fyres;
 			enemyCar[0].pos[0]= 340.0;
 			enemyCar[0].pos[1]= g.fyres+600;
 			carSize = 50;
-			enemySideSpawn = 0;;
+			totalEnemyCars = 2;
+			enemySideSpawn = 0;
 		}
 
 } ga;
@@ -232,7 +234,7 @@ void init_opengl(void)
 	glGenTextures(1, &backTexture);
 	generateTextures(); 
 
-	
+
 	//glGenTextures(1, &g.carTexture);
 	//glGenTextures(1, &g.silhouetteTexture);
 	//-----------------------------------------------------------------------------------
@@ -289,8 +291,8 @@ int check_keys(XEvent *e)
 			return 1;
 		}
 		if (key == XK_Escape && inGame) {
-		    inGame = false;
-		    inPauseMenu = true;
+			inGame = false;
+			inPauseMenu = true;
 		}
 		if (key == XK_p) {
 			if (g.pause)
@@ -315,22 +317,22 @@ int check_keys(XEvent *e)
 			}
 		}
 		if (inPauseMenu) {
-		    if (key == XK_Return) {
-			if (menuPosition == 1) {
-			    inPauseMenu = false;
-			    inGame = true;
-			} else if (menuPosition == 4) {
-				return 1;
+			if (key == XK_Return) {
+				if (menuPosition == 1) {
+					inPauseMenu = false;
+					inGame = true;
+				} else if (menuPosition == 4) {
+					return 1;
+				}
+			} else if (key == XK_Down || key == XK_s) {
+				if (menuPosition != 4) {
+					menuPosition++;
+				}
+			} else if (key == XK_Up || key == XK_w) {
+				if (menuPosition != 1) {
+					menuPosition--;
+				}
 			}
-		    } else if (key == XK_Down || key == XK_s) {
-			if (menuPosition != 4) {
-			    menuPosition++;
-			}
-		    } else if (key == XK_Up || key == XK_w) {
-			if (menuPosition != 1) {
-			    menuPosition--;
-			}
-		    }
 		}
 
 	}
@@ -355,45 +357,55 @@ void physics()
 		g.level = checkpoint(g.scrSpd);
 		ga.enemyCar[0].pos[1] -= (g.scrSpd*600.0);
 		ga.enemyCar[1].pos[1] -= (g.scrSpd*600.0);
+
+		for(int i = 0; i < ga.totalEnemyCars; i++){
+			if (ga.enemyCar[i].pos[1]-75.0 < ga.mainCar.pos[1] && 
+					ga.enemyCar[i].pos[1]+75.0 > ga.mainCar.pos[1] &&
+					ga.enemyCar[i].pos[0]-30.0 < ga.mainCar.pos[0] &&
+					ga.enemyCar[i].pos[0]+30.0 > ga.mainCar.pos[0]
+			   ) {
+				inPauseMenu = true;	
+			}
+		}
 		if (ga.enemyCar[0].pos[1] < 0.0) {
 			ga.enemyCar[0].pos[1] = g.fyres+40.0;
 			ga.enemySideSpawn = rand() % 2;
-				if (ga.enemySideSpawn)
-					ga.enemyCar[0].pos[0] = 180.0;
-				else
-					ga.enemyCar[0].pos[0] = 340.0;
-					
+			if (ga.enemySideSpawn)
+				ga.enemyCar[0].pos[0] = 180.0;
+			else
+				ga.enemyCar[0].pos[0] = 340.0;
+
 		}
 		if (ga.enemyCar[1].pos[1] < 0.0) {
 			ga.enemyCar[1].pos[1] = g.fyres+40.0;
 			ga.enemySideSpawn = rand() % 2;
-				if (ga.enemySideSpawn)
-					ga.enemyCar[1].pos[0] = 180.0;
-				else
-					ga.enemyCar[1].pos[0] = 340.0;
-					
+			if (ga.enemySideSpawn)
+				ga.enemyCar[1].pos[0] = 180.0;
+			else
+				ga.enemyCar[1].pos[0] = 340.0;
+
 		}
 
 		//moves main car using w,a,s,d keys
 		if (g.keys[XK_w]) {
-			ga.car.pos[1] += 8;
-			if (ga.car.pos[1] > g.fyres-40.0)
-				ga.car.pos[1] = g.fyres-40.0;
+			ga.mainCar.pos[1] += 8;
+			if (ga.mainCar.pos[1] > g.fyres-40.0)
+				ga.mainCar.pos[1] = g.fyres-40.0;
 		}
 		if (g.keys[XK_d]) {
-			ga.car.pos[0] += 8;
-			if (ga.car.pos[0] > 395.0)
-				ga.car.pos[0] = 395.0;
+			ga.mainCar.pos[0] += 8;
+			if (ga.mainCar.pos[0] > 395.0)
+				ga.mainCar.pos[0] = 395.0;
 		}
 		if (g.keys[XK_a]) {
-			ga.car.pos[0] -= 8;
-			if (ga.car.pos[0] < 118.0)
-				ga.car.pos[0] = 118.0;
+			ga.mainCar.pos[0] -= 8;
+			if (ga.mainCar.pos[0] < 118.0)
+				ga.mainCar.pos[0] = 118.0;
 		}
 		if (g.keys[XK_s]) {
-			ga.car.pos[1] -= 8;
-			if (ga.car.pos[1] < 40.0)
-				ga.car.pos[1] = 40.0;
+			ga.mainCar.pos[1] -= 8;
+			if (ga.mainCar.pos[1] < 40.0)
+				ga.mainCar.pos[1] = 40.0;
 		}
 	}
 }
@@ -419,9 +431,9 @@ void render()
 
 		//---------------------------------------------------------------------------- 
 		//car texture
-		renderMainCar(ga.carSize, ga.car.pos[0], ga.car.pos[1]);
+		renderMainCar(ga.carSize, ga.mainCar.pos[0], ga.mainCar.pos[1]);
 		renderAudi(ga.carSize, ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1]);
-		renderMiniTruck(ga.carSize, ga.enemyCar[1].pos[0], ga.enemyCar[1].pos[1]);
+		renderMiniVan(ga.carSize, ga.enemyCar[1].pos[0], ga.enemyCar[1].pos[1]);
 		//cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 		//screenPrint();	
 		renderText();
