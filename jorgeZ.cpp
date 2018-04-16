@@ -7,6 +7,9 @@
 #include <iostream>
 
 using namespace std;
+static double durationPaused = 0.0;
+//bool firstPause = true;
+
 void screenPrint () 
 {
     Rect r;
@@ -17,54 +20,67 @@ void screenPrint ()
     ggprint8b(&r, 16, 0x00ff0000, "by Jorge Zuniga");
     glEnd();
 }
-/*
-double pauseTimer(bool &inPauseMenu)
-{
-    static double pauseTimer = 0.0;
-    static struct timespec ftimeStart, ftimeEnd;
-    if(inPauseMenu)
-    {
-	pauseTimer = 0.0;
-	clock_gettime(CLOCK_REALTIME, &ftimeStart);
-    }
-    clock_gettime(CLOCK_REALTIME, &ftimeEnd);
-    pauseTimer = timeDiff(&ftimeStart, &ftimeEnd);
 
-    cout << "Paused Time: " << pauseTimer << endl;
-    return pauseTimer;
+void pauseTimer(bool &inPauseMenu)
+{
+    //static double pauseTimer = 0.0;
+    static struct timespec ftimeStart, ftimeEnd;
+    //if(inPauseMenu)
+    //{
+	durationPaused = 0.0;
+	clock_gettime(CLOCK_REALTIME, &ftimeStart);
+    //}
+    if(!inPauseMenu)
+    {
+	clock_gettime(CLOCK_REALTIME, &ftimeEnd);
+	durationPaused = timeDiff(&ftimeStart, &ftimeEnd);
+    }
+
+    cout << "Paused Time: " << durationPaused << endl;
+
+    //return durationPaused;
 }
-*/
+
 int checkpoint (float &scrSpd)
 {
     int i;
     static int level = 0;
     static double inGameTimer = 0.0;
     static struct timespec ftimeStart, ftimeEnd;
-    static double t2 = 10.0, setSpd = 0.01125;
+    static double t2 = 10.0;//, setSpd = 0.01125;
     if(inGameTimer == 0)
 	clock_gettime(CLOCK_REALTIME, &ftimeStart);
-    for ( i = 1; i < 100; i++){ 
+    /*for ( i = 1; i < 100; i++){ 
 	pow(i,2);
-    }
+    }*/
     clock_gettime(CLOCK_REALTIME, &ftimeEnd);
     inGameTimer = timeDiff(&ftimeStart, &ftimeEnd);
 
-    if(inGameTimer > t2 + 10){
-	t2 += 10;
-	setSpd += 0.0025;
-    }
     if(inGameTimer > t2){
+	t2 += 10;
+	//setSpd += 0.0025;
+	//scrSpd += 0.000025; //added 3 more 0's
+	scrSpd += 0.0025; //added 3 more 0's
+	cout << "scrSpd: " << scrSpd << endl;
+    }/*
+	if(inGameTimer > t2){
 	if(scrSpd < setSpd){
-	    scrSpd += 0.000025; //added 3 more 0's
+	scrSpd += 0.000025; //added 3 more 0's
 	}
-    }
-	
-  //  inGameTimer = inGameTimer - pauseTimer;
+	}*/
+
+    //inGameTimer = inGameTimer - durationPaused;
 
     //cout << "scrSpd: " << scrSpd << endl;
     //cout << "In game timer: " << inGameTimer << endl;
     return level++;
     //ggprint8b(&r, 16, 0x00ff0000, "%f", t);
+}
+
+void timeDifference()
+{
+
+
 }
 
 void function1 ()

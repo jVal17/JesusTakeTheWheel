@@ -28,6 +28,7 @@ using namespace std;
 
 void screenPrint();
 int checkpoint(float&);
+void pauseTimer(bool&);
 void function1();
 void function2();
 
