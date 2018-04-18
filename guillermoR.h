@@ -20,12 +20,10 @@ using namespace std;
 typedef float Flt;
 typedef float Vec[3];
 
-//-----------------------------------------------------------------------------
 //Setup timers
 extern struct timespec timeStart, timeCurrent;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
-//-----------------------------------------------------------------------------
 
 
 void drawBox(float x, float y, int s); 
@@ -38,5 +36,5 @@ void initImages();
 void totalTimeFunction();
 //void increaseCarSpeedY(float enemy, float scr);
 void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
-	       float &ec2X, float &ec2Y, float xres, float yres);
+		float &ec2X, float &ec2Y, float xres, float yres);
 #endif
