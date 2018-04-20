@@ -7,8 +7,7 @@
 #include <iostream>
 
 using namespace std;
-static double durationPaused = 0.0;
-//bool firstPause = true;
+double durationPaused = 0.0;
 
 void screenPrint () 
 {
@@ -23,20 +22,24 @@ void screenPrint ()
 
 void pauseTimer(bool &inPauseMenu)
 {
-    //static double pauseTimer = 0.0;
-    static struct timespec ftimeStart, ftimeEnd;
-    //if(inPauseMenu)
-    //{
-	durationPaused = 0.0;
+    static struct timespec ftimeStart, ftimeEnd, s;
+    if(inPauseMenu)
+    {
+	//durationPaused = 0.0;
 	clock_gettime(CLOCK_REALTIME, &ftimeStart);
-    //}
+	clock_gettime(CLOCK_REALTIME, &s);
+	s.tv_sec = ftimeStart.tv_sec;
+    }
+	
+
     if(!inPauseMenu)
     {
 	clock_gettime(CLOCK_REALTIME, &ftimeEnd);
 	durationPaused = timeDiff(&ftimeStart, &ftimeEnd);
+	cout << "Paused Time: " << durationPaused << endl;
+	//cout <<  "ftimeEnd:" << ftimeEnd.tv_sec << endl; 
     }
 
-    cout << "Paused Time: " << durationPaused << endl;
 
     //return durationPaused;
 }
@@ -48,11 +51,10 @@ int checkpoint (float &scrSpd)
     static double inGameTimer = 0.0;
     static struct timespec ftimeStart, ftimeEnd;
     static double t2 = 10.0;//, setSpd = 0.01125;
+
     if(inGameTimer == 0)
 	clock_gettime(CLOCK_REALTIME, &ftimeStart);
-    /*for ( i = 1; i < 100; i++){ 
-	pow(i,2);
-    }*/
+
     clock_gettime(CLOCK_REALTIME, &ftimeEnd);
     inGameTimer = timeDiff(&ftimeStart, &ftimeEnd);
 
@@ -69,7 +71,14 @@ int checkpoint (float &scrSpd)
 	}
 	}*/
 
-    //inGameTimer = inGameTimer - durationPaused;
+    //cout << "duration paused:" << durationPaused << endl;
+    cout << "in game timer(before): " << inGameTimer << endl;
+
+    inGameTimer = inGameTimer - durationPaused;
+    cout << "duration paused:" << durationPaused << endl;
+    durationPaused = 0;
+
+    cout << "in game timer(after): " << inGameTimer << endl;
 
     //cout << "scrSpd: " << scrSpd << endl;
     //cout << "In game timer: " << inGameTimer << endl;
