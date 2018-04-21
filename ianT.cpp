@@ -15,12 +15,12 @@ void renderText()
 	clock_gettime(CLOCK_REALTIME, &startTime);
 	Rect r;
 	r.bot = 984;
-	r.left = 20;
-	r.center = 0;
+	r.left = 50;
+	r.center = 1;
 	ggprint8b(&r, 16, 0x00ff0000, "Jesus Take");
 	ggprint8b(&r, 16, 0x00ff0000, "the Wheel");
 	ggprint8b(&r, 16, 0x00ff0000, "- Controls -");
-	ggprint8b(&r, 16, 0x00ff0000, "esc to pause");
+	ggprint8b(&r, 16, 0x00ff0000, "ESC to pause");
 	ggprint8b(&r, 16, 0x00ff0000, "W,S,A,D to move");
 	glEnd();
 	r.bot = 500;
@@ -36,7 +36,7 @@ void renderText()
 	ggprint8b(&r, 16, 0x00ff0000, "Timer 1: %.5f", t);
 }
 
-void mainMenu (const int xres, const int yres)
+void mainMenu(const int xres, const int yres)
 {
 	unsigned int white = 0xffffff;
 
@@ -81,7 +81,7 @@ void mainMenu (const int xres, const int yres)
 	}*/ // try to implement this after menu is finished.
 }
 
-void pauseMenu (const int xres, const int yres)
+void pauseMenu(const int xres, const int yres)
 {
 	unsigned int white = 0xffffff;
 
@@ -124,4 +124,3 @@ void pauseMenu (const int xres, const int yres)
 	glEnd();
 	glPopMatrix();
 }
-
