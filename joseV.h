@@ -22,6 +22,10 @@ extern struct timespec timeStart, timeCurrent;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
+extern float scrSpd;
+extern float xres;
+extern float yres;
+void drawPlow();
 
 void pauseGame(float y[]); 
 int clock_gettime(clockid_t clk_id, struct timespect *tp);

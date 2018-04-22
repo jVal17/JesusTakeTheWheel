@@ -4,7 +4,41 @@
 
 #include "joseV.h"
 
-//Game is paused when the p key is pressed.
+
+struct Plow 
+{
+	int pos[3];
+	int vel = scrSpd;
+}
+void initPlow() 
+{
+	stuct Plow *plow;
+	plow->pos[0] = xres/2;
+	plow->pos[1] = yres;
+	plor->pos[2] = 0.0f;
+	renderPlow(plow);
+}
+void renderPlow(struct Plow *plow)
+{
+
+ 
+  	//glColor3fv(g.ship.color);
+	glPushMatrix();
+	glTranslatef(plow->pos[0], plow->pos[1], plow->pos[2]);
+	glBegin(GL_TRIANGLES);
+		glVertex2f(-12.0f, -10.0f);
+		glVertex2f(  0.0f, 20.0f);
+		glVertex2f(  0.0f, -6.0f);
+		glVertex2f(  0.0f, -6.0f);
+		glVertex2f(  0.0f, 20.0f);
+		glVertex2f( 12.0f, -10.0f);
+	glEnd();
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glBegin(GL_POINTS);
+		glVertex2f(0.0f, 0.0f);
+	glEnd();
+	glPopMatrix();
+  }
 void pauseGame(float y[]){
 	y[0]-=0.0;
 	y[1]-=0.0;
