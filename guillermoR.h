@@ -15,7 +15,11 @@
 #include <GL/glx.h>
 #include "fonts.h"
 #include "img.h"
+#include "iostream"
 using namespace std;
+
+#define X_MIN 125
+#define X_MAX 390 
 
 typedef float Flt;
 typedef float Vec[3];
@@ -26,11 +30,20 @@ extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 
 
+void getfyres(float y);
+void getfxres(float x);
 void drawBox(float x, float y, int s); 
 void moveBox(float x, float y); 
-void renderMainCar(int s, float x, float y);
-void renderAudi(int s, float x, float y);
-void renderMiniVan(int s, float x, float y);
+void moveEnemyCars(float scr);
+void checkCollisions(float scr);
+void spawnEnemyCars(float yres);
+void wMovement(float yres);
+void dMovement();
+void aMovement();
+void sMovement();
+void renderMainCar();
+void renderAudi();
+void renderMiniVan();
 void generateTextures();
 void initImages();
 void totalTimeFunction();
