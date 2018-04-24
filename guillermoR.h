@@ -46,6 +46,8 @@ void moveBox(float x, float y);
 void moveEnemyCars(float scr);
 void checkCollisions(float scr);
 void carInvincibility();
+void blink();
+void checkInvincOutside();
 void spawnEnemyCars(float yres);
 void wMovement(float yres);
 void dMovement();
