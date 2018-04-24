@@ -27,7 +27,6 @@ using namespace std;
 
 GLuint backTexture;
 
-
 Image img[1] = {
 	"./Sprites/road2.jpeg"
 };
@@ -53,8 +52,9 @@ class Car {
 class Global {
 	public:
 		int xres, yres, level;
-		float fyres;
+		float fyres, fxres;
 		bool pause;
+		bool firstPause;
 		GLuint carTexture;
 		GLuint silhouetteTexture;
 		Texture tex;
@@ -62,39 +62,16 @@ class Global {
 		char keys[65536];
 
 		Global() {
-			xres=256, yres=1024, fyres = yres;
+			xres=256, yres=1024, fyres = yres, fxres = xres;
+			getfxres(fxres);
+			getfyres(fyres);
 			pause=false;
+			firstPause = true;
 			scrSpd = .01;
 			level = 0;
 			memset(keys, 0, 10000);
 		}
 } g;
-
-class Game {
-	public:
-		Car mainCar, enemyCar[2];
-
-		int carSize;
-		int totalEnemyCars;
-		int enemySideSpawn;
-	public:
-		Game() {
-			mainCar.pos[0]= 206.0;
-			mainCar.pos[1]= 512.0;
-			for(int i=0; i < 2; i++) {
-				enemySideSpawn = rand() % 2;
-				if (enemySideSpawn)
-					enemyCar[i].pos[0]= 180.0;
-				else
-					enemyCar[i].pos[0]= 340.0;
-			}
-			enemyCar[0].pos[1]= g.fyres;
-			enemyCar[1].pos[1]= g.fyres+(g.fyres/2.0);
-			carSize = 50;
-			totalEnemyCars = 2;
-		}
-
-} ga;
 
 bool inMainMenu = true;
 bool inGame = false;
@@ -303,6 +280,7 @@ int check_keys(XEvent *e)
 				g.pause = false;
 			else
 				g.pause = true;
+
 		}
 		if (inMainMenu) {
 			if (key == XK_Return) {
@@ -321,6 +299,11 @@ int check_keys(XEvent *e)
 			}
 		}
 		if (inPauseMenu) {
+			if(g.firstPause)
+			{
+				//pauseTimer(inPauseMenu);
+				g.firstPause = false;
+			}
 			if (key == XK_Return) {
 				if (menuPosition == 1) {
 					inPauseMenu = false;
@@ -338,6 +321,8 @@ int check_keys(XEvent *e)
 				}
 			}
 		}
+		//g.firstPause = true;
+		//pauseTimer(inPauseMenu);
 
 	}
 	if (e->type == KeyRelease) {
@@ -359,60 +344,22 @@ void physics()
 		g.tex.yc[1] -= g.scrSpd;
 
 		g.level = checkpoint(g.scrSpd);
-		ga.enemyCar[0].pos[1] -= (g.scrSpd*600.0);
-		ga.enemyCar[1].pos[1] -= (g.scrSpd*600.0);
-
-		for(int i = 0; i < ga.totalEnemyCars; i++){
-			if (ga.enemyCar[i].pos[1]-75.0 < ga.mainCar.pos[1] && 
-					ga.enemyCar[i].pos[1]+75.0 > ga.mainCar.pos[1] &&
-					ga.enemyCar[i].pos[0]-30.0 < ga.mainCar.pos[0] &&
-					ga.enemyCar[i].pos[0]+30.0 > ga.mainCar.pos[0]
-			){ 
-				cout << "You have crashed. Game has reset" << endl;
-				resetGame(g.scrSpd, ga.mainCar.pos[0],	ga.mainCar.pos[1],	
-				ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], ga.enemyCar[1].pos[1],
-				ga.enemyCar[1].pos[0], g.fyres);	
-			}
-		}
-		if (ga.enemyCar[0].pos[1] < 0.0) {
-			ga.enemyCar[0].pos[1] = g.fyres+40.0;
-			ga.enemySideSpawn = rand() % 2;
-			if (ga.enemySideSpawn)
-				ga.enemyCar[0].pos[0] = 180.0;
-			else
-				ga.enemyCar[0].pos[0] = 340.0;
-
-		}
-		if (ga.enemyCar[1].pos[1] < 0.0) {
-			ga.enemyCar[1].pos[1] = ga.enemyCar[0].pos[1]+(g.fyres/2.0);
-			ga.enemySideSpawn = rand() % 2;
-			if (ga.enemySideSpawn)
-				ga.enemyCar[1].pos[0] = 180.0;
-			else
-				ga.enemyCar[1].pos[0] = 340.0;
-
-		}
-
+		
+		moveEnemyCars(g.scrSpd);
+		checkCollisions(g.scrSpd);	
+		spawnEnemyCars(g.fyres);
 		//moves main car using w,a,s,d keys
 		if (g.keys[XK_w]) {
-			ga.mainCar.pos[1] += 8;
-			if (ga.mainCar.pos[1] > g.fyres-40.0)
-				ga.mainCar.pos[1] = g.fyres-40.0;
+			wMovement(g.fyres);
 		}
 		if (g.keys[XK_d]) {
-			ga.mainCar.pos[0] += 8;
-			if (ga.mainCar.pos[0] > 395.0)
-				ga.mainCar.pos[0] = 395.0;
+			dMovement();
 		}
 		if (g.keys[XK_a]) {
-			ga.mainCar.pos[0] -= 8;
-			if (ga.mainCar.pos[0] < 118.0)
-				ga.mainCar.pos[0] = 118.0;
+			aMovement();
 		}
 		if (g.keys[XK_s]) {
-			ga.mainCar.pos[1] -= 8;
-			if (ga.mainCar.pos[1] < 40.0)
-				ga.mainCar.pos[1] = 40.0;
+			sMovement();
 		}
 	}
 }
@@ -438,9 +385,11 @@ void render()
 
 		//---------------------------------------------------------------------------- 
 		//car texture
-		renderMainCar(ga.carSize, ga.mainCar.pos[0], ga.mainCar.pos[1]);
-		renderAudi(ga.carSize, ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1]);
-		renderMiniVan(ga.carSize, ga.enemyCar[1].pos[0], ga.enemyCar[1].pos[1]);
+		renderHeart();
+		renderMainCar();
+		//
+		renderAudi();
+		renderMiniVan();
 		//cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 		//screenPrint();	
 		renderText();
@@ -452,17 +401,3 @@ void render()
 		//totalTimeFunction();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
