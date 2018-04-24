@@ -3,179 +3,25 @@
 
 #include "guillermoR.h"
 
-float fxres, fyres;
-static struct timespec ftimeStart, ftimeEnd;
+//Function is found in the bottom of render() in our main file, "srcfile.cpp".
 
 Image mainCarImage = "./Sprites/Car.png";
 Image audiImage = "./Sprites/Audi.png";
 Image miniVanImage = "./Sprites/Mini_van.png";
-Image heartImage = "./Sprites/heart.png";
-Image transparentImage = "./Sprites/transparent.png";
 
 GLuint mainCarTexture;
 GLuint audiTexture;
 GLuint miniVanTexture;
-GLuint heartTexture;
-GLuint transparentTexture;
 GLuint silhouetteMainCarTexture;
 GLuint silhouetteAudiTexture;
 GLuint silhouetteMiniVanTexture;
-GLuint silhouetteHeartTexture;
-GLuint silhouetteTransparentTexture;
-
-class Car {
-	public:
-		Vec pos;
-		bool invinc;
-		Car() {
-			invinc = false;
-		}
-};
-
-class Heart {
-	public:
-		int size;
-		Vec pos;
-		Heart() {
-			size = 15;
-		}
-};
-
-void getfxres(float x){
-	fxres = x;
-}
-
-void getfyres(float y){
-	fyres = y;
-}
-
-class Game {
-	public:
-		Car mainCar, enemyCar[2];
-		Heart heart[3];
-		int numHearts;
-		int carSize;
-		int totalEnemyCars;
-		int carSpawnPos;
-		int firstInvinc;
-		float timer;
-
-		Game() {
-
-			for(int j = 0; j < 3; j++){
-				heart[j].pos[0]= (fxres*1.7) + (j*30);
-				heart[j].pos[1]= fyres-20.0;
-			}
-			mainCar.pos[0]= fxres;
-			mainCar.pos[1]= 80.0;
-			for(int i=0; i < 2; i++) {
-				carSpawnPos = rand() % (X_MAX - X_MIN) + X_MIN;
-				enemyCar[i].pos[0] = carSpawnPos;
-			}
-			enemyCar[0].pos[1]= fyres;
-			enemyCar[1].pos[1]= fyres+(fyres/2.0);
-			carSize = 50;
-			totalEnemyCars = 2;
-			numHearts = 2;
-			firstInvinc = true;
-			timer = 0.0;
-		}
-
-} ga;
-
-//Function is found in the bottom of render() in our main file, "srcfile.cpp".
-void moveEnemyCars(float scr){
-	ga.enemyCar[0].pos[1] -= (scr*600.0);
-	ga.enemyCar[1].pos[1] -= (scr*600.0);	
-}
-
-void checkCollisions(float scr){
-	for(int i = 0; i < ga.totalEnemyCars; i++){
-		if (ga.enemyCar[i].pos[1]-75.0 < ga.mainCar.pos[1] && 
-				ga.enemyCar[i].pos[1]+75.0 > ga.mainCar.pos[1] &&
-				ga.enemyCar[i].pos[0]-30.0 < ga.mainCar.pos[0] &&
-				ga.enemyCar[i].pos[0]+30.0 > ga.mainCar.pos[0]
-		   ){
-			if(!ga.mainCar.invinc){
-				ga.heart[ga.numHearts].pos[0]= -50.0;
-				ga.numHearts-=1;
-				ga.mainCar.invinc = true;
-			}
-			carInvincibility();
-			if (ga.numHearts < 0) {
-				cout << "You have crashed. Game has reset" << endl;
-				resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
-						ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], ga.enemyCar[1].pos[1],
-						ga.enemyCar[1].pos[0], fxres, fyres);	
-			}
-		}
-	}
-
-}
-
-void carInvincibility(){
-	static double durationTimer = 2.0;
-	if (ga.mainCar.invinc) 
-		if (ga.timer == 0.0)
-			if (ga.firstInvinc) 
-				clock_gettime(CLOCK_REALTIME, &ftimeStart);
-	ga.firstInvinc = false;
-
-	clock_gettime(CLOCK_REALTIME, &ftimeEnd);	
-	ga.timer = timeDiff(&ftimeStart, &ftimeEnd);
-	cout << ga.timer << endl;
-
-	if (ga.timer > durationTimer) {
-		ga.timer = 0.0;
-		ga.mainCar.invinc = false;
-		ga.firstInvinc=true;
-	}
-}
-
-void spawnEnemyCars(float yres){
-	if (ga.enemyCar[0].pos[1] < 0.0) {
-		ga.carSpawnPos = rand() % (X_MAX-X_MIN) + X_MIN;
-		ga.enemyCar[0].pos[0] = ga.carSpawnPos;
-		ga.enemyCar[0].pos[1] = yres+40.0;
-	}
-	if (ga.enemyCar[1].pos[1] < 0.0) {
-		ga.enemyCar[1].pos[1] = ga.enemyCar[0].pos[1]+(yres/2.0);
-		ga.carSpawnPos = rand() % (X_MAX-X_MIN) + X_MIN;
-		ga.enemyCar[1].pos[0] = ga.carSpawnPos;
-	}	
-}
-
-void wMovement(float yres){
-	ga.mainCar.pos[1] += 8;
-	if (ga.mainCar.pos[1] > yres-40.0)
-		ga.mainCar.pos[1] = yres-40.0;
-}
-
-void dMovement(){
-	ga.mainCar.pos[0] += 8;
-	if (ga.mainCar.pos[0] > 395.0)
-		ga.mainCar.pos[0] = 395.0;
-}
-
-void aMovement(){
-	ga.mainCar.pos[0] -= 8;
-	if (ga.mainCar.pos[0] < 118.0)
-		ga.mainCar.pos[0] = 118.0;
-}
-
-void sMovement(){
-	ga.mainCar.pos[1] -= 8;
-	if (ga.mainCar.pos[1] < 40.0)
-		ga.mainCar.pos[1] = 40.0;
-
-}
 
 void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
-		float &ec2X, float &ec2Y, float xres, float yres){
+		float &ec2X, float &ec2Y, float yres){
 	int randnum = rand() % 2;
 	scr = .01;
-	mcX = xres;
-	mcY = 80.0;
+	mcX = 206.0;
+	mcY = 512.0;
 	ecY = yres;
 	ec2Y = ecY+(yres/2.0);
 	if(randnum)
@@ -187,11 +33,6 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 		ec2X = 180.0;
 	else 
 		ec2X = 340.0;
-	for (int j = 0; j < 3; j++) {
-		ga.heart[j].pos[0]= (fxres*1.7) + (j*30);
-		ga.heart[j].pos[1]= fyres-20.0;
-	}
-	ga.numHearts = 2;
 }
 
 unsigned char *buildAlphaData(Image *img)
@@ -286,93 +127,26 @@ void initImages() {
 	unsigned char *silhouetteData3 = buildAlphaData(&miniVanImage);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData3);
-	free(silhouetteData3);
-
-	//Init Heart
-	w = heartImage.width;
-	h = heartImage.height;
-
-	glBindTexture(GL_TEXTURE_2D, heartTexture);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-			GL_RGB, GL_UNSIGNED_BYTE, heartImage.data);
-	//silhouette
-	glBindTexture(GL_TEXTURE_2D, silhouetteHeartTexture);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	unsigned char *silhouetteData4 = buildAlphaData(&heartImage);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData4);
-	free(silhouetteData4);	
-
-	/*
-	//Init transparent Image
-	w = transparentImage.width;
-	h = transparentImage.height;
-
-	glBindTexture(GL_TEXTURE_2D, transparentTexture);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-			GL_RGB, GL_UNSIGNED_BYTE, transparentImage.data);
-	//silhouette
-	glBindTexture(GL_TEXTURE_2D, silhouetteTransparentTexture);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	unsigned char *silhouetteData5 = buildAlphaData(&transparentImage);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData5);
-	free(silhouetteData5);
-	*/
-
+	free(silhouetteData3);	
 }
 
-void renderMainCar() {
-	//if (!ga.mainCar.invinc) {
-		int s = ga.carSize;
-		float x = ga.mainCar.pos[0];
-		float y = ga.mainCar.pos[1];
-		glPushMatrix();
-		glTranslatef(x, y, 0);
-		glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.0f);
-		glColor4ub(255,255,255,255);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
-		glEnd();
-		glPopMatrix();
-	//}
-	/*
-	if (ga.mainCar.invinc) {
-		int s = ga.carSize;
-		float x = ga.mainCar.pos[0];
-		float y = ga.mainCar.pos[1];
-		glPushMatrix();
-		glTranslatef(x, y, 0);
-		glBindTexture(GL_TEXTURE_2D, silhouetteTransparentTexture);
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.0f);
-		glColor4ub(255,255,255,255);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
-		glEnd();
-		glPopMatrix();
-	}
-	*/
+void renderMainCar(int s, float x, float y) {
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+	glEnd();
+	glPopMatrix();
 }
 
-void renderAudi() {
-	int s = ga.carSize;
-	float x = ga.enemyCar[0].pos[0];
-	float y = ga.enemyCar[0].pos[1];
+void renderAudi(int s, float x, float y) {
 	glPushMatrix();
 	glTranslatef(x, y, 0);
 	glBindTexture(GL_TEXTURE_2D, silhouetteAudiTexture);
@@ -388,10 +162,7 @@ void renderAudi() {
 	glPopMatrix();
 }
 
-void renderMiniVan() {
-	int s = ga.carSize;
-	float x = ga.enemyCar[1].pos[0];
-	float y = ga.enemyCar[1].pos[1];
+void renderMiniVan(int s, float x, float y) {
 	glPushMatrix();
 	glTranslatef(x, y, 0);
 	glBindTexture(GL_TEXTURE_2D, silhouetteMiniVanTexture);
@@ -407,28 +178,6 @@ void renderMiniVan() {
 	glPopMatrix();
 }
 
-void renderHeart() {
-	for (int i = 0; i < 3; i++) {
-		int s = ga.heart[i].size;
-		float x = ga.heart[i].pos[0];
-		float y = ga.heart[i].pos[1];
-		glPushMatrix();
-		glTranslatef(x, y, 0);
-		glBindTexture(GL_TEXTURE_2D, silhouetteHeartTexture);
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.0f);
-		glColor4ub(255,255,255,255);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
-		glEnd();
-		glPopMatrix();
-	}
-}
-
-
 void totalTimeFunction()
 {
 	static double t = 0.0;
@@ -439,7 +188,7 @@ void totalTimeFunction()
 	r.bot = 470;
 	r.left = 215;
 	r.center = 0;
-	for (int i = 0; i < 10000; i++){
+	for(int i = 0; i < 10000; i++){
 		total += i/2;
 	}
 	clock_gettime(CLOCK_REALTIME, &end);
