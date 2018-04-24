@@ -44,6 +44,7 @@ void sMovement();
 void renderMainCar();
 void renderAudi();
 void renderMiniVan();
+void renderHeart();
 void generateTextures();
 void initImages();
 void totalTimeFunction();

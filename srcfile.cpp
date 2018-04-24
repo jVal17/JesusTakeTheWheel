@@ -367,7 +367,7 @@ void physics()
 
 void render()
 {
-	glClearColor(0.9294, 0.788, 0.686, 1.0);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	if (inMainMenu) {
 		mainMenu(g.xres, g.yres);
@@ -385,7 +385,7 @@ void render()
 
 		//---------------------------------------------------------------------------- 
 		//car texture
-
+		renderHeart();
 		renderMainCar();
 		//
 		renderAudi();
