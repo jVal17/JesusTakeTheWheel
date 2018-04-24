@@ -106,6 +106,7 @@ void moveEnemyCars(float scr){
 
 void checkCollisions(float scr){
 	//if (!ga.blinkReset)
+	ga.tmpMainPos2[0] = ga.mainCar.pos[0];
 	checkInvincOutside();	
 	//if (ga.isBlinking)
 	//	cout << "Car is in invincibility mode" << endl;
@@ -122,7 +123,7 @@ void checkCollisions(float scr){
 				ga.numHearts-=1;
 				ga.mainCar.invinc = true;
 			}
-		//	ga.blinkReset=false;
+			//	ga.blinkReset=false;
 			carInvincibility();
 			//blinkCar();
 			//blinkTimer();
@@ -161,17 +162,17 @@ void checkInvincOutside(){
 		ga.invincTimer = timeDiff(&ftimeStart, &ftimeEnd);
 		//float t1=0.33;
 		if(ga.invincTimer > ga.t1){
-		//	ga.isBlinking = true;
-			ga.tmpMainPos2[0] = ga.mainCar.pos[0];
+			//	ga.isBlinking = true;
+			//ga.tmpMainPos2[0] = ga.mainCar.pos[0];
 			//cout << ga.tmpMainPos[0] << endl;
 			ga.t1 += 0.08;
 			blink();
-		/*	if (!ga.blink)
+			/*	if (!ga.blink)
 				ga.mainCar.pos[0] = -100.0;
-			else 
+				else 
 				ga.mainCar.pos[0] = 
-		*/		
-			
+			 */		
+
 		}
 		//cout << ga.invincTimer << endl;
 	}
@@ -283,7 +284,7 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 		ga.heart[j].pos[1]= fyres-20.0;
 	}
 	ga.numHearts = 2;
-//	ga.blinkReset=true;
+	//	ga.blinkReset=true;
 }
 
 unsigned char *buildAlphaData(Image *img)
@@ -422,47 +423,47 @@ void initImages() {
 
 void renderMainCar() {
 	if (!ga.mainCar.invinc) {
-	int s = ga.carSize;
-	float x = ga.mainCar.pos[0];
-	float y = ga.mainCar.pos[1];
-	glPushMatrix();
-	glTranslatef(x, y, 0);
-	glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.0f);
-	glColor4ub(255,255,255,255);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
-	glEnd();
-	glPopMatrix();
+		int s = ga.carSize;
+		float x = ga.mainCar.pos[0];
+		float y = ga.mainCar.pos[1];
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+		glEnd();
+		glPopMatrix();
 	}
-	
-	   if (ga.mainCar.invinc) {
-	   int s = ga.carSize;
-	   float x;
-	   if(ga.blink)
-	   	 x = ga.tmpMainPos[0];
-	   else
-		 x = ga.tmpMainPos2[0];
-	   float y = ga.mainCar.pos[1];
-	   glPushMatrix();
-	   glTranslatef(x, y, 0);
-	   glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
-	   glEnable(GL_ALPHA_TEST);
-	   glAlphaFunc(GL_GREATER, 0.0f);
-	   glColor4ub(255,255,255,255);
-	   glBegin(GL_QUADS);
-	   glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
-	   glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
-	   glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
-	   glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
-	   glEnd();
-	   glPopMatrix();
-	   }
-	 
+
+	if (ga.mainCar.invinc) {
+		int s = ga.carSize;
+		float x;
+		if(ga.blink)
+			x = ga.tmpMainPos[0];
+		else
+			x = ga.tmpMainPos2[0];
+		float y = ga.mainCar.pos[1];
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+		glEnd();
+		glPopMatrix();
+	}
+
 }
 
 void renderAudi() {
