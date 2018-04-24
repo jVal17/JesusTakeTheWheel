@@ -15,11 +15,20 @@
 #include <GL/glx.h>
 #include "fonts.h"
 #include "img.h"
+#include "time.h"
 #include "iostream"
 using namespace std;
 
 #define X_MIN 125
 #define X_MAX 390 
+
+//-----------------------------------------------------------------------------
+//Setup of timers
+//const double OOBILLION = 1.0 / 1e9;
+extern struct timespec timeStart, timeCurrent;
+extern double timeDiff(struct timespec *start, struct timespec *end);
+extern void timeCopy(struct timespec *dest, struct timespec *source);
+//-----------------------------------------------------------------------------
 
 typedef float Flt;
 typedef float Vec[3];
@@ -36,6 +45,7 @@ void drawBox(float x, float y, int s);
 void moveBox(float x, float y); 
 void moveEnemyCars(float scr);
 void checkCollisions(float scr);
+void carInvincibility();
 void spawnEnemyCars(float yres);
 void wMovement(float yres);
 void dMovement();

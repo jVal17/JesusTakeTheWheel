@@ -4,20 +4,24 @@
 #include "guillermoR.h"
 
 float fxres, fyres;
+static struct timespec ftimeStart, ftimeEnd;
 
 Image mainCarImage = "./Sprites/Car.png";
 Image audiImage = "./Sprites/Audi.png";
 Image miniVanImage = "./Sprites/Mini_van.png";
 Image heartImage = "./Sprites/heart.png";
+Image transparentImage = "./Sprites/transparent.png";
 
 GLuint mainCarTexture;
 GLuint audiTexture;
 GLuint miniVanTexture;
+GLuint heartTexture;
+GLuint transparentTexture;
 GLuint silhouetteMainCarTexture;
 GLuint silhouetteAudiTexture;
 GLuint silhouetteMiniVanTexture;
-GLuint heartTexture;
 GLuint silhouetteHeartTexture;
+GLuint silhouetteTransparentTexture;
 
 class Car {
 	public:
@@ -53,8 +57,11 @@ class Game {
 		int carSize;
 		int totalEnemyCars;
 		int carSpawnPos;
-	public:
+		int firstInvinc;
+		float timer;
+
 		Game() {
+
 			for(int j = 0; j < 3; j++){
 				heart[j].pos[0]= (fxres*1.7) + (j*30);
 				heart[j].pos[1]= fyres-20.0;
@@ -70,6 +77,8 @@ class Game {
 			carSize = 50;
 			totalEnemyCars = 2;
 			numHearts = 2;
+			firstInvinc = true;
+			timer = 0.0;
 		}
 
 } ga;
@@ -87,9 +96,12 @@ void checkCollisions(float scr){
 				ga.enemyCar[i].pos[0]-30.0 < ga.mainCar.pos[0] &&
 				ga.enemyCar[i].pos[0]+30.0 > ga.mainCar.pos[0]
 		   ){
-			ga.heart[ga.numHearts].pos[0]= -50.0;
-			ga.numHearts-=1;
-			ga.mainCar.invinc = true;
+			if(!ga.mainCar.invinc){
+				ga.heart[ga.numHearts].pos[0]= -50.0;
+				ga.numHearts-=1;
+				ga.mainCar.invinc = true;
+			}
+			carInvincibility();
 			if (ga.numHearts < 0) {
 				cout << "You have crashed. Game has reset" << endl;
 				resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
@@ -99,6 +111,25 @@ void checkCollisions(float scr){
 		}
 	}
 
+}
+
+void carInvincibility(){
+	static double durationTimer = 2.0;
+	if (ga.mainCar.invinc) 
+		if (ga.timer == 0.0)
+			if (ga.firstInvinc) 
+				clock_gettime(CLOCK_REALTIME, &ftimeStart);
+	ga.firstInvinc = false;
+
+	clock_gettime(CLOCK_REALTIME, &ftimeEnd);	
+	ga.timer = timeDiff(&ftimeStart, &ftimeEnd);
+	cout << ga.timer << endl;
+
+	if (ga.timer > durationTimer) {
+		ga.timer = 0.0;
+		ga.mainCar.invinc = false;
+		ga.firstInvinc=true;
+	}
 }
 
 void spawnEnemyCars(float yres){
@@ -113,7 +144,6 @@ void spawnEnemyCars(float yres){
 		ga.enemyCar[1].pos[0] = ga.carSpawnPos;
 	}	
 }
-
 
 void wMovement(float yres){
 	ga.mainCar.pos[1] += 8;
@@ -276,25 +306,67 @@ void initImages() {
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData4);
 	free(silhouetteData4);	
 
+	/*
+	//Init transparent Image
+	w = transparentImage.width;
+	h = transparentImage.height;
+
+	glBindTexture(GL_TEXTURE_2D, transparentTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+			GL_RGB, GL_UNSIGNED_BYTE, transparentImage.data);
+	//silhouette
+	glBindTexture(GL_TEXTURE_2D, silhouetteTransparentTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	unsigned char *silhouetteData5 = buildAlphaData(&transparentImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData5);
+	free(silhouetteData5);
+	*/
+
 }
 
 void renderMainCar() {
-	int s = ga.carSize;
-	float x = ga.mainCar.pos[0];
-	float y = ga.mainCar.pos[1];
-	glPushMatrix();
-	glTranslatef(x, y, 0);
-	glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.0f);
-	glColor4ub(255,255,255,255);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
-	glEnd();
-	glPopMatrix();
+	//if (!ga.mainCar.invinc) {
+		int s = ga.carSize;
+		float x = ga.mainCar.pos[0];
+		float y = ga.mainCar.pos[1];
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+		glEnd();
+		glPopMatrix();
+	//}
+	/*
+	if (ga.mainCar.invinc) {
+		int s = ga.carSize;
+		float x = ga.mainCar.pos[0];
+		float y = ga.mainCar.pos[1];
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteTransparentTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+		glEnd();
+		glPopMatrix();
+	}
+	*/
 }
 
 void renderAudi() {

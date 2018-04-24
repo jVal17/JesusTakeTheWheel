@@ -321,7 +321,7 @@ int check_keys(XEvent *e)
 				}
 			}
 		}
-		g.firstPause = true;
+		//g.firstPause = true;
 		//pauseTimer(inPauseMenu);
 
 	}
