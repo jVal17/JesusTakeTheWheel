@@ -213,14 +213,15 @@ void init_opengl(void)
 	g.tex.backImage = &img[0];
 	//create opengl texture elements
 	glGenTextures(1, &backTexture);
+	//if(inGame)
 	generateTextures(); 
 
 
 	//glGenTextures(1, &g.carTexture);
 	//glGenTextures(1, &g.silhouetteTexture);
 	//-----------------------------------------------------------------------------------
-	int w =  g.tex.backImage->width; //grabs a set number of pixels and scales them---------------------------------
-	int h =  g.tex.backImage->height; //grabs a set number of pixels and scales them-----------------------------------
+	int w =  g.tex.backImage->width; //grabs a set number of pixels and scales them-----------------
+	int h =  g.tex.backImage->height; //grabs a set number of pixels and scales them----------------------
 	glBindTexture(GL_TEXTURE_2D, backTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -370,6 +371,7 @@ void render()
 	glClearColor(0.9294, 0.788, 0.686, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	if (inMainMenu) {
+		renderMainMenu();
 		mainMenu(g.xres, g.yres);
 	} else if (inPauseMenu) {
 		pauseMenu(g.xres, g.yres);
@@ -394,7 +396,7 @@ void render()
 		//screenPrint();	
 		renderText();
 		//printText();
-		function1();
+		//function1();
 		//function2();
 		//drawDatBox1();
 		//drawDatBox2();

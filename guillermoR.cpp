@@ -10,9 +10,11 @@ Image mainCarImage = "./Sprites/Car.png";
 Image audiImage = "./Sprites/Audi.png";
 Image miniVanImage = "./Sprites/Mini_van.png";
 Image heartImage = "./Sprites/heart.png";
+Image mainMenuImage = "./Sprites/mainMenu.png";
 //Image transparentImage = "./Sprites/transparent.png";
 
 GLuint mainCarTexture;
+GLuint mainMenuTexture;
 GLuint audiTexture;
 GLuint miniVanTexture;
 GLuint heartTexture;
@@ -21,6 +23,7 @@ GLuint silhouetteMainCarTexture;
 GLuint silhouetteAudiTexture;
 GLuint silhouetteMiniVanTexture;
 GLuint silhouetteHeartTexture;
+GLuint silhouetteMainMenuTexture;
 //GLuint silhouetteTransparentTexture;
 
 class Car {
@@ -324,6 +327,8 @@ void generateTextures(){
 	glGenTextures(1, &silhouetteMainCarTexture);
 	glGenTextures(1, &silhouetteAudiTexture);
 	glGenTextures(1, &silhouetteMiniVanTexture);
+	glGenTextures(1, &silhouetteHeartTexture);
+	glGenTextures(1, &silhouetteMainMenuTexture);
 }
 
 void initImages() {
@@ -399,25 +404,24 @@ void initImages() {
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData4);
 	free(silhouetteData4);	
 
-	/*
 	//Init transparent Image
-	w = transparentImage.width;
-	h = transparentImage.height;
+	w = mainMenuImage.width;
+	h = mainMenuImage.height;
 
-	glBindTexture(GL_TEXTURE_2D, transparentTexture);
+	glBindTexture(GL_TEXTURE_2D, mainMenuTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-	GL_RGB, GL_UNSIGNED_BYTE, transparentImage.data);
+	GL_RGB, GL_UNSIGNED_BYTE, mainMenuImage.data);
 	//silhouette
-	glBindTexture(GL_TEXTURE_2D, silhouetteTransparentTexture);
+	glBindTexture(GL_TEXTURE_2D, silhouetteMainMenuTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	unsigned char *silhouetteData5 = buildAlphaData(&transparentImage);
+	unsigned char *silhouetteData6 = buildAlphaData(&mainMenuImage);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-	GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData5);
-	free(silhouetteData5);
-	 */
+	GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData6);
+	free(silhouetteData6);
+	
 
 }
 
@@ -523,6 +527,28 @@ void renderHeart() {
 		glEnd();
 		glPopMatrix();
 	}
+}
+
+void renderMainMenu() {
+		float sw = fxres;
+		float sh = fyres/2.0; 
+		//float x = 512.0;
+		//float y = 1024.0;
+		//float ws = (float)1/mainMenuImage.columns;
+		//float hs = (float)1/mainMenuImage.rows;
+		glPushMatrix();
+		glTranslatef(256.0, 512, 0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteMainMenuTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-sw,-sh);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-sw, sh);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( sw, sh);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( sw,-sh);
+		glEnd();
+		glPopMatrix();
 }
 
 
