@@ -11,21 +11,18 @@ Image audiImage = "./Sprites/Audi.png";
 Image miniVanImage = "./Sprites/Mini_van.png";
 Image heartImage = "./Sprites/heart.png";
 Image mainMenuImage = "./Sprites/mainMenu.png";
-//Image transparentImage = "./Sprites/transparent.png";
 
 GLuint mainCarTexture;
 GLuint mainMenuTexture;
 GLuint audiTexture;
 GLuint miniVanTexture;
 GLuint heartTexture;
-//GLuint transparentTexture;
 GLuint silhouetteMainCarTexture;
 GLuint silhouetteAudiTexture;
 GLuint silhouetteMiniVanTexture;
 GLuint silhouetteHeartTexture;
 GLuint silhouetteMainMenuTexture;
-//GLuint silhouetteTransparentTexture;
-void makeCar();
+
 class Car {
 	public:
 		Vec pos;
@@ -93,7 +90,6 @@ class Game {
 			blinkTimer = 0.0;
 			blinkReset = true;
 			blink = false;
-			//isBlinking = false;
 			t1=.08;
 			invincDurationTimer=1.5;
 			tmpMainPos[0]=-500.0;
@@ -101,21 +97,15 @@ class Game {
 
 } ga;
 
-//Function is found in the bottom of render() in our main file, "srcfile.cpp".
 void moveEnemyCars(float scr){
 	ga.enemyCar[0].pos[1] -= (scr*600.0);
 	ga.enemyCar[1].pos[1] -= (scr*600.0);	
 }
 
 int checkCollisions(float scr){
-	//if (!ga.blinkReset)
 	int doesHit = 0;
 	ga.tmpMainPos2[0] = ga.mainCar.pos[0];
 	checkInvincOutside();	
-	//if (ga.isBlinking)
-	//	cout << "Car is in invincibility mode" << endl;
-	//if (!ga.mainCar.invinc)
-	//	cout << "Not in invincibility mode" << endl;
 	for(int i = 0; i < ga.totalEnemyCars; i++){
 		if (ga.enemyCar[i].pos[1]-75.0 < ga.mainCar.pos[1] && 
 				ga.enemyCar[i].pos[1]+75.0 > ga.mainCar.pos[1] &&
@@ -128,10 +118,7 @@ int checkCollisions(float scr){
 				ga.mainCar.invinc = true;
 				doesHit = 1;
 			}
-			//	ga.blinkReset=false;
 			carInvincibility();
-			//blinkCar();
-			//blinkTimer();
 			if (ga.numHearts < 0) {
 				cout << "You have crashed. Game has reset" << endl;
 				resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
@@ -155,7 +142,6 @@ void carInvincibility(){
 	ga.invincTimer = timeDiff(&ftimeStart, &ftimeEnd);
 
 	if (ga.invincTimer > ga.invincDurationTimer && ga.mainCar.invinc) {
-		// cout << "invincibility mode has ended" << endl;
 		ga.invincTimer = 0.0;
 		ga.mainCar.invinc = false;
 		ga.firstInvinc=true;
@@ -166,31 +152,19 @@ void checkInvincOutside(){
 	if (ga.mainCar.invinc && ga.invincTimer > 0.0){
 		clock_gettime(CLOCK_REALTIME, &ftimeEnd);	
 		ga.invincTimer = timeDiff(&ftimeStart, &ftimeEnd);
-		//float t1=0.33;
 		if(ga.invincTimer > ga.t1){
-			//	ga.isBlinking = true;
-			//ga.tmpMainPos2[0] = ga.mainCar.pos[0];
-			//cout << ga.tmpMainPos[0] << endl;
 			ga.t1 += 0.08;
 			blink();
-			/*	if (!ga.blink)
-				ga.mainCar.pos[0] = -100.0;
-				else 
-				ga.mainCar.pos[0] = 
-			 */		
-
 		}
-		//cout << ga.invincTimer << endl;
 	}
 	if (ga.invincTimer > ga.invincDurationTimer && ga.mainCar.invinc) {
-		//cout << "Stopped Blinking" << endl;
 		ga.invincTimer = 0.0;
 		ga.mainCar.invinc = false;
 		ga.firstInvinc=true;
 		ga.t1=0.08;
-		//ga.isBlinking = false;
 	}
 }
+
 void blink(){
 	if (!ga.blink){
 		ga.blink = true;
@@ -198,37 +172,6 @@ void blink(){
 	else
 		ga.blink = false;
 }
-/*
-   void blinkCar(){
-   if (ga.firstBlink) 
-   clock_gettime(CLOCK_REALTIME, &fblinkStart);
-   ga.firstBlink = false;
-   clock_gettime(CLOCK_REALTIME, &fblinkEnd);	
-   ga.blinkTimer = timeDiff(&fblinkStart, &fblinkEnd);
-   cout << ga.blinkTimer << endl;
-   if (ga.blinkTimer < ga.invincDurationTimer && ga.mainCar.invinc) {
-   cout << "car blinking" << endl;
-   }
-   if (ga.blinkTimer > ga.invincDurationTimer && ga.mainCar.invinc) {
-   ga.blinkTimer = 0.0;
-//ga.mainCar.invinc = false;
-ga.firstBlink=true;
-}
-}
- */
-/*
-   void invincibilityTimer(){
-   clock_gettime(CLOCK_REALTIME, &ftimeEnd);	
-   ga.timer = timeDiff(&ftimeStart, &ftimeEnd);
-   cout << ga.timer << endl;
-   if (ga.timer > ga.invincDurationTimer && ga.mainCar.invinc) {
-   cout << "invincibility mode has ended" << endl;
-   ga.timer = 0.0;
-   ga.mainCar.invinc = false;
-   ga.firstInvinc=true;
-   }
-   }
- */
 
 bool spawnEnemyCars(float yres){
 	if (ga.enemyCar[0].pos[1] < 0.0) {
@@ -246,29 +189,31 @@ bool spawnEnemyCars(float yres){
 	return false;	
 }
 
-void wMovement(float yres){
+void wMovement(){
 	ga.mainCar.pos[1] += 8;
-	if (ga.mainCar.pos[1] > yres-40.0)
-		ga.mainCar.pos[1] = yres-40.0;
 }
 
 void dMovement(){
 	ga.mainCar.pos[0] += 8;
-	if (ga.mainCar.pos[0] > 395.0)
-		ga.mainCar.pos[0] = 395.0;
 }
 
 void aMovement(){
 	ga.mainCar.pos[0] -= 8;
-	if (ga.mainCar.pos[0] < 118.0)
-		ga.mainCar.pos[0] = 118.0;
 }
 
 void sMovement(){
 	ga.mainCar.pos[1] -= 8;
+}
+
+void fixCarBoundaries() {
+	if (ga.mainCar.pos[1] > fyres-40.0)
+		ga.mainCar.pos[1] = fyres-40.0;
+	if (ga.mainCar.pos[0] > 395.0)
+		ga.mainCar.pos[0] = 395.0;
+	if (ga.mainCar.pos[0] < 118.0)
+		ga.mainCar.pos[0] = 118.0;
 	if (ga.mainCar.pos[1] < 40.0)
 		ga.mainCar.pos[1] = 40.0;
-
 }
 
 void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
@@ -293,12 +238,10 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 		ga.heart[j].pos[1]= fyres-20.0;
 	}
 	ga.numHearts = 2;
-	//	ga.blinkReset=true;
 }
 
 unsigned char *buildAlphaData(Image *img)
 {
-	//add 4th component to RGB stream...
 	int i;
 	unsigned char *newdata, *ptr;
 	unsigned char *data = (unsigned char *)img->data;
@@ -319,7 +262,6 @@ unsigned char *buildAlphaData(Image *img)
 		*(ptr+3) = 1;
 		if (a==t0 && b==t1 && c==t2)
 			*(ptr+3) = 0;
-		//-----------------------------------------------
 		ptr += 4;
 		data += 3;
 	}
@@ -432,15 +374,11 @@ void initImages() {
 }
 
 
-void makeCar() {
-	
-}
 float angle = 0;
 void renderMainCar(bool l, bool r) {
 	float x = ga.mainCar.pos[0];
 	float y = ga.mainCar.pos[1];
 	if (!ga.mainCar.invinc) {
-//		int s = ga.carSize;
 		glPushMatrix();
 		glTranslatef(x, y, 0);
 		if(l) {
@@ -473,6 +411,7 @@ void renderMainCar(bool l, bool r) {
 		}else{
 			x=ga.mainCar.pos[0]-=10;
 		}
+		fixCarBoundaries();
 		printf("%f\n",x);
 		glTranslatef(x, y, 0);
 		glRotatef( angle+=15.0, 0.0, 0.0, 1.0);
@@ -552,10 +491,6 @@ void renderHeart() {
 void renderMainMenu() {
 		float sw = fxres;
 		float sh = fyres/2.0; 
-		//float x = 512.0;
-		//float y = 1024.0;
-		//float ws = (float)1/mainMenuImage.columns;
-		//float hs = (float)1/mainMenuImage.rows;
 		glPushMatrix();
 		glTranslatef(256.0, 512, 0);
 		glBindTexture(GL_TEXTURE_2D, silhouetteMainMenuTexture);

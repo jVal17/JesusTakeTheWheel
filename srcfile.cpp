@@ -182,7 +182,7 @@ void render(void);
 int main()
 {
 	init_opengl();
-	makeCar();
+	//makeCar();
 	int done=0;
 	while (!done) {
 		while (x11.getXPending()) {
@@ -396,7 +396,7 @@ void physics()
 		}
 		//moves main car using w,a,s,d keys
 		if (g.forward) {
-			wMovement(g.fyres);
+			wMovement();
 		}
 		if (g.right) {
 			dMovement();
@@ -407,6 +407,7 @@ void physics()
 		if (g.backwards) {
 			sMovement();
 		}
+		fixCarBoundaries();
 	}
 }
 
