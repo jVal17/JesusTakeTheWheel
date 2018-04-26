@@ -59,17 +59,22 @@ class Global {
 		GLuint silhouetteTexture;
 		Texture tex;
 		float scrSpd;
+		bool forward, backwards, left, right;
 		char keys[65536];
 
 		Global() {
 			xres=256, yres=1024, fyres = yres, fxres = xres;
 			getfxres(fxres);
 			getfyres(fyres);
+			forward = 
+			backwards = 
+			left = 
+			right = 
 			pause=false;
 			firstPause = true;
 			scrSpd = .01;
 			level = 0;
-			memset(keys, 0, 10000);
+			memset(keys, 0, sizeof(keys));
 		}
 } g;
 
@@ -177,6 +182,7 @@ void render(void);
 int main()
 {
 	init_opengl();
+	makeCar();
 	int done=0;
 	while (!done) {
 		while (x11.getXPending()) {
@@ -281,7 +287,18 @@ int check_keys(XEvent *e)
 				g.pause = false;
 			else
 				g.pause = true;
-
+		}
+		if (key == XK_w) {
+			g.forward = true;
+		}
+		if (key == XK_a) {
+			g.left = true;
+		}
+		if (key == XK_s) {
+			g.backwards = true;
+		}
+		if (key == XK_d) {
+			g.right = true;
 		}
 		if (inMainMenu) {
 			if (key == XK_Return) {
@@ -326,14 +343,26 @@ int check_keys(XEvent *e)
 		//pauseTimer(inPauseMenu);
 
 	}
+
 	if (e->type == KeyRelease) {
-		g.keys[key]=0;
+		if (key == XK_w) {
+			g.forward = false;
+		}
+		if (key == XK_a) {
+			g.left = false;
+		}
+		if (key == XK_s) {
+			g.backwards = false;
+		}
+		if (key == XK_d) {
+			g.right = false;
+		}
 		return 0;
 	}
-	g.keys[key]=1;
 	return 0;
 }
-
+int Score = 0;
+float spd = .01;
 void physics()
 {
 	if(inGame) {
@@ -341,25 +370,41 @@ void physics()
 			main();
 		}
 		//move the background
+
+		
 		g.tex.yc[0] -= g.scrSpd;
 		g.tex.yc[1] -= g.scrSpd;
-
-		g.level = checkpoint(g.scrSpd);
+		
+		g.level = checkpoint();
 		
 		moveEnemyCars(g.scrSpd);
-		checkCollisions(g.scrSpd);	
-		spawnEnemyCars(g.fyres);
+		int cc = checkCollisions(g.scrSpd);
+		if(cc){
+			if(cc==1){
+				g.scrSpd /= 4;
+			}
+			if(cc==2){
+				Score = 0;
+				g.scrSpd = spd;
+			}
+		}	
+		if(spawnEnemyCars(g.fyres)){
+			Score += 10;
+			g.scrSpd = g.scrSpd + Score*.000001;
+			g.scrSpd = g.scrSpd + Score*.000001;
+			cout << "Score: " << Score << endl;
+		}
 		//moves main car using w,a,s,d keys
-		if (g.keys[XK_w]) {
+		if (g.forward) {
 			wMovement(g.fyres);
 		}
-		if (g.keys[XK_d]) {
+		if (g.right) {
 			dMovement();
 		}
-		if (g.keys[XK_a]) {
+		if (g.left) {
 			aMovement();
 		}
-		if (g.keys[XK_s]) {
+		if (g.backwards) {
 			sMovement();
 		}
 	}
@@ -388,7 +433,7 @@ void render()
 		//---------------------------------------------------------------------------- 
 		//car texture
 		renderHeart();
-		renderMainCar();
+		renderMainCar(g.left, g.right);
 		//
 		renderAudi();
 		renderMiniVan();

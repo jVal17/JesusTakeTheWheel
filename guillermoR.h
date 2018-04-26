@@ -44,17 +44,18 @@ void getfxres(float x);
 void drawBox(float x, float y, int s); 
 void moveBox(float x, float y); 
 void moveEnemyCars(float scr);
-void checkCollisions(float scr);
+int checkCollisions(float scr);
 void carInvincibility();
 void blink();
 void checkInvincOutside();
-void spawnEnemyCars(float yres);
+bool spawnEnemyCars(float yres);
 void wMovement(float yres);
 void dMovement();
 void aMovement();
 void sMovement();
-void renderMainCar();
+void renderMainCar(bool, bool);
 void renderAudi();
+void makeCar();
 void renderMiniVan();
 void renderHeart();
 void renderMainMenu();
@@ -63,5 +64,5 @@ void initImages();
 void totalTimeFunction();
 //void increaseCarSpeedY(float enemy, float scr);
 void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
-		float &ec2X, float &ec2Y, float xres, float yres);
+float &ec2X, float &ec2Y, float xres, float yres);
 #endif

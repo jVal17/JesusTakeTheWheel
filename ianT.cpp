@@ -10,9 +10,6 @@
 
 void renderText()
 {
-	timespec startTime, endTime;
-	static double t = 0.0;
-	clock_gettime(CLOCK_REALTIME, &startTime);
 	Rect r;
 	r.bot = 984;
 	r.left = 50;
@@ -28,12 +25,6 @@ void renderText()
 	r.center = 0;
 	ggprint8b(&r, 16, 0x00ff0000, "Ian Thomas");
 	glEnd();
-	clock_gettime(CLOCK_REALTIME, &endTime);
-	t += timeDiff(&startTime, &endTime);
-	r.bot = 490;
-	r.left = 420;
-	r.center = 0;
-	ggprint8b(&r, 16, 0x00ff0000, "Timer 1: %.5f", t);
 }
 
 void mainMenu(const int xres, const int yres)
