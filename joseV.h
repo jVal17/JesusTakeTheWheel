@@ -14,6 +14,7 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "fonts.h"
+#include "guillermoR.h"
 using namespace std;
 
 //-----------------------------------------------------------------------------
@@ -25,8 +26,10 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 extern float scrSpd;
 extern float xres;
 extern float yres;
-void drawPlow();
 
+void renderPlow();
+void generatePowerUpTextures();
+void initPowerUpImages();
 void pauseGame(float y[]); 
 int clock_gettime(clockid_t clk_id, struct timespect *tp);
 void example();

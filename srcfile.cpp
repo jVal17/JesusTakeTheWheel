@@ -18,6 +18,7 @@
 #include <GL/glx.h>
 #include </usr/include/AL/alut.h>
 #include "fonts.h"
+//#include "img.h"
 #include "guillermoR.h"
 #include "ianT.h"
 #include "jorgeZ.h"
@@ -221,6 +222,7 @@ void init_opengl(void)
 	glGenTextures(1, &backTexture);
 	//if(inGame)
 	generateTextures(); 
+	generatePowerUpTextures();
 
 
 	//glGenTextures(1, &g.carTexture);
@@ -243,6 +245,7 @@ void init_opengl(void)
 	g.tex.yc[1] = 1.0;
 	//----------------------------------------------------------
 	initImages();
+	initPowerUpImages();
 }
 
 void check_mouse(XEvent *e)
@@ -430,7 +433,8 @@ void render()
 		glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres - 100, g.yres);
 		glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
 		glEnd();  
-
+	
+		renderPlow();
 		//---------------------------------------------------------------------------- 
 		//car texture
 		renderHeart();

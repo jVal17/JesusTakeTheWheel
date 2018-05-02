@@ -14,14 +14,15 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "fonts.h"
-#include "img.h"
 #include "time.h"
 #include "iostream"
+#include "img.h"
 using namespace std;
 
 #define X_MIN 125
 #define X_MAX 390 
 
+//extern Image image;
 //-----------------------------------------------------------------------------
 //Setup of timers
 //const double OOBILLION = 1.0 / 1e9;
@@ -37,6 +38,7 @@ typedef float Vec[3];
 extern struct timespec timeStart, timeCurrent;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
+unsigned char *buildAlphaData(Image *img);
 
 
 void getfyres(float y);
