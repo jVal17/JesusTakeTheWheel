@@ -3,81 +3,116 @@
 //Source code
 
 #include "joseV.h"
-
-Image plowImage = "./Sprites/Piskel.png"; 
-
+Image plowImage = "./Sprites/plow.png"; 
+Image crateImage = "./Sprites/crate.png";
+GLuint crateTexture;
+GLuint silhouetteCrateTexture;
 GLuint plowTexture;
 GLuint silhouettePlowTexture;
 
-class Plow 
+class powerUp 
 {
 	public:
 		int pos[3];
 		int vel;
 		int size;
-		Plow() {
+		powerUp() {
 			size = 50;
 		};
 };
 
 class gameObjects{
 	public:
-		Plow plow;
+		powerUp plow;
+		powerUp crate;
 		int size;
 		gameObjects() {
 			plow.pos[0] = 256.0f;
 			plow.pos[1] = 512.0f;
 			plow.pos[2] = 0.0f;
+			crate.pos[0] = 256.0f;
+			crate.pos[1] = 512.0f;
+			crate.pos[2] = 0.0f;
 		}
 }go;
-
+void movePlow(float src){
+	int chance = 100 - rand()%100;
+	cout << chance << endl;
+	if(chance == 1){
+		if(go.crate.pos[1] < 0){
+			spawnPlow();	
+		}
+	}
+	go.crate.pos[1] -= (src*600.0);
+}
+/*
+void colWithPowerUP(){
+	if(go.crate.pos[0] == ga.mainCar.pos[0] && 
+		go.crate.pos[1] == ga.mainCar.pos[1]){
+		//draw plow
+		//make car invinc
+		//if car collision with enmy make enmy spin
+	}
+}
+*/
+void spawnPlow(){
+		cout << "spawned crate" <<endl;
+		go.crate.pos[0] = rand()%(X_MAX - X_MIN) + X_MIN;
+		go.crate.pos[1] = 1024;
+}
 void generatePowerUpTextures(){
 	glGenTextures(1, &plowTexture);
 	glGenTextures(1, &silhouettePlowTexture);
+	glGenTextures(1, &crateTexture);
+	glGenTextures(1, &silhouetteCrateTexture);
 }
 
 void initPowerUpImages(){
-	//Initialize main car Image
+	//initialize plow image
+	
 	int w = plowImage.width;
 	int h = plowImage.height;
-
 	glBindTexture(GL_TEXTURE_2D, plowTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-			GL_RGB, GL_UNSIGNED_BYTE, plowImage.data);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE
+		, plowImage.data);
 	//silhouette
 	glBindTexture(GL_TEXTURE_2D, silhouettePlowTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	unsigned char *silhouetteData = buildAlphaData(&plowImage);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
-	free(silhouetteData);
+	unsigned char *silhouetteData0 = buildAlphaData(&plowImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE
+		, silhouetteData0);
+	free(silhouetteData0);
+	
+	//initial crate image
+	 w = crateImage.width;
+	 h = crateImage.height;
+	glBindTexture(GL_TEXTURE_2D, crateTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE
+		, crateImage.data);
+	//silhouette
+	glBindTexture(GL_TEXTURE_2D, silhouetteCrateTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	unsigned char *silhouetteData1 = buildAlphaData(&crateImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE
+		, silhouetteData1);
+	free(silhouetteData1);
 }
 
 void renderPlow()
 {
-	/*
-	   int s = 50;
-	   glColor3f(0.0, 0.0, 0.0);
-	   glPushMatrix();
-	   glTranslatef(256, 512, 0.0);
-	   glBegin(GL_QUADS);
-	   glVertex2i( -s,  -s);
-	   glVertex2i( -s,   s);
-	   glVertex2i(  s,   s);
-	   glVertex2i(  s,  -s);
-	   glEnd();
-	   glPopMatrix();
-	 */
-	int s = go.plow.size;
+	int s = go.crate.size;
 	GLfloat color[3];
 	color[0]=color[1]=color[2]=1.0;
 	glPushMatrix();
 	glColor3f(1.0,1.0,1.0);
-	glTranslatef(go.plow.pos[0], go.plow.pos[1], 0.0f);
-	glBindTexture(GL_TEXTURE_2D, silhouettePlowTexture);
+	glTranslatef(go.crate.pos[0], go.crate.pos[1], 0.0f);
+	glBindTexture(GL_TEXTURE_2D, silhouetteCrateTexture);
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);
@@ -86,26 +121,10 @@ void renderPlow()
 	glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
 	glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
 	glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);		
-
-	/*
-	   glRotatef(0.0f,0.0f,0.0f,1.0f);
-	   glBegin(GL_TRIANGLES);
-	   glVertex2f(-12.0f, -10.0f);
-	   glVertex2f(  0.0f, 20.0f);
-	   glVertex2f(  0.0f, -6.0f);
-	   glVertex2f(  0.0f, -6.0f);
-	   glVertex2f(  0.0f, 20.0f);
-	   glVertex2f( 12.0f, -10.0f);
-	   glEnd();
-	   glColor3f(1.0f, 1.0f, 1.0f);
-	   glBegin(GL_POINTS);
-	   glVertex2f(0.0f, 0.0f);
-	 */
 	glEnd();
 	glPopMatrix();
 
 }
-
 void pauseGame(float y[]){
 	y[0]-=0.0;
 	y[1]-=0.0;

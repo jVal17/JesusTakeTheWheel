@@ -3,7 +3,6 @@
 
 #ifndef JOSE_V
 #define JOSE_V
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -15,7 +14,9 @@
 #include <GL/glx.h>
 #include "fonts.h"
 #include "guillermoR.h"
+//#include "timers.cpp"
 using namespace std;
+
 
 //-----------------------------------------------------------------------------
 //Setup timers
@@ -26,6 +27,8 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 extern float scrSpd;
 extern float xres;
 extern float yres;
+void movePlow(float src);
+void spawnPlow();
 
 void renderPlow();
 void generatePowerUpTextures();
