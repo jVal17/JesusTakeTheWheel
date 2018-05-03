@@ -160,8 +160,12 @@ int checkCollisions(float scr){
 	return doesHit;
 }
 
+void getMainCarCoords(float (&M)[2]) {
+	M[0] = ga.mainCar.pos[0];
+	M[1] = ga.mainCar.pos[1];
+}
 
-void carInvincibility(){
+void carInvincibility() {
 	if (ga.mainCar.invinc) 
 		if (ga.invincTimer == 0.0)
 			if (ga.firstInvinc) 

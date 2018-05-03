@@ -29,6 +29,7 @@ extern float xres;
 extern float yres;
 void movePlow(float src);
 void spawnPlow();
+void colWithPowerUP();
 
 void renderPlow();
 void generatePowerUpTextures();

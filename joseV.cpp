@@ -2,8 +2,9 @@
 //lab05
 //Source code
 
+
 #include "joseV.h"
-Image plowImage = "./Sprites/plow.png"; 
+Image plowImage = "./Sprites/Piskel.png"; 
 Image crateImage = "./Sprites/crate.png";
 GLuint crateTexture;
 GLuint silhouetteCrateTexture;
@@ -17,7 +18,7 @@ class powerUp
 		int vel;
 		int size;
 		powerUp() {
-			size = 50;
+			size = 26;
 		};
 };
 
@@ -27,6 +28,7 @@ class gameObjects{
 		powerUp crate;
 		int size;
 		gameObjects() {
+			crate.size = 35;
 			plow.pos[0] = 256.0f;
 			plow.pos[1] = 512.0f;
 			plow.pos[2] = 0.0f;
@@ -35,9 +37,10 @@ class gameObjects{
 			crate.pos[2] = 0.0f;
 		}
 }go;
+
 void movePlow(float src){
 	int chance = 100 - rand()%100;
-	cout << chance << endl;
+	//cout << chance << endl;
 	if(chance == 1){
 		if(go.crate.pos[1] < 0){
 			spawnPlow();	
@@ -45,21 +48,29 @@ void movePlow(float src){
 	}
 	go.crate.pos[1] -= (src*600.0);
 }
-/*
+
 void colWithPowerUP(){
-	if(go.crate.pos[0] == ga.mainCar.pos[0] && 
-		go.crate.pos[1] == ga.mainCar.pos[1]){
+	float MC[2];
+	getMainCarCoords(MC);
+	if(go.crate.pos[1]-25.0 < MC[1] && 
+	   go.crate.pos[1]+25.0 > MC[1] &&
+	   go.crate.pos[0]-20.0 < MC[0] &&
+	   go.crate.pos[0]+20.0 > MC[0]
+	){
+		cout << "Crate Contact with main Car" << endl;
+	}
 		//draw plow
 		//make car invinc
 		//if car collision with enmy make enmy spin
-	}
+	//}
 }
-*/
+
 void spawnPlow(){
 		cout << "spawned crate" <<endl;
 		go.crate.pos[0] = rand()%(X_MAX - X_MIN) + X_MIN;
 		go.crate.pos[1] = 1024;
 }
+
 void generatePowerUpTextures(){
 	glGenTextures(1, &plowTexture);
 	glGenTextures(1, &silhouettePlowTexture);
@@ -86,6 +97,7 @@ void initPowerUpImages(){
 		, silhouetteData0);
 	free(silhouetteData0);
 	
+	
 	//initial crate image
 	 w = crateImage.width;
 	 h = crateImage.height;
@@ -102,6 +114,7 @@ void initPowerUpImages(){
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE
 		, silhouetteData1);
 	free(silhouetteData1);
+	
 }
 
 void renderPlow()
@@ -147,3 +160,4 @@ void example() {
 	time += timeDiff(&start, &end);
 	ggprint8b(&r, 16, 0xFFFF00, "function-time:%lf", time);
 }
+

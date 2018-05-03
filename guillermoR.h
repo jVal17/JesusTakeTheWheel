@@ -66,6 +66,7 @@ void renderMainMenu();
 void generateTextures();
 void initImages();
 void totalTimeFunction();
+void getMainCarCoords(float (&M)[2]);
 //void increaseCarSpeedY(float enemy, float scr);
 void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 float &ec2X, float &ec2Y, float xres, float yres);

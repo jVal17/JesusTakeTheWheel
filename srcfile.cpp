@@ -379,8 +379,10 @@ void physics()
 		g.tex.yc[1] -= g.scrSpd;
 		
 		g.level = checkpoint();
-		
+	
+		movePlow(g.scrSpd);	
 		moveEnemyCars(g.scrSpd);
+		colWithPowerUP();
 		int cc = checkCollisions(g.scrSpd);
 		if(cc){
 			if(cc==1){
