@@ -380,7 +380,7 @@ void physics()
 		
 		g.level = checkpoint();
 	
-		movePlow(g.scrSpd);	
+		moveCrate(g.scrSpd);	
 		moveEnemyCars(g.scrSpd);
 		colWithPowerUP();
 		int cc = checkCollisions(g.scrSpd);
@@ -436,7 +436,8 @@ void render()
 		glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
 		glEnd();  
 	
-		renderPlow();
+		renderCrate();
+		renderPlowOnCar();
 		//---------------------------------------------------------------------------- 
 		//car texture
 		renderHeart();

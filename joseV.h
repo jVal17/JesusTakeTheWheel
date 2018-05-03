@@ -27,11 +27,12 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 extern float scrSpd;
 extern float xres;
 extern float yres;
-void movePlow(float src);
-void spawnPlow();
+void moveCrate(float src);
+void spawnCrate();
 void colWithPowerUP();
+void renderPlowOnCar();
 
-void renderPlow();
+void renderCrate();
 void generatePowerUpTextures();
 void initPowerUpImages();
 void pauseGame(float y[]); 
