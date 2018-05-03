@@ -29,13 +29,11 @@ void renderText()
 
 void mainMenu(const int xres, const int yres)
 {
-	unsigned int white = 0xffffff;
-
 	Rect m;
-	m.bot = yres - 200;
+	m.bot = yres - 650;
 	m.left = xres/2 - 55;
 	m.center = 0;
-	ggprint12(&m, 16, white, "Play Game");
+	ggprint12(&m, 16, 0xee6666, "Play Game");
 	ggprint12(&m, 16, 0x000000, "Settings **IN PROGRESS**");
 
 	int pointerX;
@@ -43,10 +41,10 @@ void mainMenu(const int xres, const int yres)
 
 	if (menuPosition == 1) {
 		pointerX = xres/2 - 73;
-		pointerY = yres - 190;
+		pointerY = yres - 640;
 	} else if (menuPosition == 2) {
 		pointerX = xres/2 - 73;
-		pointerY = yres - 207;
+		pointerY = yres - 657;
 	}
 
 	float w = 5.0;
@@ -115,3 +113,46 @@ void pauseMenu(const int xres, const int yres)
 	glEnd();
 	glPopMatrix();
 }
+
+void gameOverMenu(const int xres, const int yres)
+{
+    Rect m;
+    m.bot = yres - 600;
+    m.left = xres/2 - 30;
+    m.center = 0;
+    ggprint12(&m, 16, 0xffffff, "Start Again");
+    ggprint12(&m, 16, 0x000000, "Main Menu");
+    ggprint12(&m, 16, 0x000000, "Change Game Mode");
+    ggprint12(&m, 16, 0xffffff, "Exit Game");
+
+    int pointerX;
+    int pointerY;
+
+    if (menuPosition == 1) {
+	pointerX = xres/2 - 73;
+	pointerY = yres - 590;
+    } else if (menuPosition == 2) {
+	pointerX = xres/2 - 73;
+	pointerY = yres - 607;
+    } else if (menuPosition == 3) {
+	pointerX = xres/2 - 73;
+	pointerY = yres - 624;
+    } else if (menuPosition == 4) {
+	pointerX = xres/2 - 73;
+	pointerY = yres - 641;
+    }
+
+    float w = 5.0;
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glPushMatrix();
+    glTranslatef(pointerX, pointerY, 0);
+    glColor4ub(255, 255, 255, 255);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f); glVertex2i( w, w);
+    glTexCoord2f(1.0f, 1.0f); glVertex2i( w,-w);
+    glTexCoord2f(1.0f, 0.0f); glVertex2i(-w,-w);
+    glTexCoord2f(0.0f, 0.0f); glVertex2i(-w, w);
+    glEnd();
+    glPopMatrix();
+}
+

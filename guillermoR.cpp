@@ -149,12 +149,12 @@ int checkCollisions(float scr){
 			}
 			carInvincibility();
 			if (ga.numHearts < 0) {
+			    gameOver = true;
 				cout << "You have crashed. Game has reset" << endl;
 				resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
 						ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], ga.enemyCar[1].pos[1],
 						ga.enemyCar[1].pos[0], fxres, fyres);
-				doesHit = 2;	
-			}
+				doesHit = 2;				}
 		}
 	}
 	return doesHit;

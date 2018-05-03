@@ -26,4 +26,5 @@ extern int key;
 void renderText();
 void mainMenu(const int, const int);
 void pauseMenu(const int, const int);
+void gameOverMenu(const int, const int);
 #endif

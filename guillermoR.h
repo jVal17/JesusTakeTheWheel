@@ -40,6 +40,7 @@ extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 unsigned char *buildAlphaData(Image *img);
 
+extern bool gameOver;
 
 void getfyres(float y);
 void getfxres(float x);
