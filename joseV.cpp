@@ -4,7 +4,7 @@
 
 
 #include "joseV.h"
-Image plowImage = "./Sprites/Piskel.png"; 
+Image plowImage = "./Sprites/plow.png"; 
 Image crateImage = "./Sprites/crate.png";
 GLuint crateTexture;
 GLuint silhouetteCrateTexture;
@@ -29,7 +29,7 @@ class gameObjects{
 		int size;
 		bool contactCrate;
 		gameObjects() {
-			plow.size = 35;
+			plow.size = 50;
 			crate.size = 35;
 			plow.pos[0] = 256.0f;
 			plow.pos[1] = 512.0f;
@@ -75,7 +75,7 @@ void renderPlowOnCar(){
 		float MC[2];
 		getMainCarCoords(MC);
 		go.plow.pos[0] = MC[0];
-		go.plow.pos[1] = MC[1] + 50;
+		go.plow.pos[1] = MC[1] + 30;
 		int s = go.plow.size;
 		GLfloat color[3];
 		color[0]=color[1]=color[2]=1.0;
