@@ -72,8 +72,8 @@ class Game {
 
 	Game() {
 	    for(int j = 0; j < 3; j++){
-		heart[j].pos[0]= (fxres*1.7) + (j*30);
-		heart[j].pos[1]= (fyres/2.0) + 100;
+		heart[j].pos[0]= (fxres*1.68) + (j*30);
+		heart[j].pos[1]= 760;
 	    }
 	    mainCar.pos[0]= fxres;
 	    mainCar.pos[1]= 80.0;
@@ -144,7 +144,7 @@ int checkCollisions(float scr){
 		ga.enemyCar[i].pos[0]+30.0 > ga.mainCar.pos[0]
 	   ){
 	    if(!ga.mainCar.invinc){
-		ga.heart[ga.numHearts].pos[0]= -50.0;
+		ga.heart[ga.numHearts].pos[0] = -50;
 		ga.numHearts-=1;
 		ga.mainCar.invinc = true;
 		doesHit = 1;
@@ -270,8 +270,8 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
     else 
 	ec2X = 340.0;
     for (int j = 0; j < 3; j++) {
-	ga.heart[j].pos[0] = (fxres*1.7) + (j*30);
-	ga.heart[j].pos[1] = (fyres/2.0)+100; 
+	ga.heart[j].pos[0] = (fxres*1.68) + (j*30);
+	ga.heart[j].pos[1] = 760.0; 
     }
     ga.numHearts = 2;
 }
@@ -522,7 +522,7 @@ void renderLives() {
     int sy = 20;
     int sx = 2.3435*sy;
     float x = (fxres*1.7)+25;
-    float y = (fyres/2.0)+140;
+    float y = 800.0;
     glPushMatrix();
     glTranslatef(x, y, 0);
     glBindTexture(GL_TEXTURE_2D, silhouetteLivesTexture);
