@@ -9,19 +9,22 @@ static struct timespec ftimeStart, ftimeEnd;
 Image mainCarImage = "./Sprites/Car.png";
 Image audiImage = "./Sprites/Audi.png";
 Image miniVanImage = "./Sprites/Mini_van.png";
-Image heartImage = "./Sprites/heart.png";
+Image heartImage = "./Sprites/cross.jpg";
 Image mainMenuImage = "./Sprites/mainMenu.png";
+Image livesImage = "./Sprites/Lives.png";
 
 GLuint mainCarTexture;
 GLuint mainMenuTexture;
 GLuint audiTexture;
 GLuint miniVanTexture;
 GLuint heartTexture;
+GLuint livesTexture;
 GLuint silhouetteMainCarTexture;
 GLuint silhouetteAudiTexture;
 GLuint silhouetteMiniVanTexture;
 GLuint silhouetteHeartTexture;
 GLuint silhouetteMainMenuTexture;
+GLuint silhouetteLivesTexture;
 
 class Car {
 	public:
@@ -68,10 +71,9 @@ class Game {
 		Vec tmpMainPos, tmpMainPos2;
 
 		Game() {
-
 			for(int j = 0; j < 3; j++){
 				heart[j].pos[0]= (fxres*1.7) + (j*30);
-				heart[j].pos[1]= fyres-20.0;
+				heart[j].pos[1]= (fyres/2.0) + 100;
 			}
 			mainCar.pos[0]= fxres;
 			mainCar.pos[1]= 80.0;
@@ -279,11 +281,14 @@ void generateTextures(){
 	glGenTextures(1, &mainCarTexture);
 	glGenTextures(1, &audiTexture);
 	glGenTextures(1, &miniVanTexture);
+	glGenTextures(1, &livesTexture);
+	glGenTextures(1, &heartTexture);
 	glGenTextures(1, &silhouetteMainCarTexture);
 	glGenTextures(1, &silhouetteAudiTexture);
 	glGenTextures(1, &silhouetteMiniVanTexture);
 	glGenTextures(1, &silhouetteHeartTexture);
 	glGenTextures(1, &silhouetteMainMenuTexture);
+	glGenTextures(1, &silhouetteLivesTexture);
 }
 
 void initImages() {
@@ -376,10 +381,26 @@ void initImages() {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 	GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData6);
 	free(silhouetteData6);
-	
+
+	//Init transparent Image
+	w = livesImage.width;
+	h = livesImage.height;
+
+	glBindTexture(GL_TEXTURE_2D, livesTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+	GL_RGB, GL_UNSIGNED_BYTE, livesImage.data);
+	//silhouette
+	glBindTexture(GL_TEXTURE_2D, silhouetteLivesTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	unsigned char *silhouetteData7 = buildAlphaData(&livesImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+	GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData7);
+	free(silhouetteData7);
 
 }
-
 
 float angle = 0;
 void renderMainCar(bool l, bool r) {
@@ -414,9 +435,9 @@ void renderMainCar(bool l, bool r) {
 		else
 			glColor4f(1.0,1.0,1.0,1.0);
 		if(rand()%2==0){	
-			x=ga.mainCar.pos[0]+=10;
+			x=ga.mainCar.pos[0]+=5;
 		}else{
-			x=ga.mainCar.pos[0]-=10;
+			x=ga.mainCar.pos[0]-=5;
 		}
 		fixCarBoundaries();
 		//printf("%f\n",x);
@@ -493,6 +514,26 @@ void renderHeart() {
 		glEnd();
 		glPopMatrix();
 	}
+}
+
+void renderLives() {
+		int sy = 20;
+		int sx = 2.3435*sy;
+		float x = (fxres*1.7)+25;
+		float y = (fyres/2.0)+140;
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteLivesTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-sx,-sy);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-sx, sy);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f( sx, sy);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f( sx,-sy);
+		glEnd();
+		glPopMatrix();
 }
 
 void renderMainMenu() {

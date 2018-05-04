@@ -442,7 +442,6 @@ void physics()
     }
 }
 
-
 void render()
 {
     glClearColor(0.9294, 0.788, 0.686, 1.0);
@@ -476,7 +475,8 @@ void render()
 	renderMiniVan();
 	//cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 	//screenPrint();	
-	renderText();
+	//renderText();
+	renderLives();
 	//printText();
 	//function1();
 	//function2();
