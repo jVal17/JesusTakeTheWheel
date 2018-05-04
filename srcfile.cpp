@@ -385,7 +385,7 @@ int check_keys(XEvent *e)
     }
     return 0;
 }
-int Score = 0;
+//int Score = 0;
 float spd = .01;
 void physics()
 {
@@ -404,7 +404,7 @@ void physics()
 	//move the background
 	if(countDown)
 	{
-		return;
+	    return;
 	}
 
 	g.tex.yc[0] -= g.scrSpd;
@@ -415,22 +415,27 @@ void physics()
 	moveCrate(g.scrSpd);	
 	moveEnemyCars(g.scrSpd);
 	colWithPowerUP();
-	int cc = checkCollisions(g.scrSpd);
-	if(cc){
-	    if(cc==1){
-		g.scrSpd /= 4;
-	    }
-	    if(cc==2){
-		Score = 0;
-		g.scrSpd = spd;
-	    }
-	}	
-	if(spawnEnemyCars(g.fyres)){
-	    Score += 10;
-	    g.scrSpd = g.scrSpd + Score*.000001;
-	    g.scrSpd = g.scrSpd + Score*.000001;
-	    cout << "Score: " << Score << endl;
-	}
+
+	velocityMod(g.fyres, g.scrSpd);
+	/*
+	   int cc = checkCollisions(g.scrSpd);
+	   if(cc){
+	   if(cc==1){
+	   g.scrSpd /= 4;
+	   }
+	   if(cc==2){
+	   Score = 0;
+	   g.scrSpd = spd;
+	   }
+	   }	
+	   if(spawnEnemyCars(g.fyres)){
+	   Score += 10;
+	   g.scrSpd = g.scrSpd + Score*.000001;
+	   g.scrSpd = g.scrSpd + Score*.000001;
+	   cout << "Score: " << Score << endl;
+	   }
+	   */
+
 	//moves main car using w,a,s,d keys
 	if (g.forward) {
 	    wMovement();
@@ -471,10 +476,10 @@ void render()
 	    gameOverMenu(g.xres, g.yres);
 
 	if (countDown) {
-		renderMainCar(g.left, g.right);
-		renderLives();
-		renderHeart();
-		pointTracker();
+	    renderMainCar(g.left, g.right);
+	    renderLives();
+	    renderHeart();
+	    pointTracker();
 	}
 	pointTracker();
 	renderMainCar(g.left, g.right);

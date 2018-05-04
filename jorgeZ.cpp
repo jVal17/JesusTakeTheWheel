@@ -2,13 +2,15 @@
 // My changes
 
 #include "jorgeZ.h"
-//#include "ianT.h"
+#include "guillermoR.h"
 #include <ctime>
 #include <iostream>
 
 using namespace std;
 double durationPaused = 0.0;
-//float fxres, fyres;
+int Score = 0;
+    float speed = .01;
+float fyres2 = 1024;
 
 Image scoreboard = "./Sprites/scoreboard.png";
 
@@ -39,6 +41,28 @@ int checkpoint ()
     return level++;
 }
 
+void velocityMod(float fyres2, float &scrolling)
+{
+    int cc = checkCollisions(scrolling);
+    if(cc){
+	if(cc==1){
+	    scrolling /= 3;
+	    Score -= 50;
+	    cout << "Score: " << Score << endl;
+	}
+	if(cc==2){
+	    Score = 0;
+	    //speed = .01;
+	}
+    }
+    if(spawnEnemyCars(fyres2)){
+	Score += 10;
+	scrolling = scrolling + Score*.000001;
+	//scrolling = scrolling + Score*.000001;
+	cout << "Score: " << Score << endl;
+    }
+}
+
 void imageTexturing()
 {
     //Init transparent Image
@@ -57,7 +81,7 @@ void imageTexturing()
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     unsigned char *silhouetteScore = buildAlphaData(&scoreboard);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-	    GL_RGBA, GL_UNSIGNED_BYTE, silhouetteScore);
+    GL_RGBA, GL_UNSIGNED_BYTE, silhouetteScore);
     free(silhouetteScore);
     */
 }
