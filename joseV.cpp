@@ -35,7 +35,7 @@ class gameObjects{
 			plow.pos[1] = 512.0f;
 			plow.pos[2] = 0.0f;
 			crate.pos[0] = 256.0f;
-			crate.pos[1] = 512.0f;
+			crate.pos[1] = 512.0f+600.0f;
 			crate.pos[2] = 0.0f;
 			contactCrate=false;
 		}

@@ -79,9 +79,11 @@ class Global {
 	}
 } g;
 
+//bool inMainMenu = true;
 bool inMainMenu = true;
 bool inGame = false;
 bool inPauseMenu = false;
+bool countDown = false;
 bool gameOver = false;
 int menuPosition = 1;
 
@@ -224,7 +226,7 @@ void init_opengl(void)
     //if(inGame)
     generateTextures(); 
     generatePowerUpTextures();
-
+    createTextures();
 
     //glGenTextures(1, &g.carTexture);
     //glGenTextures(1, &g.silhouetteTexture);
@@ -247,6 +249,7 @@ void init_opengl(void)
     //----------------------------------------------------------
     initImages();
     initPowerUpImages();
+    imageTexturing();
 }
 
 void check_mouse(XEvent *e)
@@ -399,7 +402,10 @@ void physics()
 	if (!g.pause && g.scrSpd == 0)
 	    g.scrSpd = g.strSpd;
 	//move the background
-
+	if(countDown)
+	{
+		return;
+	}
 
 	g.tex.yc[0] -= g.scrSpd;
 	g.tex.yc[1] -= g.scrSpd;
@@ -464,19 +470,26 @@ void render()
 	if (gameOver)
 	    gameOverMenu(g.xres, g.yres);
 
+	if (countDown) {
+		renderMainCar(g.left, g.right);
+		renderLives();
+		renderHeart();
+		pointTracker();
+	}
+	pointTracker();
+	renderMainCar(g.left, g.right);
+	renderLives();
+	renderHeart();
 	renderCrate();
 	renderPlowOnCar();
 	//---------------------------------------------------------------------------- 
 	//car texture
-	renderHeart();
-	renderMainCar(g.left, g.right);
 	//
 	renderAudi();
 	renderMiniVan();
 	//cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 	//screenPrint();	
 	//renderText();
-	renderLives();
 	//printText();
 	//function1();
 	//function2();
