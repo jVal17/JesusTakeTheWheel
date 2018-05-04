@@ -252,7 +252,8 @@ void fixCarBoundaries() {
 }
 
 void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
-		float &ec2X, float &ec2Y, float xres, float yres){
+		float &ec2X, float &ec2Y, float xres, float yres)
+	{
 	int randnum = rand() % 2;
 	scr = .01;
 	mcX = xres;
@@ -269,8 +270,8 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 	else 
 		ec2X = 340.0;
 	for (int j = 0; j < 3; j++) {
-		ga.heart[j].pos[0]= (fxres*1.7) + (j*30);
-		ga.heart[j].pos[1]= fyres-20.0;
+		ga.heart[j].pos[0] = (fxres*1.7) + (j*30);
+		ga.heart[j].pos[1] = (fyres/2.0)+100; 
 	}
 	ga.numHearts = 2;
 }
