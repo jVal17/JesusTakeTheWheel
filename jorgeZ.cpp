@@ -8,6 +8,18 @@
 
 using namespace std;
 double durationPaused = 0.0;
+//float fxres, fyres;
+
+Image scoreboard = "./Sprites/scoreboard.png";
+
+GLuint scoreTexture;
+//GLuint silhouetteScoreTexture;
+
+void createTextures()
+{
+    glGenTextures(1, &scoreTexture);
+    //glGenTextures(1, &silhouetteScoreTexture);
+}
 
 void screenPrint () 
 {
@@ -27,6 +39,47 @@ int checkpoint ()
     return level++;
 }
 
+void imageTexturing()
+{
+    //Init transparent Image
+    int w = scoreboard.width;
+    int h = scoreboard.height;
 
+    glBindTexture(GL_TEXTURE_2D, scoreTexture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+	    GL_RGB, GL_UNSIGNED_BYTE, scoreboard.data);
+    /*
+    //silhouette
+    glBindTexture(GL_TEXTURE_2D, silhouetteScoreTexture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    unsigned char *silhouetteScore = buildAlphaData(&scoreboard);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+	    GL_RGBA, GL_UNSIGNED_BYTE, silhouetteScore);
+    free(silhouetteScore);
+    */
+}
 
-
+void pointTracker() 
+{
+    int sy = 20;
+    int sx = 2.3435*sy;
+    float x = (50);
+    float y = (800);
+    glPushMatrix();
+    glTranslatef(x, y, 0);
+    //glBindTexture(GL_TEXTURE_2D, silhouetteScoreTexture);
+    glBindTexture(GL_TEXTURE_2D, scoreTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor4ub(255,255,255,255);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f); glVertex2f(-sx,-sy);
+    glTexCoord2f(0.0f, 0.0f); glVertex2f(-sx, sy);
+    glTexCoord2f(1.0f, 0.0f); glVertex2f( sx, sy);
+    glTexCoord2f(1.0f, 1.0f); glVertex2f( sx,-sy);
+    glEnd();
+    glPopMatrix();
+}

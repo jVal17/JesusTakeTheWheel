@@ -9,11 +9,13 @@
 #include <string.h>
 #include <unistd.h>
 #include <math.h>
+#include <cmath>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "fonts.h"
 #include <ctime> //-----
+#include "guillermoR.h" //-----
 
 //-----------------------------------------------------------------------------
 //Setup of timers
@@ -28,8 +30,13 @@ using namespace std;
 
 void screenPrint();
 int checkpoint();
-void pauseTimer(bool&);
-void function1();
-void function2();
+void createTextures();
+void imageTexturing();
+void pointTracker();
+
+//void pauseTimer(bool&);
+//void function1();
+//void function2();
+
 
 #endif
