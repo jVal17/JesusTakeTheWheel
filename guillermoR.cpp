@@ -4,7 +4,7 @@
 #include "guillermoR.h"
 
 float fxres, fyres;
-static struct timespec ftimeStart, ftimeEnd, fireTime;
+static struct timespec ftimeStart, ftimeEnd, fireTime, currentCountTime, countDownTime;
 
 Image mainCarImage = "./Sprites/Car.png";
 Image audiImage = "./Sprites/Audi.png";
@@ -13,7 +13,11 @@ Image heartImage = "./Sprites/cross.jpg";
 Image mainMenuImage = "./Sprites/mainMenu.png";
 Image livesImage = "./Sprites/Lives.png";
 Image fireImage = "./Sprites/fire.png";
-
+Image countDownImage[4] = {"./Sprites/3.png",
+	"./Sprites/2.png",
+	"./Sprites/1.png",
+	"./Sprites/GO.png"};
+GLuint countDownTexture[4];
 GLuint mainCarTexture;
 GLuint mainMenuTexture;
 GLuint audiTexture;
@@ -134,6 +138,9 @@ void moveEnemyCars(float scr){
 	ga.enemyCar[0].pos[1] -= (scr*600.0);
 	ga.enemyCar[1].pos[1] -= (scr*600.0);	
 }
+
+//void countDownSetTrue (bool &countBool)
+//	countBool = true;
 
 int checkCollisions(float scr){
 	int doesHit = 0;
@@ -287,6 +294,10 @@ void generateTextures(){
 	glGenTextures(1, &livesTexture);
 	glGenTextures(1, &heartTexture);
 	glGenTextures(1, &fireTexture);
+	glGenTextures(1, &countDownTexture[0]);
+	glGenTextures(1, &countDownTexture[1]);
+	glGenTextures(1, &countDownTexture[2]);
+	glGenTextures(1, &countDownTexture[3]);
 	glGenTextures(1, &silhouetteMainCarTexture);
 	glGenTextures(1, &silhouetteAudiTexture);
 	glGenTextures(1, &silhouetteMiniVanTexture);
@@ -417,6 +428,26 @@ void initImages() {
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData7);
 	free(silhouetteData7);
 
+	unsigned char *silhouetteCountDownData[4];
+	for (int i=0; i<4; i++) {
+		//Init transparent Image
+		w = countDownImage[i].width;
+		h = countDownImage[i].height;
+
+		glBindTexture(GL_TEXTURE_2D, countDownTexture[i]);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+				GL_RGB, GL_UNSIGNED_BYTE, countDownImage[i].data);
+		//silhouette
+		glBindTexture(GL_TEXTURE_2D, countDownTexture[i]);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+		silhouetteCountDownData[i] = buildAlphaData(&countDownImage[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+				GL_RGBA, GL_UNSIGNED_BYTE, silhouetteCountDownData[i]);
+		free(silhouetteCountDownData[i]);
+	}
 }
 
 float angle = 0;
@@ -654,4 +685,50 @@ void fireAnimation() {
 			fireFrame -= 32;
 		clock_gettime(CLOCK_REALTIME, &fireTime);	
 	}
+}
+
+void startCountDownTimer() {
+	clock_gettime(CLOCK_REALTIME, &countDownTime); 
+}
+
+int inc= 0;
+float delay = 1.0;
+void renderCountDown(bool &countDownBool) {
+	//render 
+		int sx = 46;
+		int sy = 79;
+		if(inc == 3){
+			 sx = 130;
+			 sy = sx*0.509;
+		}
+		float x = (fxres/2.0) + 140;
+		float y = (fyres/2.0) + 200.0;
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glBindTexture(GL_TEXTURE_2D, countDownTexture[inc]);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-sx,-sy);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-sx, sy);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( sx, sy);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( sx,-sy);
+		glEnd();
+		glPopMatrix();
+	//
+	clock_gettime(CLOCK_REALTIME, &currentCountTime);
+	double timeSpan = timeDiff(&countDownTime, &currentCountTime);
+	if(timeSpan > delay) {
+		delay +=1;	
+		inc++;
+		//cout << "Timer has hit" << endl;
+		if (inc == 4){
+			countDownBool = false;
+			inc = 0;
+			delay = 1;
+		}
+			
+	}
+	//countDownImage[i];
 }

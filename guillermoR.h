@@ -72,7 +72,9 @@ void getMainCarCoords(float (&M)[2]);
 void fireAnimation();
 void startFireTime();
 void renderFire();
-
+void startCountDownTimer();
+void renderCountDown(bool &);
+void countDownSetTrue(bool &);
 
 //void increaseCarSpeedY(float enemy, float scr);
 void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,

@@ -83,7 +83,7 @@ class Global {
 bool inMainMenu = true;
 bool inGame = false;
 bool inPauseMenu = false;
-bool countDown = false;
+bool countDown = true;
 bool gameOver = false;
 int menuPosition = 1;
 
@@ -387,6 +387,7 @@ int check_keys(XEvent *e)
 }
 //int Score = 0;
 float spd = .01;
+bool firstCountDown = true;
 void physics()
 {
     if (inGame) {
@@ -402,9 +403,12 @@ void physics()
 	if (!g.pause && g.scrSpd == 0)
 	    g.scrSpd = g.strSpd;
 	//move the background
-	if(countDown)
-	{
-	    return;
+	if(countDown) {	
+		if (firstCountDown){
+			startCountDownTimer();
+			firstCountDown = false;
+		}
+		return;
 	}
 
 	g.tex.yc[0] -= g.scrSpd;
@@ -480,6 +484,7 @@ void render()
 	    renderLives();
 	    renderHeart();
 	    pointTracker();
+	    renderCountDown(countDown);
 	}
 	pointTracker();
 	renderMainCar(g.left, g.right);
