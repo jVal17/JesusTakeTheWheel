@@ -385,7 +385,7 @@ int check_keys(XEvent *e)
     }
     return 0;
 }
-//int Score = 0;
+int Points = 0;
 float spd = .01;
 bool firstCountDown = true;
 void physics()
@@ -466,9 +466,11 @@ void render()
 	    renderLives();
 	    renderHeart();
 	    pointTracker();
+	    levelTracker();
 	    renderCountDown(countDown);
 	}
 	pointTracker();
+	levelTracker();
 	renderMainCar(g.left, g.right);
 	renderLives();
 	renderHeart();
@@ -480,7 +482,7 @@ void render()
 	renderAudi();
 	renderMiniVan();
 	//cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
-	//screenPrint();	
+	screenPrint();	
 	//renderText();
 	//printText();
 	//function1();
