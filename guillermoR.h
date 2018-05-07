@@ -48,7 +48,7 @@ void makeCar();
 void drawBox(float x, float y, int s); 
 void moveBox(float x, float y); 
 void moveEnemyCars(float scr);
-int checkCollisions(float scr);
+int checkCollisions(float scr, bool &, bool &);
 void carInvincibility();
 void blink();
 void checkInvincOutside();

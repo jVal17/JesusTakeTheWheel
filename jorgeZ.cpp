@@ -41,9 +41,9 @@ int checkpoint ()
     return level++;
 }
 
-void velocityMod(float fyres2, float &scrolling)
+void velocityMod(float fyres2, float &scrolling, bool &countDownBool, bool &firstCountDownBool)
 {
-    int cc = checkCollisions(scrolling);
+    int cc = checkCollisions(scrolling, countDownBool, firstCountDownBool);
     if(cc){
 	if(cc==1){
 	    scrolling /= 3;

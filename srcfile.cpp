@@ -403,7 +403,7 @@ void physics()
 	if (!g.pause && g.scrSpd == 0)
 	    g.scrSpd = g.strSpd;
 	//move the background
-	if(countDown) {	
+	if(countDown && !gameOver) {	
 		if (firstCountDown){
 			startCountDownTimer();
 			firstCountDown = false;
@@ -420,7 +420,7 @@ void physics()
 	moveEnemyCars(g.scrSpd);
 	colWithPowerUP();
 
-	velocityMod(g.fyres, g.scrSpd);
+	velocityMod(g.fyres, g.scrSpd, countDown, firstCountDown);
 	/*
 	   int cc = checkCollisions(g.scrSpd);
 	   if(cc){
@@ -479,7 +479,7 @@ void render()
 	if (gameOver)
 	    gameOverMenu(g.xres, g.yres);
 
-	if (countDown) {
+	if (countDown && !gameOver) {
 	    renderMainCar(g.left, g.right);
 	    renderLives();
 	    renderHeart();

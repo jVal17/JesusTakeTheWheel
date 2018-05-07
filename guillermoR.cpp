@@ -142,7 +142,7 @@ void moveEnemyCars(float scr){
 //void countDownSetTrue (bool &countBool)
 //	countBool = true;
 
-int checkCollisions(float scr){
+int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown){
 	int doesHit = 0;
 	ga.tmpMainPos2[0] = ga.mainCar.pos[0];
 	checkInvincOutside();	
@@ -152,7 +152,7 @@ int checkCollisions(float scr){
 				ga.enemyCar[i].pos[0]-30.0 < ga.mainCar.pos[0] &&
 				ga.enemyCar[i].pos[0]+30.0 > ga.mainCar.pos[0]
 		   ){
-			if(!ga.mainCar.invinc){
+			if(!ga.mainCar.invinc) {
 				ga.heart[ga.numHearts].pos[0] = -50;
 				ga.numHearts-=1;
 				ga.mainCar.invinc = true;
@@ -163,9 +163,13 @@ int checkCollisions(float scr){
 				gameOver = true;
 				cout << "You have crashed. Game has reset" << endl;
 				resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
-						ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], ga.enemyCar[1].pos[1],
-						ga.enemyCar[1].pos[0], fxres, fyres);
-				doesHit = 2;				}
+				ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], 
+				ga.enemyCar[1].pos[1], ga.enemyCar[1].pos[0], 
+				fxres, fyres);
+				countDownBool = true;	
+				firstCountDown = true;	
+				doesHit = 2;				
+			}
 		}
 	}
 	return doesHit;
@@ -284,8 +288,6 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 	}
 	ga.numHearts = 2;
 }
-
-
 
 void generateTextures(){
 	glGenTextures(1, &mainCarTexture);
@@ -693,6 +695,7 @@ void startCountDownTimer() {
 
 int inc= 0;
 float delay = 1.0;
+
 void renderCountDown(bool &countDownBool) {
 	//render 
 		int sx = 46;
@@ -726,7 +729,7 @@ void renderCountDown(bool &countDownBool) {
 		if (inc == 4){
 			countDownBool = false;
 			inc = 0;
-			delay = 1;
+			delay = 1.0;
 		}
 			
 	}
