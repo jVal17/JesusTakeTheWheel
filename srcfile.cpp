@@ -410,6 +410,7 @@ void physics()
 		}
 		return;
 	}
+	initiateCrateTimer();
 
 	g.tex.yc[0] -= g.scrSpd;
 	g.tex.yc[1] -= g.scrSpd;
@@ -481,6 +482,7 @@ void render()
 	//
 	renderAudi();
 	renderMiniVan();
+	renderAudi2();
 	//cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 	screenPrint();	
 	//renderText();

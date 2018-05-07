@@ -55,7 +55,7 @@ void velocityMod(float fyres2, float &scrolling, bool &countDownBool, bool &firs
     int cc = checkCollisions(scrolling, countDownBool, firstCountDownBool);
     if(cc){
 	if(cc==1){
-	    scrolling /= 3;
+	    scrolling *= .333;
 	    Score -= 50;
 	    cout << "Score: " << Score << endl;
 	    screenPrint();
@@ -68,7 +68,7 @@ void velocityMod(float fyres2, float &scrolling, bool &countDownBool, bool &firs
     if(spawnEnemyCars(fyres2)){
 	Score += 10;
 	scrolling = scrolling + Score*.000001;
-	cout << "Score: " << Score << endl;
+	//cout << "Score: " << Score << endl;
     }
 
 
