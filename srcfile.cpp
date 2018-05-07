@@ -29,7 +29,7 @@ using namespace std;
 GLuint backTexture;
 
 Image img[1] = {
-    "./Sprites/road2.jpeg"
+    "./Sprites/GameMapComplete3.jpg"
 };
 
 class Texture {
@@ -453,10 +453,10 @@ void render()
 	glColor3f(1.0, 1.0, 1.0);
 	glBindTexture(GL_TEXTURE_2D, backTexture);
 	glBegin(GL_QUADS);
-	glTexCoord2f(g.tex.xc[0], g.tex.yc[1]); glVertex2i(100, 0);
-	glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(100, g.yres);
-	glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres - 100, g.yres);
-	glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres - 100, 0);
+	glTexCoord2f(g.tex.xc[0], g.tex.yc[1]); glVertex2i(0, 0);
+	glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(0, g.yres);
+	glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres, g.yres);
+	glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
 	glEnd();		
 
 	if (gameOver)
