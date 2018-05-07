@@ -61,7 +61,7 @@ void getfyres(float y){
 
 class Game {
 	public:
-		Car mainCar, enemyCar[2];
+		Car mainCar, enemyCar[3];
 		Heart heart[3];
 		int numHearts;
 		int carSize;
@@ -84,14 +84,15 @@ class Game {
 			}
 			mainCar.pos[0]= fxres;
 			mainCar.pos[1]= 80.0;
-			for(int i=0; i < 2; i++) {
+			for(int i=0; i < 3; i++) {
 				carSpawnPos = rand() % (X_MAX - X_MIN) + X_MIN;
 				enemyCar[i].pos[0] = carSpawnPos;
 			}
 			enemyCar[0].pos[1]= fyres+100;
-			enemyCar[1].pos[1]= fyres+(fyres/2.0);
+			enemyCar[1].pos[1]= fyres+((fyres*.35)+100);
+			enemyCar[2].pos[1]= fyres+((fyres*.7)+100);
 			carSize = 50;
-			totalEnemyCars = 2;
+			totalEnemyCars = 3;
 			numHearts = 2;
 			firstInvinc = true;
 			firstBlink = true;
@@ -138,6 +139,7 @@ unsigned char *buildAlphaData(Image *img)
 void moveEnemyCars(float scr){
 	ga.enemyCar[0].pos[1] -= (scr*600.0);
 	ga.enemyCar[1].pos[1] -= (scr*600.0);	
+	ga.enemyCar[2].pos[1] -= (scr*600.0);	
 }
 
 //void countDownSetTrue (bool &countBool)
@@ -227,15 +229,24 @@ bool spawnEnemyCars(float yres){
 	if (ga.enemyCar[0].pos[1] < 0.0) {
 		ga.carSpawnPos = rand() % (X_MAX-X_MIN) + X_MIN;
 		ga.enemyCar[0].pos[0] = ga.carSpawnPos;
-		ga.enemyCar[0].pos[1] = yres+40.0;
+		ga.enemyCar[0].pos[1] = yres+100;
 		return true;
 	}
 	if (ga.enemyCar[1].pos[1] < 0.0) {
-		ga.enemyCar[1].pos[1] = ga.enemyCar[0].pos[1]+(yres/2.0);
+		//ga.enemyCar[1].pos[1] = fyres+((yres*.33)+100);
 		ga.carSpawnPos = rand() % (X_MAX-X_MIN) + X_MIN;
 		ga.enemyCar[1].pos[0] = ga.carSpawnPos;
+		ga.enemyCar[1].pos[1] = yres+100;
+		return true;
+	}	
+	if (ga.enemyCar[2].pos[1] < 0.0) {
+		//ga.enemyCar[2].pos[1] = fyres+((yres*.66)+100);
+		ga.carSpawnPos = rand() % (X_MAX-X_MIN) + X_MIN;
+		ga.enemyCar[2].pos[0] = ga.carSpawnPos;
+		ga.enemyCar[2].pos[1] = yres+100;
 		return true;
 	}
+
 	return false;	
 }
 
@@ -288,6 +299,7 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 		ga.heart[j].pos[0] = (fxres*1.68) + (j*30);
 		ga.heart[j].pos[1] = 760.0; 
 	}
+	ga.enemyCar[2].pos[1]= fyres+((fyres*.7)+100);
 	ga.numHearts = 2;
 }
 
@@ -546,6 +558,26 @@ void renderMiniVan() {
 	glEnd();
 	glPopMatrix();
 }
+
+void renderAudi2() {
+	int s = ga.carSize;
+	float x = ga.enemyCar[2].pos[0];
+	float y = ga.enemyCar[2].pos[1];
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glBindTexture(GL_TEXTURE_2D, silhouetteAudiTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+	glEnd();
+	glPopMatrix();
+}
+
 
 void renderHeart() {
 	for (int i = 0; i < 3; i++) {
