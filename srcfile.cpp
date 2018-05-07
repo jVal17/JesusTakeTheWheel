@@ -421,24 +421,6 @@ void physics()
 	colWithPowerUP();
 
 	velocityMod(g.fyres, g.scrSpd, countDown, firstCountDown);
-	/*
-	   int cc = checkCollisions(g.scrSpd);
-	   if(cc){
-	   if(cc==1){
-	   g.scrSpd /= 4;
-	   }
-	   if(cc==2){
-	   Score = 0;
-	   g.scrSpd = spd;
-	   }
-	   }	
-	   if(spawnEnemyCars(g.fyres)){
-	   Score += 10;
-	   g.scrSpd = g.scrSpd + Score*.000001;
-	   g.scrSpd = g.scrSpd + Score*.000001;
-	   cout << "Score: " << Score << endl;
-	   }
-	   */
 
 	//moves main car using w,a,s,d keys
 	if (g.forward) {
