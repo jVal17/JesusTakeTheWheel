@@ -33,6 +33,7 @@ int checkpoint();
 void createTextures();
 void imageTexturing();
 void pointTracker();
+void levelTracker();
 void velocityMod(float, float &, bool &, bool &);
 
 //void pauseTimer(bool&);
