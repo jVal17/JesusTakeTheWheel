@@ -73,7 +73,7 @@ class Global {
 		right = 
 		pause=false;
 	    firstPause = true;
-	    scrSpd = .01;
+	    scrSpd = .01125;
 	    level = 0;
 	    memset(keys, 0, sizeof(keys));
 	}
@@ -410,12 +410,12 @@ void physics()
 		}
 		return;
 	}
-	initiateCrateTimer();
 
 	g.tex.yc[0] -= g.scrSpd;
 	g.tex.yc[1] -= g.scrSpd;
 
-	g.level = checkpoint();
+	//g.level = checkpoint();
+	//checkpoint(g.level);
 
 	moveCrate(g.scrSpd);	
 	moveEnemyCars(g.scrSpd);
@@ -482,7 +482,6 @@ void render()
 	//
 	renderAudi();
 	renderMiniVan();
-	renderAudi2();
 	//cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 	screenPrint();	
 	//renderText();

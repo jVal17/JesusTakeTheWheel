@@ -29,7 +29,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 using namespace std;
 
 void screenPrint();
-int checkpoint();
+void checkpoint(int, int &);
 void createTextures();
 void imageTexturing();
 void pointTracker();

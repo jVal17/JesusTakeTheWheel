@@ -1,6 +1,3 @@
-// Jorge Zuniga
-// My changes
-
 #include "jorgeZ.h"
 #include "guillermoR.h"
 #include <ctime>
@@ -9,8 +6,10 @@
 using namespace std;
 double durationPaused = 0.0;
 int Score = 0;
+int lvl = 1;
 float speed = .01;
 float fyres2 = 1024;
+int tmp = 100;
 
 Image level = "./Sprites/level.png";
 Image scoreboard = "./Sprites/scoreboard.png";
@@ -34,29 +33,38 @@ void screenPrint ()
     r.bot = 688;
     r.left = 50;
     r.center = 0;
-    //ggprint8b(&r, 16, 0x00ff0000, "Changes made");
-    //ggprint8b(&r, 16, 0x00ff0000, "by Jorge Zuniga");
     ggprint8b(&r, 16, 0xffffffff, "%li", Score);
+    //ggprint8b(&r, 16, 0xffffffff, "%li", level);
+
+    Rect r2;
+    r2.bot = 785;
+    r2.left = 50;
+    r2.center = 0;
+    ggprint8b(&r2, 16, 0xffffffff, "%li", lvl);
+
     glEnd();
 }
 
 
-int checkpoint ()
+void checkpoint (int Score, int &Lev)
 {
-    static int level = 0;
-    return level++;
+    if(Score >= tmp){
+	tmp += 100;
+	Lev += 1;
+    }
 }
 
 void velocityMod(float fyres2, float &scrolling, bool &countDownBool, bool &firstCountDownBool)
 {
-    if(scrolling <=.01)
-	scrolling = .01;
+    checkpoint(Score, lvl);
+    cout << "Scrolling = " << scrolling << endl;
 
     int cc = checkCollisions(scrolling, countDownBool, firstCountDownBool);
     if(cc){
 	if(cc==1){
-	    scrolling *= .333;
+	    scrolling *= .3;
 	    Score -= 50;
+	    //.015 is a bit too fast
 	    cout << "Score: " << Score << endl;
 	    screenPrint();
 	}
@@ -68,9 +76,20 @@ void velocityMod(float fyres2, float &scrolling, bool &countDownBool, bool &firs
     if(spawnEnemyCars(fyres2)){
 	Score += 10;
 	scrolling = scrolling + Score*.000001;
+	if(Score < 1000 && scrolling >= .03125)
+	    scrolling = .03125;
+	else if(Score >= 1000 && Score <= 2000)
+	    scrolling = .03625;
 	//cout << "Score: " << Score << endl;
     }
 
+
+    if(scrolling <=.01125)
+	scrolling = .01125;
+
+
+    if(Score <= 0)
+	Score = 0;
 
 }
 
