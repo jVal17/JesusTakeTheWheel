@@ -481,6 +481,7 @@ void render()
 	//car texture
 	//
 	renderAudi();
+	renderAudi2();
 	renderMiniVan();
 	//cout << "x: " << ga.car.pos[0] << "y: " << ga.car.pos[1] << endl;
 	screenPrint();	
