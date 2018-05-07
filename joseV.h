@@ -27,6 +27,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 extern float scrSpd;
 extern float xres;
 extern float yres;
+float getPlowCor(float (&P)[2]);
 void moveCrate(float src);
 void spawnCrate();
 void colWithPowerUP();
