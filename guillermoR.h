@@ -17,6 +17,7 @@
 #include "time.h"
 #include "iostream"
 #include "img.h"
+#include "joseV.h"
 using namespace std;
 
 #define X_MIN 125

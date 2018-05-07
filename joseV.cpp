@@ -10,6 +10,7 @@ GLuint crateTexture;
 GLuint silhouetteCrateTexture;
 GLuint plowTexture;
 GLuint silhouettePlowTexture;
+bool plowPowerUp = false;
 
 class powerUp 
 {
@@ -28,6 +29,7 @@ class gameObjects{
 		powerUp crate;
 		int size;
 		bool contactCrate;
+		bool plowPowerUp = false;
 		gameObjects() {
 			plow.size = 50;
 			crate.size = 35;
@@ -61,16 +63,19 @@ void colWithPowerUP(){
 			go.crate.pos[0]-35.0 < MC[0] &&
 			go.crate.pos[0]+35.0 > MC[0]
 	  ){
+		plowPowerUp = true;
 		go.contactCrate = true;
-		//cout << "Crate Contact with main Car" << endl;
+		cout << "Crate Contact with main Car" << endl;
 	}
 	//draw plow
 	//make car invinc
 	//if car collision with enmy make enmy spin
 	//}
 }
-
-void renderPlowOnCar(){
+bool getPowerUp(){
+	return go.plowPowerUp;
+}
+void renderPlowOnCar(bool l, bool r){
 	if(go.contactCrate){
 		float MC[2];
 		getMainCarCoords(MC);
@@ -82,6 +87,12 @@ void renderPlowOnCar(){
 		glPushMatrix();
 		glColor3f(1.0,1.0,1.0);
 		glTranslatef(go.plow.pos[0], go.plow.pos[1], 0.0f);
+		if(l) {
+			glRotatef( 10.0, 0.0, 0.0, 1.0);
+		}
+		if(r) {
+			glRotatef(-10.0, 0.0, 0.0, 1.0);
+		}
 		glBindTexture(GL_TEXTURE_2D, silhouettePlowTexture);
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
@@ -97,7 +108,7 @@ void renderPlowOnCar(){
 }
 
 void spawnCrate(){
-	//cout << "spawned crate" <<endl;
+	cout << "spawned crate" <<endl;
 	go.crate.pos[0] = rand()%(X_MAX - X_MIN) + X_MIN;
 	go.crate.pos[1] = 1024;
 }
@@ -151,7 +162,7 @@ void initPowerUpImages(){
 void renderCrate()
 {
 	if(go.contactCrate) {
-		//cout << go.crate.pos[0] << " " << go.crate.pos[1] << endl;
+		cout << go.crate.pos[0] << " " << go.crate.pos[1] << endl;
 		return;
 	}
 	int s = go.crate.size;
@@ -197,4 +208,3 @@ void example() {
 	time += timeDiff(&start, &end);
 	ggprint8b(&r, 16, 0xFFFF00, "function-time:%lf", time);
 }
-

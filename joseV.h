@@ -30,8 +30,8 @@ extern float yres;
 void moveCrate(float src);
 void spawnCrate();
 void colWithPowerUP();
-void renderPlowOnCar();
-
+void renderPlowOnCar(bool, bool);
+bool getPowerUp();
 void renderCrate();
 void generatePowerUpTextures();
 void initPowerUpImages();

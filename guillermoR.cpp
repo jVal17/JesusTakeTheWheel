@@ -2,7 +2,7 @@
 //Seperate file for Guillermo Ramirez
 
 #include "guillermoR.h"
-
+#include "joseV.h"
 float fxres, fyres;
 static struct timespec ftimeStart, ftimeEnd, fireTime, currentCountTime, countDownTime;
 
@@ -36,6 +36,7 @@ class Car {
 	public:
 		Vec pos;
 		bool invinc;
+		bool powerUp = false;
 		Car() {
 			invinc = false;
 		}
@@ -143,6 +144,7 @@ void moveEnemyCars(float scr){
 //	countBool = true;
 
 int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown){
+	ga.mainCar.powerUp = getPowerUp();
 	int doesHit = 0;
 	ga.tmpMainPos2[0] = ga.mainCar.pos[0];
 	checkInvincOutside();	

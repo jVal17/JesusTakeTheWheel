@@ -473,7 +473,7 @@ void render()
 	renderLives();
 	renderHeart();
 	renderCrate();
-	renderPlowOnCar();
+	renderPlowOnCar(g.left, g.right);
 	//---------------------------------------------------------------------------- 
 	//car texture
 	//
