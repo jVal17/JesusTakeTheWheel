@@ -285,7 +285,7 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 	mcX = xres;
 	mcY = 80.0;
 	ecY = yres+100;
-	ec2Y = ecY+(yres/2.0);
+	ec2Y = fyres+(fyres*0.35);
 	if(randnum)
 		ecX = 180.0;
 	else 
@@ -299,7 +299,7 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 		ga.heart[j].pos[0] = (fxres*1.68) + (j*30);
 		ga.heart[j].pos[1] = 760.0; 
 	}
-	ga.enemyCar[2].pos[1]= fyres+((fyres*.7)+100);
+	ga.enemyCar[2].pos[1] = fyres+((fyres*.7)+100);
 	ga.numHearts = 2;
 }
 
