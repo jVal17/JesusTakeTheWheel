@@ -9,18 +9,18 @@
 using namespace std;
 double durationPaused = 0.0;
 int Score = 0;
-    float speed = .01;
+float speed = .01;
 float fyres2 = 1024;
 
 Image scoreboard = "./Sprites/scoreboard.png";
 
 GLuint scoreTexture;
-//GLuint silhouetteScoreTexture;
+GLuint silhouetteScoreTexture;
 
 void createTextures()
 {
     glGenTextures(1, &scoreTexture);
-    //glGenTextures(1, &silhouetteScoreTexture);
+    glGenTextures(1, &silhouetteScoreTexture);
 }
 
 void screenPrint () 
@@ -43,6 +43,9 @@ int checkpoint ()
 
 void velocityMod(float fyres2, float &scrolling, bool &countDownBool, bool &firstCountDownBool)
 {
+    if(scrolling <=.01)
+	scrolling = .01;
+
     int cc = checkCollisions(scrolling, countDownBool, firstCountDownBool);
     if(cc){
 	if(cc==1){
@@ -58,7 +61,6 @@ void velocityMod(float fyres2, float &scrolling, bool &countDownBool, bool &firs
     if(spawnEnemyCars(fyres2)){
 	Score += 10;
 	scrolling = scrolling + Score*.000001;
-	//scrolling = scrolling + Score*.000001;
 	cout << "Score: " << Score << endl;
     }
 }
@@ -74,16 +76,16 @@ void imageTexturing()
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
 	    GL_RGB, GL_UNSIGNED_BYTE, scoreboard.data);
-    /*
+
     //silhouette
     glBindTexture(GL_TEXTURE_2D, silhouetteScoreTexture);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     unsigned char *silhouetteScore = buildAlphaData(&scoreboard);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-    GL_RGBA, GL_UNSIGNED_BYTE, silhouetteScore);
+	    GL_RGBA, GL_UNSIGNED_BYTE, silhouetteScore);
     free(silhouetteScore);
-    */
+
 }
 
 void pointTracker() 
@@ -94,7 +96,7 @@ void pointTracker()
     float y = (800);
     glPushMatrix();
     glTranslatef(x, y, 0);
-    //glBindTexture(GL_TEXTURE_2D, silhouetteScoreTexture);
+    glBindTexture(GL_TEXTURE_2D, silhouetteScoreTexture);
     glBindTexture(GL_TEXTURE_2D, scoreTexture);
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);

@@ -62,7 +62,7 @@ void colWithPowerUP(){
 			go.crate.pos[0]+35.0 > MC[0]
 	  ){
 		go.contactCrate = true;
-		cout << "Crate Contact with main Car" << endl;
+		//cout << "Crate Contact with main Car" << endl;
 	}
 	//draw plow
 	//make car invinc
@@ -97,7 +97,7 @@ void renderPlowOnCar(){
 }
 
 void spawnCrate(){
-	cout << "spawned crate" <<endl;
+	//cout << "spawned crate" <<endl;
 	go.crate.pos[0] = rand()%(X_MAX - X_MIN) + X_MIN;
 	go.crate.pos[1] = 1024;
 }
@@ -151,7 +151,7 @@ void initPowerUpImages(){
 void renderCrate()
 {
 	if(go.contactCrate) {
-		cout << go.crate.pos[0] << " " << go.crate.pos[1] << endl;
+		//cout << go.crate.pos[0] << " " << go.crate.pos[1] << endl;
 		return;
 	}
 	int s = go.crate.size;
