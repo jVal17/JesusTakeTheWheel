@@ -464,6 +464,7 @@ void render()
 
 	if (countDown && !gameOver) {
 	    renderMainCar(g.left, g.right);
+	    renderLivesFrame();
 	    renderLives();
 	    renderHeart();
 	    pointTracker();
@@ -473,6 +474,7 @@ void render()
 	pointTracker();
 	levelTracker();
 	renderMainCar(g.left, g.right);
+	renderLivesFrame();
 	renderLives();
 	renderHeart();
 	renderCrate();
