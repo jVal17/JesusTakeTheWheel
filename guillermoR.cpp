@@ -6,8 +6,9 @@
 float fxres, fyres;
 static struct timespec ftimeStart, ftimeEnd, fireTime, currentCountTime, countDownTime;
 
-Image mainCarImage = "./Sprites/Car.png";
-Image audiImage = "./Sprites/Audi.png";
+Image mainCarImage = "./Sprites/Audi.png";
+Image audiImage = "./Sprites/Car.png";
+Image taxiImage = "./Sprites/taxi2.jpg";
 Image miniVanImage = "./Sprites/Mini_van.png";
 Image heartImage = "./Sprites/cross.jpg";
 Image mainMenuImage = "./Sprites/mainMenu.png";
@@ -17,12 +18,13 @@ Image livesFrameImage = "./Sprites/livesFrame.png";
 Image countDownImage[4] = {"./Sprites/3.png",
 	"./Sprites/2.png",
 	"./Sprites/1.png",
-	"./Sprites/GO.png"};
-
+	"./Sprites/GO.png"
+};
 GLuint countDownTexture[4];
 GLuint mainCarTexture;
 GLuint mainMenuTexture;
 GLuint audiTexture;
+GLuint taxiTexture;
 GLuint miniVanTexture;
 GLuint heartTexture;
 GLuint livesTexture;
@@ -30,6 +32,7 @@ GLuint fireTexture;
 GLuint livesFrameTexture;
 GLuint silhouetteMainCarTexture;
 GLuint silhouetteAudiTexture;
+GLuint silhouetteTaxiTexture;
 GLuint silhouetteMiniVanTexture;
 GLuint silhouetteHeartTexture;
 GLuint silhouetteMainMenuTexture;
@@ -311,6 +314,7 @@ void generateTextures(){
 	glGenTextures(1, &mainCarTexture);
 	glGenTextures(1, &audiTexture);
 	glGenTextures(1, &miniVanTexture);
+	glGenTextures(1, &taxiTexture);
 	glGenTextures(1, &livesTexture);
 	glGenTextures(1, &livesFrameTexture);
 	glGenTextures(1, &heartTexture);
@@ -322,6 +326,7 @@ void generateTextures(){
 	glGenTextures(1, &silhouetteMainCarTexture);
 	glGenTextures(1, &silhouetteAudiTexture);
 	glGenTextures(1, &silhouetteMiniVanTexture);
+	glGenTextures(1, &silhouetteTaxiTexture);
 	glGenTextures(1, &silhouetteHeartTexture);
 	glGenTextures(1, &silhouetteMainMenuTexture);
 	glGenTextures(1, &silhouetteLivesTexture);
@@ -395,6 +400,24 @@ void initImages() {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData3);
 	free(silhouetteData3);
+	
+	//taxi
+	w = taxiImage.width;
+	h = taxiImage.height;
+
+	glBindTexture(GL_TEXTURE_2D, taxiTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+			GL_RGB, GL_UNSIGNED_BYTE, taxiImage.data);
+	//silhouette
+	glBindTexture(GL_TEXTURE_2D, silhouetteTaxiTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	unsigned char *silhouetteTaxi = buildAlphaData(&taxiImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteTaxi);
+	free(silhouetteTaxi);
 
 	//Init Heart
 	w = heartImage.width;
@@ -564,10 +587,30 @@ void renderAudi() {
 	glPopMatrix();
 }
 
-void renderMiniVan() {
-	int s = ga.carSize;
+void renderTaxi() {
+	int sw = 20;
+	int sh = sw*2.044444;
 	float x = ga.enemyCar[1].pos[0];
 	float y = ga.enemyCar[1].pos[1];
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glBindTexture(GL_TEXTURE_2D, silhouetteTaxiTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(-sw,-sh);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(-sw, sh);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i( sw, sh);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i( sw,-sh);
+	glEnd();
+	glPopMatrix();
+}
+
+void renderMiniVan() {
+	int s = ga.carSize;;
+	float x = ga.enemyCar[2].pos[0];
+	float y = ga.enemyCar[2].pos[1];
 	glPushMatrix();
 	glTranslatef(x, y, 0);
 	glBindTexture(GL_TEXTURE_2D, silhouetteMiniVanTexture);
@@ -582,6 +625,8 @@ void renderMiniVan() {
 	glEnd();
 	glPopMatrix();
 }
+
+
 
 void renderAudi2() {
 	int s = ga.carSize;
@@ -605,7 +650,7 @@ void renderAudi2() {
 
 void renderHeart() {
 	for (int i = 0; i < 3; i++) {
-		int sw = ga.heart[i].size*.917;
+		int sw = ga.heart[i].size*.9175;
 		int sh = ga.heart[i].size;
 		float x = ga.heart[i].pos[0];
 		float y = ga.heart[i].pos[1];

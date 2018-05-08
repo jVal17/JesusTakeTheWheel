@@ -61,7 +61,7 @@ void sMovement();
 void fixCarBoundaries();
 void renderMainCar(bool, bool);
 void renderAudi();
-void renderAudi2();
+void renderTaxi();
 void makeCar();
 void renderMiniVan();
 void renderHeart();
