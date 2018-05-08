@@ -292,7 +292,7 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 	mcX = xres;
 	mcY = 80.0;
 	ecY = yres+100;
-	ec2Y = fyres+(fyres*0.35);
+	ec2Y = fyres+(fyres*0.35)+100;
 	if(randnum)
 		ecX = 180.0;
 	else 
