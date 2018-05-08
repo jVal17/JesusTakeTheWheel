@@ -66,6 +66,7 @@ void makeCar();
 void renderMiniVan();
 void renderHeart();
 void renderLives();
+void renderLivesFrame();
 void renderMainMenu();
 void generateTextures();
 void initImages();
