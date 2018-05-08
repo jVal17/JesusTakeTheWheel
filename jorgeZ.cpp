@@ -30,15 +30,19 @@ void createTextures()
 void screenPrint () 
 {
     Rect r;
-    r.bot = 688;
-    r.left = 50;
+    r.bot = 686;
+    r.left = 45;
+    if(Score >= 100)
+    	r.left = 42;
+    if(Score >= 1000)
+    	r.left = 39;
     r.center = 0;
     ggprint8b(&r, 16, 0xffffffff, "%li", Score);
     //ggprint8b(&r, 16, 0xffffffff, "%li", level);
 
     Rect r2;
-    r2.bot = 785;
-    r2.left = 50;
+    r2.bot = 787;
+    r2.left = 45;
     r2.center = 0;
     ggprint8b(&r2, 16, 0xffffffff, "%li", lvl);
 
@@ -57,7 +61,7 @@ void checkpoint (int Score, int &Lev)
 void velocityMod(float fyres2, float &scrolling, bool &countDownBool, bool &firstCountDownBool)
 {
     checkpoint(Score, lvl);
-    cout << "Scrolling = " << scrolling << endl;
+    //cout << "Scrolling = " << scrolling << endl;
 
     int cc = checkCollisions(scrolling, countDownBool, firstCountDownBool);
     if(cc){
@@ -139,7 +143,7 @@ void imageTexturing()
 void pointTracker() 
 {
     int sy = 20;
-    int sx = 2.3435*sy;
+    int sx = 2.43902439*sy;
     float x = (50);
     float y = (700);
     glPushMatrix();
@@ -161,7 +165,7 @@ void pointTracker()
 void levelTracker()
 {
     int sy = 20;
-    int sx = 2.3435*sy;
+    int sx = 2.43902439*sy;
     float x = (50);
     float y = (800);
     glPushMatrix();

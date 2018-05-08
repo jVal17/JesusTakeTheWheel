@@ -269,10 +269,10 @@ void sMovement(){
 void fixCarBoundaries() {
 	if (ga.mainCar.pos[1] > fyres-40.0)
 		ga.mainCar.pos[1] = fyres-40.0;
-	if (ga.mainCar.pos[0] > 395.0)
-		ga.mainCar.pos[0] = 395.0;
-	if (ga.mainCar.pos[0] < 118.0)
-		ga.mainCar.pos[0] = 118.0;
+	if (ga.mainCar.pos[0] > 370.0)
+		ga.mainCar.pos[0] = 370.0;
+	if (ga.mainCar.pos[0] < 140.0)
+		ga.mainCar.pos[0] = 140.0;
 	if (ga.mainCar.pos[1] < 40.0)
 		ga.mainCar.pos[1] = 40.0;
 }

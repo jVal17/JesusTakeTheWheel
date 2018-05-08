@@ -20,8 +20,8 @@
 #include "joseV.h"
 using namespace std;
 
-#define X_MIN 125
-#define X_MAX 390 
+#define X_MIN 140
+#define X_MAX 370 
 
 //extern Image image;
 //-----------------------------------------------------------------------------
