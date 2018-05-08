@@ -6,6 +6,22 @@
 #include </usr/include/AL/alut.h>
 #endif
 
+#include <time.h>
+#include <ctime>
+#include <cmath>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <math.h>
+#include <X11/Xlib.h>
+#include <X11/keysym.h>
+#include <GL/glx.h>
+#include "fonts.h"
+#include "log.h"
+#include <iostream>
+
+using namespace std;
 
 
 #ifdef USE_OPENAL_SOUND
@@ -49,7 +65,7 @@ extern void playMain()
     alGenSources(1, &mainSource);
     alSourcei(mainSource, AL_BUFFER, alBuffer);
 
-    alSourcef(mainSource, AL_GAIN, .30f);
+    alSourcef(mainSource, AL_GAIN, 1.0f);
     alSourcef(mainSource, AL_PITCH, 1.0f);
     alSourcei(mainSource, AL_LOOPING, AL_TRUE);
     if (alGetError() != AL_NO_ERROR){
