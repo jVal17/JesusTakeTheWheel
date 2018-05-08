@@ -114,7 +114,7 @@ extern void playMenuSelect()
 }
 extern void carExplodeOne()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/CarExplode1.wav"); // INSERT SOUND FILE
     
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
@@ -133,7 +133,7 @@ extern void carExplodeOne()
 
 extern void carExplodeTwo()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/CarExplosion2.wav"); // INSERT SOUND FILE
     
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
@@ -151,7 +151,43 @@ extern void carExplodeTwo()
 }
 extern void carExplodeThree()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/CarExplosion3.wav"); // INSERT SOUND FILE
+    
+    alGenSources(1 , &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+
+    if (alGetError() != AL_NO_ERROR) {
+	printf("ERROR setting sound source\n");
+	return;
+    }
+
+    alSourcePlay(alSource);  
+}
+extern void carExplodeFour()
+{
+    alBuffer = alutCreateBufferFromFile("./sound/CarExplosion4.wav"); // INSERT SOUND FILE
+    
+    alGenSources(1 , &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+
+    if (alGetError() != AL_NO_ERROR) {
+	printf("ERROR setting sound source\n");
+	return;
+    }
+
+    alSourcePlay(alSource);  
+}
+extern void carExplodeFive()
+{
+    alBuffer = alutCreateBufferFromFile("./sound/CarExplosion5.wav"); // INSERT SOUND FILE
     
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
@@ -169,7 +205,7 @@ extern void carExplodeThree()
 }
 extern void healthLossOne()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/healthLoss1.wav"); // INSERT SOUND FILE
     
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
@@ -187,7 +223,7 @@ extern void healthLossOne()
 }
 extern void healthLossTwo()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/healthLoss2.wav"); // INSERT SOUND FILE
     
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
@@ -205,7 +241,43 @@ extern void healthLossTwo()
 }
 extern void healthLossThree()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/healthLoss3.wav"); // INSERT SOUND FILE
+    
+    alGenSources(1 , &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+
+    if (alGetError() != AL_NO_ERROR) {
+	printf("ERROR setting sound source\n");
+	return;
+    }
+
+    alSourcePlay(alSource);  
+}
+extern void healthLossFour()
+{
+    alBuffer = alutCreateBufferFromFile("./sound/healthLoss4.wav"); // INSERT SOUND FILE
+    
+    alGenSources(1 , &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+
+    if (alGetError() != AL_NO_ERROR) {
+	printf("ERROR setting sound source\n");
+	return;
+    }
+
+    alSourcePlay(alSource);  
+}
+extern void healthLossFive()
+{
+    alBuffer = alutCreateBufferFromFile("./sound/healthLoss5.wav"); // INSERT SOUND FILE
     
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
@@ -223,33 +295,24 @@ extern void healthLossThree()
 }
 extern void playGameOver()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/gameOver.wav"); // INSERT SOUND FILE
     alGenSources(1, &gameOverSource);
     alSourcei(gameOverSource, AL_BUFFER, alBuffer);
 
     alSourcef(gameOverSource, AL_GAIN, .30f);
     alSourcef(gameOverSource, AL_PITCH, 1.0f);
-    alSourcei(gameOverSource, AL_LOOPING, AL_TRUE);
+    alSourcei(gameOverSource, AL_LOOPING, AL_FALSE);
         if (alGetError() != AL_NO_ERROR){
         printf("ERROR setting sound source\n");
         return ;
     }
     alSourcePlay(gameOverSource);
 }
-extern void stopGameOver()
-{
-    alSourcePause(gameOverSource);
-    return;
-}
-extern void resumeGameOver()
-{
-    alSourcePlay(gameOverSource);
 
-}
 
 extern void playInGame()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/inGame.wav"); // INSERT SOUND FILE
     alGenSources(1, &inGameSource);
     alSourcei(inGameSource, AL_BUFFER, alBuffer);
 
@@ -274,7 +337,7 @@ extern void resumeInGame()
 }
 extern void carRevOne()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/carRev1.wav"); // INSERT SOUND FILE
     
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
@@ -293,7 +356,7 @@ extern void carRevOne()
 
 extern void carRevTwo()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/carRev2.wav"); // INSERT SOUND FILE
     
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
@@ -311,7 +374,7 @@ extern void carRevTwo()
 }
 extern void carRevThree()
 {
-    alBuffer = alutCreateBufferFromFile(); // INSERT SOUND FILE
+    alBuffer = alutCreateBufferFromFile("./sound/carRev3.wav"); // INSERT SOUND FILE
     
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
@@ -330,7 +393,7 @@ extern void carRevThree()
 
 extern void startGame()
 {
-    alBuffer = alutCreateBufferFromFile(); //Insert HOLY.WAV
+    alBuffer = alutCreateBufferFromFile("./sound/Holy.wav"); //Insert HOLY.WAV
 
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
@@ -350,7 +413,43 @@ extern void startGame()
 
 extern void playBrake()
 {
-    alBuffer = alutCreateBufferFromFile(); //Insert SOUND
+    alBuffer = alutCreateBufferFromFile("./sound/brake.wav"); //Insert SOUND
+
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+
+    if (alGetError() != AL_NO_ERROR) {
+	printf("ERROR setting sound source\n");
+	return;
+    }
+
+    alSourcePlay(alSource); 
+}
+extern void playAccellOne()
+{
+    alBuffer = alutCreateBufferFromFile("./sound/accell1.wav"); //Insert SOUND
+
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+
+    if (alGetError() != AL_NO_ERROR) {
+	printf("ERROR setting sound source\n");
+	return;
+    }
+
+    alSourcePlay(alSource); 
+}
+extern void playAccellTwo()
+{
+    alBuffer = alutCreateBufferFromFile("./sound/accell2.wav"); //Insert SOUND
 
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
