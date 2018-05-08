@@ -334,7 +334,7 @@ extern void resumeInGame()
 {
     alSourcePlay(inGameSource);
 
-}
+
 extern void carRevOne()
 {
     alBuffer = alutCreateBufferFromFile("./sound/carRev1.wav"); // INSERT SOUND FILE

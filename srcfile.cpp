@@ -16,14 +16,14 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
-#include </usr/include/AL/alut.h>
+//#include </usr/include/AL/alut.h>
 #include "fonts.h"
 //#include "img.h"
 #include "guillermoR.h"
 #include "ianT.h"
 #include "jorgeZ.h"
 #include "joseV.h"
-#include "alecS.h"
+
 using namespace std;
 
 GLuint backTexture;
@@ -179,12 +179,46 @@ void check_mouse(XEvent *e);
 int check_keys(XEvent *e);
 void physics(void);
 void render(void);
-
+#ifdef USE_OPENAL_SOUND
+extern void initSounds();
+extern void cleanSounds();
+extern void playMain();
+extern void stopMain();
+extern void resumeMain();
+extern void playPause();
+extern void stopPause();
+extern void resumePause();
+extern void playMenuSelect();
+extern void carExplodeOne();
+extern void carExplodeTwo();
+extern void carExplodeThree();
+extern void carExplodeFour();
+extern void carExplodeFive();
+extern void healthLossOne();
+extern void healthLossTwo();
+extern void healthLossThree();
+extern void healthLossFour();
+extern void healthLossFive();
+extern void playGameOver();
+extern void playInGame();
+extern void stopInGame();
+extern void resumeInGame();
+extern void carRevOne();
+extern void carRevTwo();
+extern void carRevThree();
+extern void startGame();
+extern void playBrake();
+extern void playAccellOne();
+extern void playAccellTwo();
+#endif
 
 //===========================================================================
 //===========================================================================
 int main()
 {
+#ifdef USE_OPENAL_SOUND
+    initSounds();	
+#endif    
     init_opengl();
     //makeCar();
     int done=0;
@@ -466,6 +500,9 @@ void render()
 	}
 
 	if (countDown && !gameOver) {
+#ifdef USE_OPENAL_SOUND
+	    playInGame();
+#endif
 	    renderMainCar(g.left, g.right);
 	    renderLivesFrame();
 	    renderLives();
