@@ -13,10 +13,12 @@ Image heartImage = "./Sprites/cross.jpg";
 Image mainMenuImage = "./Sprites/mainMenu.png";
 Image livesImage = "./Sprites/Lives.png";
 Image fireImage = "./Sprites/fire.png";
+Image livesFrameImage = "./Sprites/livesFrame.png";
 Image countDownImage[4] = {"./Sprites/3.png",
 	"./Sprites/2.png",
 	"./Sprites/1.png",
 	"./Sprites/GO.png"};
+
 GLuint countDownTexture[4];
 GLuint mainCarTexture;
 GLuint mainMenuTexture;
@@ -25,12 +27,14 @@ GLuint miniVanTexture;
 GLuint heartTexture;
 GLuint livesTexture;
 GLuint fireTexture;
+GLuint livesFrameTexture;
 GLuint silhouetteMainCarTexture;
 GLuint silhouetteAudiTexture;
 GLuint silhouetteMiniVanTexture;
 GLuint silhouetteHeartTexture;
 GLuint silhouetteMainMenuTexture;
 GLuint silhouetteLivesTexture;
+GLuint silhouetteLivesFrameTexture;
 
 class Car {
 	public:
@@ -79,8 +83,8 @@ class Game {
 
 		Game() {
 			for(int j = 0; j < 3; j++){
-				heart[j].pos[0]= (fxres*1.68) + (j*30);
-				heart[j].pos[1]= 760;
+				heart[j].pos[0]= (fxres*1.66) + (j*30);
+				heart[j].pos[1]= 774;
 			}
 			mainCar.pos[0]= fxres;
 			mainCar.pos[1]= 80.0;
@@ -295,9 +299,9 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 		ec2X = 180.0;
 	else 
 		ec2X = 340.0;
-	for (int j = 0; j < 3; j++) {
-		ga.heart[j].pos[0] = (fxres*1.68) + (j*30);
-		ga.heart[j].pos[1] = 760.0; 
+	for (int j = 0; j < 3; j++) {	
+		ga.heart[j].pos[0]= (fxres*1.66) + (j*30);
+		ga.heart[j].pos[1]= 774;
 	}
 	ga.enemyCar[2].pos[1] = fyres+((fyres*.7)+100);
 	ga.numHearts = 2;
@@ -308,6 +312,7 @@ void generateTextures(){
 	glGenTextures(1, &audiTexture);
 	glGenTextures(1, &miniVanTexture);
 	glGenTextures(1, &livesTexture);
+	glGenTextures(1, &livesFrameTexture);
 	glGenTextures(1, &heartTexture);
 	glGenTextures(1, &fireTexture);
 	glGenTextures(1, &countDownTexture[0]);
@@ -320,6 +325,7 @@ void generateTextures(){
 	glGenTextures(1, &silhouetteHeartTexture);
 	glGenTextures(1, &silhouetteMainMenuTexture);
 	glGenTextures(1, &silhouetteLivesTexture);
+	glGenTextures(1, &silhouetteLivesFrameTexture);
 }
 
 void initImages() {
@@ -443,6 +449,24 @@ void initImages() {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData7);
 	free(silhouetteData7);
+
+	w = livesFrameImage.width;
+	h = livesFrameImage.height;
+
+	glBindTexture(GL_TEXTURE_2D, livesFrameTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+			GL_RGB, GL_UNSIGNED_BYTE, livesFrameImage.data);
+
+	//silhouette
+	glBindTexture(GL_TEXTURE_2D, silhouetteLivesFrameTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	unsigned char *silhouetteFrameData = buildAlphaData(&livesFrameImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteFrameData);
+	free(silhouetteFrameData);
 
 	unsigned char *silhouetteCountDownData[4];
 	for (int i=0; i<4; i++) {
@@ -581,7 +605,8 @@ void renderAudi2() {
 
 void renderHeart() {
 	for (int i = 0; i < 3; i++) {
-		int s = ga.heart[i].size;
+		int sw = ga.heart[i].size*.917;
+		int sh = ga.heart[i].size;
 		float x = ga.heart[i].pos[0];
 		float y = ga.heart[i].pos[1];
 		glPushMatrix();
@@ -591,20 +616,20 @@ void renderHeart() {
 		glAlphaFunc(GL_GREATER, 0.0f);
 		glColor4ub(255,255,255,255);
 		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-sw,-sh);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-sw, sh);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( sw, sh);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( sw,-sh);
 		glEnd();
 		glPopMatrix();
 	}
 }
 
 void renderLives() {
-	int sy = 20;
-	int sx = 2.3435*sy;
-	float x = (fxres*1.7)+25;
-	float y = 800.0;
+	int sy = 13;
+	int sx = (3.64102*sy);
+	float x = (fxres*1.7)+20;
+	float y = 805.0;
 	glPushMatrix();
 	glTranslatef(x, y, 0);
 	glBindTexture(GL_TEXTURE_2D, silhouetteLivesTexture);
@@ -619,6 +644,27 @@ void renderLives() {
 	glEnd();
 	glPopMatrix();
 }
+
+void renderLivesFrame() {
+	int sy = 43;
+	int sx = 38*1.466666;
+	float x = (fxres*1.7)+20;
+	float y = 785.0;
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glBindTexture(GL_TEXTURE_2D, silhouetteLivesFrameTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 1.0f); glVertex2f(-sx,-sy);
+	glTexCoord2f(0.0f, 0.0f); glVertex2f(-sx, sy);
+	glTexCoord2f(1.0f, 0.0f); glVertex2f( sx, sy);
+	glTexCoord2f(1.0f, 1.0f); glVertex2f( sx,-sy);
+	glEnd();
+	glPopMatrix();
+}
+
 
 void renderMainMenu() {
 	float sw = fxres;
@@ -637,7 +683,6 @@ void renderMainMenu() {
 	glEnd();
 	glPopMatrix();
 }
-
 
 void totalTimeFunction() {
 	static double t = 0.0;
