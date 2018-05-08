@@ -72,6 +72,7 @@ extern void playMain()
         printf("ERROR setting sound source\n");
         return ;
     }
+    printf("We have made it to the playMain! \n")
     alSourcePlay(mainSource);
 }
 extern void stopMain()

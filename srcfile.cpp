@@ -16,6 +16,7 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include "log.h"
 //#include </usr/include/AL/alut.h>
 #include "fonts.h"
 //#include "img.h"
@@ -179,6 +180,8 @@ void check_mouse(XEvent *e);
 int check_keys(XEvent *e);
 void physics(void);
 void render(void);
+
+bool audio_on = true;
 #ifdef USE_OPENAL_SOUND
 extern void initSounds();
 extern void cleanSounds();
@@ -218,8 +221,15 @@ int main()
 {
 #ifdef USE_OPENAL_SOUND
     initSounds();	
-#endif    
+#endif
+    
     init_opengl();
+
+#ifdef USE_OPENAL_SOUND
+    if (audio_on){
+    	playMain();
+    }
+#endif
     //makeCar();
     int done=0;
     while (!done) {
@@ -500,9 +510,6 @@ void render()
 	}
 
 	if (countDown && !gameOver) {
-#ifdef USE_OPENAL_SOUND
-	    playInGame();
-#endif
 	    renderMainCar(g.left, g.right);
 	    renderLivesFrame();
 	    renderLives();
