@@ -12,6 +12,7 @@ Image taxiImage = "./Sprites/taxi2.jpg";
 Image miniVanImage = "./Sprites/Mini_van.png";
 Image heartImage = "./Sprites/cross.jpg";
 Image mainMenuImage = "./Sprites/mainMenu.png";
+Image gameOverImage = "./Sprites/gameOver.png";
 Image livesImage = "./Sprites/Lives.png";
 Image fireImage = "./Sprites/fire.png";
 Image livesFrameImage = "./Sprites/livesFrame.png";
@@ -22,6 +23,7 @@ Image countDownImage[4] = {"./Sprites/3.png",
 };
 GLuint countDownTexture[4];
 GLuint mainCarTexture;
+GLuint gameOverTexture;
 GLuint mainMenuTexture;
 GLuint audiTexture;
 GLuint taxiTexture;
@@ -312,6 +314,7 @@ void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 
 void generateTextures(){
 	glGenTextures(1, &mainCarTexture);
+	glGenTextures(1, &gameOverTexture);
 	glGenTextures(1, &audiTexture);
 	glGenTextures(1, &miniVanTexture);
 	glGenTextures(1, &taxiTexture);
@@ -454,8 +457,18 @@ void initImages() {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData6);
 	free(silhouetteData6);
+	
+	//init game over 
+	w = gameOverImage.width;
+	h = gameOverImage.height;
 
-	//Init transparent Image
+	glBindTexture(GL_TEXTURE_2D, gameOverTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+			GL_RGB, GL_UNSIGNED_BYTE, gameOverImage.data);
+
+	//Init Lives Image
 	w = livesImage.width;
 	h = livesImage.height;
 
@@ -717,6 +730,24 @@ void renderMainMenu() {
 	glPushMatrix();
 	glTranslatef(256.0, 512, 0);
 	glBindTexture(GL_TEXTURE_2D, silhouetteMainMenuTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(-sw,-sh);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(-sw, sh);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i( sw, sh);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i( sw,-sh);
+	glEnd();
+	glPopMatrix();
+}
+
+void renderGameOver() {
+	float sw = fxres;
+	float sh = fyres/2.0; 
+	glPushMatrix();
+	glTranslatef(256.0, 512, 0);
+	glBindTexture(GL_TEXTURE_2D, gameOverTexture);
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);

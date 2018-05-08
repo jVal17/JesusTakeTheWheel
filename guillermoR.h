@@ -68,6 +68,7 @@ void renderHeart();
 void renderLives();
 void renderLivesFrame();
 void renderMainMenu();
+void renderGameOver();
 void generateTextures();
 void initImages();
 void totalTimeFunction();

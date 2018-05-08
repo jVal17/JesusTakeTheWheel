@@ -459,8 +459,11 @@ void render()
 	glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
 	glEnd();		
 
-	if (gameOver)
+	if (gameOver) {
+	    renderGameOver();
 	    gameOverMenu(g.xres, g.yres);
+	    return;
+	}
 
 	if (countDown && !gameOver) {
 	    renderMainCar(g.left, g.right);
