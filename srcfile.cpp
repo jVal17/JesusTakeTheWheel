@@ -220,6 +220,7 @@ extern void stopHoly();
 //===========================================================================
 int main()
 {
+    initTime();
 #ifdef USE_OPENAL_SOUND
     initSounds();	
 #endif
@@ -514,6 +515,7 @@ void physics()
 
 void render()
 {
+	powerUpHandler();
     glClearColor(0.9294, 0.788, 0.686, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     if (inMainMenu) {

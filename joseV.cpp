@@ -1,5 +1,4 @@
 //Jose Valenzuela 
-//lab05
 //Source code
 
 
@@ -10,10 +9,15 @@ GLuint crateTexture;
 GLuint silhouetteCrateTexture;
 GLuint plowTexture;
 GLuint silhouettePlowTexture;
-bool plowPowerUp = false;
-
-class powerUp 
-{
+static struct timespec ctimeStart, ctimeEnd, ptimeStart, ptimeEnd;
+bool once = true;
+void initTime(){
+	if(once){
+		clock_gettime(CLOCK_REALTIME, &ctimeStart);
+		once = false;
+	}
+}
+class powerUp {
 	public:
 		int pos[3];
 		int vel;
@@ -22,14 +26,13 @@ class powerUp
 			size = 26;
 		};
 };
-
 class gameObjects{
 	public:
 		powerUp plow;
 		powerUp crate;
 		int size;
 		bool contactCrate;
-		bool plowPowerUp = false;
+		bool poweredUp;
 		gameObjects() {
 			plow.size = 50;
 			crate.size = 35;
@@ -40,21 +43,39 @@ class gameObjects{
 			crate.pos[1] = 512.0f+600.0f;
 			crate.pos[2] = 0.0f;
 			contactCrate=false;
+			poweredUp=false;
 		}
 }go;
-
-void moveCrate(float src){
-	int chance = 100 - rand()%100;
-	//cout << chance << endl;
-	if(chance == 1){
-		if(go.crate.pos[1] < 0){
-			go.contactCrate = false;
-			spawnCrate();	
-		}
-	}
-	go.crate.pos[1] -= (src*600.0);
+bool getPowerUp(){
+	return go.poweredUp; 
 }
 
+//if power up timer initiated 
+bool already = false;
+//checks power up interval
+void endPower(){
+	cout << "endpower" <<endl;
+	clock_gettime(CLOCK_REALTIME, &ptimeEnd);	
+	int diff = timeDiff(&ptimeStart, &ptimeEnd);
+	if(diff > 5){
+		already = false;
+		go.poweredUp = false;	
+		cout << "here" << endl;
+	}	
+}
+//only calls power up check if powered up
+void powerUpHandler(){
+
+	if(go.poweredUp){
+		endPower();
+	}
+}
+void initPTimer(){
+	if(go.poweredUp && already==false){
+		clock_gettime(CLOCK_REALTIME, &ptimeStart);
+		already = true;
+	}
+}
 void colWithPowerUP(){
 	float MC[2];
 	getMainCarCoords(MC);
@@ -63,37 +84,39 @@ void colWithPowerUP(){
 			go.crate.pos[0]-35.0 < MC[0] &&
 			go.crate.pos[0]+35.0 > MC[0]
 	  ){
-		plowPowerUp = true;
+
+		go.poweredUp = true;
 		go.contactCrate = true;
-		//cout << "Crate Contact with main Car" << endl;
+		initPTimer();
 	}
-	//draw plow
-	//make car invinc
-	//if car collision with enmy make enmy spin
-	//}
 }
-bool getPowerUp(){
-	return go.plowPowerUp;
+
+int temp = 5;
+void spawnCrate(){
+	go.crate.pos[0] = rand()%(X_MAX - X_MIN) + X_MIN;
+	go.crate.pos[1] = 1024;
 }
-void renderPlowOnCar(bool l, bool r){
-	if(go.contactCrate){
-		float MC[2];
-		getMainCarCoords(MC);
-		go.plow.pos[0] = MC[0];
-		go.plow.pos[1] = MC[1] + 30;
-		int s = go.plow.size;
+void moveCrate(float src){
+	clock_gettime(CLOCK_REALTIME, &ctimeEnd);	
+	int diff = timeDiff(&ctimeStart, &ctimeEnd);
+	if(diff > temp){
+		temp+=5;
+		go.contactCrate = false;
+		spawnCrate();	
+	}
+	go.crate.pos[1] -= (src*600.0);
+}
+//---------------------------------RENDERING-----------------------------------
+void renderCrate()
+{
+	if(go.contactCrate == false){
+		int s = go.crate.size;
 		GLfloat color[3];
 		color[0]=color[1]=color[2]=1.0;
 		glPushMatrix();
 		glColor3f(1.0,1.0,1.0);
-		glTranslatef(go.plow.pos[0], go.plow.pos[1], 0.0f);
-		if(l) {
-			glRotatef( 10.0, 0.0, 0.0, 1.0);
-		}
-		if(r) {
-			glRotatef(-10.0, 0.0, 0.0, 1.0);
-		}
-		glBindTexture(GL_TEXTURE_2D, silhouettePlowTexture);
+		glTranslatef(go.crate.pos[0], go.crate.pos[1], 0.0f);
+		glBindTexture(GL_TEXTURE_2D, silhouetteCrateTexture);
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
 		glColor4ub(255,255,255,255);
@@ -105,14 +128,9 @@ void renderPlowOnCar(bool l, bool r){
 		glEnd();
 		glPopMatrix();
 	}
-}
 
-void spawnCrate(){
-	//cout << "spawned crate" <<endl;
-	go.crate.pos[0] = rand()%(X_MAX - X_MIN) + X_MIN;
-	go.crate.pos[1] = 1024;
-}
 
+}
 void generatePowerUpTextures(){
 	glGenTextures(1, &plowTexture);
 	glGenTextures(1, &silhouettePlowTexture);
@@ -158,53 +176,36 @@ void initPowerUpImages(){
 	free(silhouetteData1);
 
 }
-
-void renderCrate()
-{
-	if(go.contactCrate) {
-		//cout << go.crate.pos[0] << " " << go.crate.pos[1] << endl;
-		return;
+void renderPlowOnCar(bool l, bool r){
+	if(go.poweredUp){
+		float MC[2];
+		getMainCarCoords(MC);
+		go.plow.pos[0] = MC[0];
+		go.plow.pos[1] = MC[1] + 30;
+		int s = go.plow.size;
+		GLfloat color[3];
+		color[0]=color[1]=color[2]=1.0;
+		glPushMatrix();
+		glColor3f(1.0,1.0,1.0);
+		glTranslatef(go.plow.pos[0], go.plow.pos[1], 0.0f);
+		if(l) {
+			glRotatef( 10.0, 0.0, 0.0, 1.0);
+		}
+		if(r) {
+			glRotatef(-10.0, 0.0, 0.0, 1.0);
+		}
+		glBindTexture(GL_TEXTURE_2D, silhouettePlowTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);		
+		glEnd();
+		glPopMatrix();
 	}
-	int s = go.crate.size;
-	GLfloat color[3];
-	color[0]=color[1]=color[2]=1.0;
-	glPushMatrix();
-	glColor3f(1.0,1.0,1.0);
-	glTranslatef(go.crate.pos[0], go.crate.pos[1], 0.0f);
-	glBindTexture(GL_TEXTURE_2D, silhouetteCrateTexture);
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.0f);
-	glColor4ub(255,255,255,255);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);		
-	glEnd();
-	glPopMatrix();
 }
 
 
-
-void pauseGame(float y[]){
-	y[0]-=0.0;
-	y[1]-=0.0;
-}
-
-void example() {
-	Rect r;
-	r.bot = 155;
-	r.left = 155;
-	r.center = 0;
-	struct timespec start, end;
-	double temp = 0;
-	static double time = 0.0000;
-
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
-	for (int i = 0; i< 242000000; i++)
-		temp+=temp;
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-
-	time += timeDiff(&start, &end);
-	ggprint8b(&r, 16, 0xFFFF00, "function-time:%lf", time);
-}
