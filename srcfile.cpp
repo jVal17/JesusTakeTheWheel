@@ -534,6 +534,10 @@ void render()
 	if (gameOver) {
 	    renderGameOver();
 	    gameOverMenu(g.xres, g.yres);
+	    finalScoreTracker();
+	    GameOverScore();
+	    finalLevelTracker();
+	    GameOverLevel();
 	    return;
 	}
 
