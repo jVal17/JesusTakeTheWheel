@@ -19,12 +19,13 @@ extern double timeDiff(struct timespec *start, struct timespec *end);
 
 extern bool inGame;
 extern bool inMainMenu;
+extern bool audio_on;
 extern int menuPosition;
-extern int key;
-
 
 void renderText();
 void mainMenu(const int, const int);
 void pauseMenu(const int, const int);
 void gameOverMenu(const int, const int);
+void audioMenu(const int, const int);
+void tutorial(const int, const int);
 #endif
