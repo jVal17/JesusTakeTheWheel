@@ -418,6 +418,8 @@ int check_keys(XEvent *e)
 		    gameOver = false;
 		    g.pause = false;
 		    inGame = true;
+		    clearScore(0);
+		    clearLevel(1);
 		} else if (menuPosition == 4) {
 		    return 1;
 		}
@@ -484,7 +486,6 @@ void physics()
 	//checkpoint(g.level);
 
 	moveCrate(g.scrSpd);	
-	moveLife(g.scrSpd);
 	moveEnemyCars(g.scrSpd);
 	colWithPowerUP();
 

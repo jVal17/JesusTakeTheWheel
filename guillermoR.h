@@ -28,9 +28,11 @@ class Car {
 		Vec pos;
 		bool invinc;
 		bool powerUp;
+		bool carHit;
 		Car() {
 			invinc = false;
 			powerUp = false;
+			carHit = false;
 		}
 };
 
