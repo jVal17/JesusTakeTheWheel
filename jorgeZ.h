@@ -29,11 +29,15 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 using namespace std;
 
 void screenPrint();
+void GameOverScore();
+void GameOverLevel();
 void checkpoint(int, int &);
 void createTextures();
 void imageTexturing();
 void pointTracker();
 void levelTracker();
+void finalScoreTracker();
+void finalLevelTracker();
 void velocityMod(float, float &, bool &, bool &);
 
 //void pauseTimer(bool&);
