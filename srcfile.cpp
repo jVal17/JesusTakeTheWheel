@@ -334,16 +334,16 @@ int check_keys(XEvent *e)
 	    else
 		g.pause = true;
 	}
-	if (key == XK_w && !g.pause) {
+	if ((key == XK_w || key == XK_Up) && !g.pause) {
 	    g.forward = true;
 	}
-	if (key == XK_a && !g.pause) {
+	if ((key == XK_a || key == XK_Left) && !g.pause) {
 	    g.left = true;
 	}
-	if (key == XK_s && !g.pause) {
+	if ((key == XK_s || key == XK_Down) && !g.pause) {
 	    g.backwards = true;
 	}
-	if (key == XK_d && !g.pause) {
+	if ((key == XK_d || key == XK_Right) && !g.pause) {
 	    g.right = true;
 	}
 	if (inMainMenu) {
@@ -434,16 +434,16 @@ int check_keys(XEvent *e)
 	}
     }
     if (e->type == KeyRelease) {
-	if (key == XK_w) {
+	if ((key == XK_w || key == XK_Up))  {
 	    g.forward = false;
 	}
-	if (key == XK_a) {
+	if (key == XK_a || key == XK_Left) {
 	    g.left = false;
 	}
-	if (key == XK_s) {
+	if (key == XK_s || key == XK_Down) {
 	    g.backwards = false;
 	}
-	if (key == XK_d) {
+	if (key == XK_d || key  == XK_Right) {
 	    g.right = false;
 	}
 	return 0;
