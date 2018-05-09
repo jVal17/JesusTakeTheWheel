@@ -108,7 +108,7 @@ void colWithPowerUP(){
 int temp = 5;
 void spawnCrate(){
 	go.crate.pos[0] = rand()%(X_MAX - X_MIN) + X_MIN;
-	go.crate.pos[1] = 1024;
+	go.crate.pos[1] = 1124;
 }
 
 void moveCrate(float src){
