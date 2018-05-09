@@ -481,7 +481,7 @@ void physics()
 
 	//g.level = checkpoint();
 	//checkpoint(g.level);
-
+	moveLife(g.scrSpd);
 	moveCrate(g.scrSpd);	
 	moveEnemyCars(g.scrSpd);
 	colWithPowerUP();
