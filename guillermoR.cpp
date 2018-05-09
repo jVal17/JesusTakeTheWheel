@@ -167,10 +167,13 @@ int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown){
 				carInvincibility();
 			if (ga.numHearts < 0) {
 				gameOver = true;
-				cout << "You have crashed. Game has reset" << endl;
+				//cout << "You have crashed. Game has reset" << endl;
+				//void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
+				//float &ec2X, float &ec2Y, float xres, float yres)
+
 				resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
 						ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], 
-						ga.enemyCar[1].pos[1], ga.enemyCar[1].pos[0], 
+						ga.enemyCar[1].pos[0], ga.enemyCar[1].pos[1], 
 						fxres, fyres);
 				countDownBool = true;	
 				firstCountDown = true;	
