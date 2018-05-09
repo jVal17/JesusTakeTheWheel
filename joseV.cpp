@@ -48,11 +48,10 @@ class gameObjects{
 }go;
 //-------------------------------Power up physics------
 void powerUpHandler(){
-	Car enemyCars[3];
-	getEnemyCars(enemyCars);
 	if(go.poweredUp){
 		endPower();
 	}
+
 
 }
 //-------------------------------POWER UPS -------------
@@ -183,7 +182,7 @@ void renderPlowOnCar(bool l, bool r){
 		float MC[2];
 		getMainCarCoords(MC);
 		go.plow.pos[0] = MC[0];
-		go.plow.pos[1] = MC[1] + 50;
+		go.plow.pos[1] = MC[1] + 55;
 		int s = go.plow.size;
 		GLfloat color[3];
 		color[0]=color[1]=color[2]=1.0;

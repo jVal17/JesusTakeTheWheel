@@ -41,14 +41,7 @@ class Texture {
 	float yc[2];
 };
 
-class Car {
-    public:
-	Vec pos;
-	int dir[4];
-    public:
-	Car() {
-	}
-};
+
 
 
 class Global {
