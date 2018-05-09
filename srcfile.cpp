@@ -484,6 +484,7 @@ void physics()
 	//checkpoint(g.level);
 
 	moveCrate(g.scrSpd);	
+	moveLife(g.scrSpd);
 	moveEnemyCars(g.scrSpd);
 	colWithPowerUP();
 
