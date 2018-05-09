@@ -30,6 +30,7 @@ ALuint mainSource;
 ALuint pauseSource;
 ALuint gameOverSource;
 ALuint inGameSource;
+ALuint holySource;
 ALuint alBuffer;
 
 extern void initSounds() 
@@ -72,7 +73,7 @@ extern void playMain()
         printf("ERROR setting sound source\n");
         return ;
     }
-    printf("We have made it to the playMain! \n")
+    printf("We have made it to the playMain! \n");
     alSourcePlay(mainSource);
 }
 extern void stopMain()
@@ -350,7 +351,7 @@ extern void stopInGame()
 extern void resumeInGame()
 {
     alSourcePlay(inGameSource);
-
+}
 
 extern void carRevOne()
 {
@@ -412,20 +413,25 @@ extern void startGame()
 {
     alBuffer = alutCreateBufferFromFile("./sound/Holy.wav"); //Insert HOLY.WAV
 
-    alGenSources(1, &alSource);
-    alSourcei(alSource, AL_BUFFER, alBuffer);
+    alGenSources(1, &holySource);
+    alSourcei(holySource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
-    alSourcef(alSource, AL_PITCH, 1.0f);
-    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+    alSourcef(holySource, AL_GAIN, 1.0f);
+    alSourcef(holySource, AL_PITCH, 1.0f);
+    alSourcei(holySource, AL_LOOPING, AL_FALSE);
 
     if (alGetError() != AL_NO_ERROR) {
 	printf("ERROR setting sound source\n");
 	return;
     }
 
-    alSourcePlay(alSource);
+    alSourcePlay(holySource);
 
+}
+
+extern void stopHoly()
+{
+   alSourcePause(holySource);
 }
 
 extern void playBrake()

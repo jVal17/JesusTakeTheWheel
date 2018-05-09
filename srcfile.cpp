@@ -213,6 +213,7 @@ extern void startGame();
 extern void playBrake();
 extern void playAccellOne();
 extern void playAccellTwo();
+extern void stopHoly();
 #endif
 
 //===========================================================================
@@ -227,7 +228,8 @@ int main()
 
 #ifdef USE_OPENAL_SOUND
     if (audio_on){
-    	playMain();
+    	startGame();
+	playMain();
     }
 #endif
     //makeCar();
@@ -353,21 +355,36 @@ int check_keys(XEvent *e)
 	}
 	if (inMainMenu) {
 	    if (key == XK_Return) {
-		if (menuPosition == 1) {
+		if (menuPosition == 1){
+#ifdef USE_OPENAL_SOUND
+		    playInGame();
+		    stopMain();
+		    stopHoly();		
+#endif
 		    inMainMenu = false;
 		    inGame = true;
 		}
 	    } else if (key == XK_Down || key == XK_s) {
 		if (menuPosition != 2) {
+#ifdef USE_OPENAL_SOUND
+		    playMenuSelect();	
+#endif
 		    menuPosition++;
 		}
 	    } else if (key == XK_Up || key == XK_w) {
 		if (menuPosition != 1) {
+#ifdef USE_OPENAL_SOUND
+		    playMenuSelect();	
+#endif
 		    menuPosition--;
 		}
 	    }
 	}
 	if (inPauseMenu) {
+#ifdef USE_OPENAL_SOUND
+	    playPause();
+	    stopInGame();	
+#endif
 	    if(g.firstPause)
 	    {
 		//pauseTimer(inPauseMenu);
@@ -375,6 +392,11 @@ int check_keys(XEvent *e)
 	    }
 	    if (key == XK_Return) {
 		if (menuPosition == 1) {
+#ifdef USE_OPENAL_SOUND
+		    stopPause();
+		    resumeInGame();
+		    		
+#endif
 		    inPauseMenu = false;
 		    inGame = true;
 		} else if (menuPosition == 4) {
@@ -382,10 +404,16 @@ int check_keys(XEvent *e)
 		}
 	    } else if (key == XK_Down || key == XK_s) {
 		if (menuPosition != 4) {
+#ifdef USE_OPENAL_SOUND
+		    playMenuSelect();
+#endif
 		    menuPosition++;
 		}
 	    } else if (key == XK_Up || key == XK_w) {
 		if (menuPosition != 1) {
+#ifdef USE_OPENAL_SOUND
+		    playMenuSelect();
+#endif
 		    menuPosition--;
 		}
 	    }
