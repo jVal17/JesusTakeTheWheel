@@ -41,14 +41,7 @@ class Texture {
 	float yc[2];
 };
 
-class Car {
-    public:
-	Vec pos;
-	int dir[4];
-    public:
-	Car() {
-	}
-};
+
 
 
 class Global {
@@ -220,7 +213,6 @@ extern void stopHoly();
 //===========================================================================
 int main()
 {
-    initTime();
 #ifdef USE_OPENAL_SOUND
     initSounds();	
 #endif
@@ -425,6 +417,8 @@ int check_keys(XEvent *e)
 		    gameOver = false;
 		    g.pause = false;
 		    inGame = true;
+		    clearScore(0);
+		    clearLevel(1);
 		} else if (menuPosition == 4) {
 		    return 1;
 		}
@@ -439,8 +433,6 @@ int check_keys(XEvent *e)
 	    }
 	}
     }
-
-
     if (e->type == KeyRelease) {
 	if (key == XK_w) {
 	    g.forward = false;
@@ -489,7 +481,7 @@ void physics()
 
 	//g.level = checkpoint();
 	//checkpoint(g.level);
-
+	moveLife(g.scrSpd);
 	moveCrate(g.scrSpd);	
 	moveEnemyCars(g.scrSpd);
 	colWithPowerUP();
@@ -552,6 +544,8 @@ void render()
 	    levelTracker();
 	    renderCountDown(countDown);
 	}
+	if (!countDown)
+		initTime();
 	pointTracker();
 	levelTracker();
 	renderMainCar(g.left, g.right);

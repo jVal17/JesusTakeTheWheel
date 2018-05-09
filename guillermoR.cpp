@@ -41,16 +41,6 @@ GLuint silhouetteMainMenuTexture;
 GLuint silhouetteLivesTexture;
 GLuint silhouetteLivesFrameTexture;
 
-class Car {
-	public:
-		Vec pos;
-		bool invinc;
-		bool powerUp = false;
-		Car() {
-			invinc = false;
-		}
-};
-
 class Heart {
 	public:
 		int size;
@@ -153,7 +143,7 @@ void moveEnemyCars(float scr){
 
 //void countDownSetTrue (bool &countBool)
 //	countBool = true;
-
+int carHit = -1;
 int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown){
 	ga.mainCar.powerUp = getPowerUp();
 	int doesHit = 0;
@@ -165,7 +155,9 @@ int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown){
 				ga.enemyCar[i].pos[0]-30.0 < ga.mainCar.pos[0] &&
 				ga.enemyCar[i].pos[0]+30.0 > ga.mainCar.pos[0]
 		   ){
-			if(!ga.mainCar.invinc) {
+			if(ga.mainCar.powerUp) {
+				ga.enemyCar[i].carHit = 1;
+			} else if(!ga.mainCar.invinc) {
 				ga.heart[ga.numHearts].pos[0] = -50;
 				ga.numHearts-=1;
 				ga.mainCar.invinc = true;
@@ -176,9 +168,9 @@ int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown){
 				gameOver = true;
 				cout << "You have crashed. Game has reset" << endl;
 				resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
-				ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], 
-				ga.enemyCar[1].pos[1], ga.enemyCar[1].pos[0], 
-				fxres, fyres);
+						ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], 
+						ga.enemyCar[1].pos[1], ga.enemyCar[1].pos[0], 
+						fxres, fyres);
 				countDownBool = true;	
 				firstCountDown = true;	
 				doesHit = 2;				
@@ -191,6 +183,12 @@ int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown){
 void getMainCarCoords(float (&M)[2]) {
 	M[0] = ga.mainCar.pos[0];
 	M[1] = ga.mainCar.pos[1];
+}
+
+void getEnemyCars(struct Car (&eCar)[3]){
+	eCar[0] = ga.enemyCar[0];
+	eCar[1] = ga.enemyCar[1];
+	eCar[2] = ga.enemyCar[2];
 }
 
 void carInvincibility() {
@@ -239,6 +237,7 @@ bool spawnEnemyCars(float yres){
 		ga.carSpawnPos = rand() % (X_MAX-X_MIN) + X_MIN;
 		ga.enemyCar[0].pos[0] = ga.carSpawnPos;
 		ga.enemyCar[0].pos[1] = yres+100;
+		ga.enemyCar[0].carHit = 0;
 		return true;
 	}
 	if (ga.enemyCar[1].pos[1] < 0.0) {
@@ -246,6 +245,7 @@ bool spawnEnemyCars(float yres){
 		ga.carSpawnPos = rand() % (X_MAX-X_MIN) + X_MIN;
 		ga.enemyCar[1].pos[0] = ga.carSpawnPos;
 		ga.enemyCar[1].pos[1] = yres+100;
+		ga.enemyCar[1].carHit = 0;
 		return true;
 	}	
 	if (ga.enemyCar[2].pos[1] < 0.0) {
@@ -253,6 +253,7 @@ bool spawnEnemyCars(float yres){
 		ga.carSpawnPos = rand() % (X_MAX-X_MIN) + X_MIN;
 		ga.enemyCar[2].pos[0] = ga.carSpawnPos;
 		ga.enemyCar[2].pos[1] = yres+100;
+		ga.enemyCar[2].carHit = 0;
 		return true;
 	}
 
@@ -403,7 +404,7 @@ void initImages() {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData3);
 	free(silhouetteData3);
-	
+
 	//taxi
 	w = taxiImage.width;
 	h = taxiImage.height;
@@ -457,7 +458,7 @@ void initImages() {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData6);
 	free(silhouetteData6);
-	
+
 	//init game over 
 	w = gameOverImage.width;
 	h = gameOverImage.height;
@@ -530,7 +531,7 @@ float angle = 0;
 void renderMainCar(bool l, bool r) {
 	float x = ga.mainCar.pos[0];
 	float y = ga.mainCar.pos[1];
-	if (!ga.mainCar.invinc) {
+	if (!ga.mainCar.invinc && !ga.mainCar.powerUp) {
 		glPushMatrix();
 		glTranslatef(x, y, 0);
 		if(l) {
@@ -550,8 +551,27 @@ void renderMainCar(bool l, bool r) {
 		glTexCoord2f(1.0f, 1.0f); glVertex2i( 50,-50);
 		glEnd();
 		glPopMatrix();
-	}
-	if (ga.mainCar.invinc) {
+	} else if (ga.mainCar.powerUp) {
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		if(l) {
+			glRotatef( 10.0, 0.0, 0.0, 1.0);
+		}
+		if(r) {
+			glRotatef(-10.0, 0.0, 0.0, 1.0);
+		}
+		glColor4ub(255,255,255,255);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glBindTexture(GL_TEXTURE_2D, silhouetteMainCarTexture);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-50,-50);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-50, 50);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( 50, 50);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( 50,-50);
+		glEnd();
+		glPopMatrix();
+	} else if (ga.mainCar.invinc) {
 		int s = ga.carSize;
 		glPushMatrix();
 		if(ga.blink)
@@ -581,62 +601,127 @@ void renderMainCar(bool l, bool r) {
 
 }
 
+float angle2;
 void renderAudi() {
-	int s = ga.carSize;
-	float x = ga.enemyCar[0].pos[0];
-	float y = ga.enemyCar[0].pos[1];
-	glPushMatrix();
-	glTranslatef(x, y, 0);
-	glBindTexture(GL_TEXTURE_2D, silhouetteAudiTexture);
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.0f);
-	glColor4ub(255,255,255,255);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
-	glEnd();
-	glPopMatrix();
+	if(ga.enemyCar[0].carHit){
+		int s = ga.carSize;
+		float x = ga.enemyCar[0].pos[0];
+		float y = ga.enemyCar[0].pos[1];
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glRotatef( angle2+=15.0, 0.0, 0.0, 1.0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteAudiTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+		glEnd();
+		glPopMatrix();
+	} else {
+		int s = ga.carSize;
+		float x = ga.enemyCar[0].pos[0];
+		float y = ga.enemyCar[0].pos[1];
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteAudiTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+		glEnd();
+		glPopMatrix();
+	}
 }
 
+float angle3;
 void renderTaxi() {
-	int sw = 20;
-	int sh = sw*2.044444;
-	float x = ga.enemyCar[1].pos[0];
-	float y = ga.enemyCar[1].pos[1];
-	glPushMatrix();
-	glTranslatef(x, y, 0);
-	glBindTexture(GL_TEXTURE_2D, silhouetteTaxiTexture);
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.0f);
-	glColor4ub(255,255,255,255);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(-sw,-sh);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(-sw, sh);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i( sw, sh);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i( sw,-sh);
-	glEnd();
-	glPopMatrix();
+	if(ga.enemyCar[1].carHit){
+		int sw = 20;
+		int sh = sw*2.044444;
+		float x = ga.enemyCar[1].pos[0];
+		float y = ga.enemyCar[1].pos[1];
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glRotatef( angle3+=15.0, 0.0, 0.0, 1.0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteTaxiTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-sw,-sh);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-sw, sh);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( sw, sh);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( sw,-sh);
+		glEnd();
+		glPopMatrix();
+	} else {
+		int sw = 20;
+		int sh = sw*2.044444;
+		float x = ga.enemyCar[1].pos[0];
+		float y = ga.enemyCar[1].pos[1];
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteTaxiTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-sw,-sh);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-sw, sh);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( sw, sh);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( sw,-sh);
+		glEnd();
+		glPopMatrix();
+	}
 }
 
+float angle4;
 void renderMiniVan() {
-	int s = ga.carSize;;
-	float x = ga.enemyCar[2].pos[0];
-	float y = ga.enemyCar[2].pos[1];
-	glPushMatrix();
-	glTranslatef(x, y, 0);
-	glBindTexture(GL_TEXTURE_2D, silhouetteMiniVanTexture);
-	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.0f);
-	glColor4ub(255,255,255,255);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
-	glEnd();
-	glPopMatrix();
+	if(ga.enemyCar[2].carHit){
+		int s = ga.carSize;
+		float x = ga.enemyCar[2].pos[0];
+		float y = ga.enemyCar[2].pos[1];
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glRotatef(angle4 += 15.0, 0.0, 0.0, 1.0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteMiniVanTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+		glEnd();
+		glPopMatrix();
+
+	} else {
+		int s = ga.carSize;;
+		float x = ga.enemyCar[2].pos[0];
+		float y = ga.enemyCar[2].pos[1];
+		glPushMatrix();
+		glTranslatef(x, y, 0);
+		glBindTexture(GL_TEXTURE_2D, silhouetteMiniVanTexture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255,255,255,255);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-s,-s);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-s, s);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( s, s);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( s,-s);
+		glEnd();
+		glPopMatrix();
+	}
 }
 
 
@@ -853,27 +938,27 @@ float delay = 1.0;
 
 void renderCountDown(bool &countDownBool) {
 	//render 
-		int sx = 46;
-		int sy = 79;
-		if(inc == 3){
-			 sx = 130;
-			 sy = sx*0.509;
-		}
-		float x = (fxres/2.0) + 140;
-		float y = (fyres/2.0) + 200.0;
-		glPushMatrix();
-		glTranslatef(x, y, 0);
-		glBindTexture(GL_TEXTURE_2D, countDownTexture[inc]);
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.0f);
-		glColor4ub(255,255,255,255);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(-sx,-sy);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(-sx, sy);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i( sx, sy);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i( sx,-sy);
-		glEnd();
-		glPopMatrix();
+	int sx = 46;
+	int sy = 79;
+	if(inc == 3){
+		sx = 130;
+		sy = sx*0.509;
+	}
+	float x = (fxres/2.0) + 140;
+	float y = (fyres/2.0) + 200.0;
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glBindTexture(GL_TEXTURE_2D, countDownTexture[inc]);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(-sx,-sy);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(-sx, sy);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i( sx, sy);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i( sx,-sy);
+	glEnd();
+	glPopMatrix();
 	//
 	clock_gettime(CLOCK_REALTIME, &currentCountTime);
 	double timeSpan = timeDiff(&countDownTime, &currentCountTime);
@@ -886,7 +971,7 @@ void renderCountDown(bool &countDownBool) {
 			inc = 0;
 			delay = 1.0;
 		}
-			
+
 	}
 	//countDownImage[i];
 }

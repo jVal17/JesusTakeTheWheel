@@ -39,6 +39,8 @@ void levelTracker();
 void finalScoreTracker();
 void finalLevelTracker();
 void velocityMod(float, float &, bool &, bool &);
+void clearScore(int );
+void clearLevel(int );
 
 //void pauseTimer(bool&);
 //void function1();

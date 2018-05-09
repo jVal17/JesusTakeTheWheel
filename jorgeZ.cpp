@@ -87,6 +87,16 @@ void GameOverScore()
     ggprint8b(&r, 16, 0xffffffff, "%li", fScore);
 }
 
+void clearScore(int newScore)
+{
+        Score = newScore;
+}
+
+void clearLevel(int newLevel)
+{
+        lvl = newLevel;
+}
+
 void checkpoint (int Score, int &Lev)
 {
     if(Score >= levelUp){

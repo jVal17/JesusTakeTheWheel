@@ -40,4 +40,6 @@ void powerUpHandler();
 int clock_gettime(clockid_t clk_id, struct timespect *tp);
 void initTime();
 void endPower();
+void spawnLive();
+void moveLife(float src);
 #endif
