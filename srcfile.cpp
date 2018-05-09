@@ -213,7 +213,6 @@ extern void stopHoly();
 //===========================================================================
 int main()
 {
-    initTime();
 #ifdef USE_OPENAL_SOUND
     initSounds();	
 #endif
@@ -434,8 +433,6 @@ int check_keys(XEvent *e)
 	    }
 	}
     }
-
-
     if (e->type == KeyRelease) {
 	if (key == XK_w) {
 	    g.forward = false;
@@ -547,6 +544,8 @@ void render()
 	    levelTracker();
 	    renderCountDown(countDown);
 	}
+	if (!countDown)
+		initTime();
 	pointTracker();
 	levelTracker();
 	renderMainCar(g.left, g.right);

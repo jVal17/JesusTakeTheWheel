@@ -11,12 +11,14 @@ GLuint plowTexture;
 GLuint silhouettePlowTexture;
 static struct timespec ctimeStart, ctimeEnd, ptimeStart, ptimeEnd;
 bool once = true;
+
 void initTime(){
 	if(once){
 		clock_gettime(CLOCK_REALTIME, &ctimeStart);
 		once = false;
 	}
 }
+
 class powerUp {
 	public:
 		int pos[3];
@@ -26,6 +28,7 @@ class powerUp {
 			size = 26;
 		};
 };
+
 class gameObjects{
 	public:
 		powerUp plow;
@@ -39,8 +42,8 @@ class gameObjects{
 			plow.pos[0] = 256.0f;
 			plow.pos[1] = 512.0f;
 			plow.pos[2] = 0.0f;
-			crate.pos[0] = 256.0f;
-			crate.pos[1] = 512.0f+600.0f;
+			crate.pos[0] = rand() % (X_MAX-X_MIN) + X_MIN;
+			crate.pos[1] = 1124;
 			crate.pos[2] = 0.0f;
 			contactCrate=false;
 			poweredUp=false;
@@ -51,8 +54,6 @@ void powerUpHandler(){
 	if(go.poweredUp){
 		endPower();
 	}
-
-
 }
 //-------------------------------POWER UPS -------------
 bool getPowerUp(){
@@ -72,12 +73,14 @@ void endPower(){
 		cout << "here" << endl;
 	}	
 }
+
 void initPTimer(){
 	if(go.poweredUp && already==false){
 		clock_gettime(CLOCK_REALTIME, &ptimeStart);
 		already = true;
 	}
 }
+
 void colWithPowerUP(){
 	float MC[2];
 	getMainCarCoords(MC);
@@ -92,11 +95,13 @@ void colWithPowerUP(){
 		initPTimer();
 	}
 }
+
 int temp = 5;
 void spawnCrate(){
 	go.crate.pos[0] = rand()%(X_MAX - X_MIN) + X_MIN;
 	go.crate.pos[1] = 1024;
 }
+
 void moveCrate(float src){
 	clock_gettime(CLOCK_REALTIME, &ctimeEnd);	
 	int diff = timeDiff(&ctimeStart, &ctimeEnd);
@@ -107,6 +112,7 @@ void moveCrate(float src){
 	}
 	go.crate.pos[1] -= (src*600.0);
 }
+
 //---------------------------------RENDERING-----------------------------------
 void renderCrate()
 {
@@ -132,6 +138,7 @@ void renderCrate()
 
 
 }
+
 void generatePowerUpTextures(){
 	glGenTextures(1, &plowTexture);
 	glGenTextures(1, &silhouettePlowTexture);
