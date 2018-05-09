@@ -14,7 +14,7 @@ Image heartImage = "./Sprites/cross.jpg";
 Image mainMenuImage = "./Sprites/mainMenu.png";
 Image gameOverImage = "./Sprites/gameOver.png";
 Image livesImage = "./Sprites/Lives.png";
-//Image fireImage = "./Sprites/fire.png";
+Image fireImage = "./Sprites/fire.png";
 Image livesFrameImage = "./Sprites/livesFrame.png";
 Image countDownImage[4] = {"./Sprites/3.png",
 	"./Sprites/2.png",
