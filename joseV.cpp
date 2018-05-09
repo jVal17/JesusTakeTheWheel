@@ -46,6 +46,16 @@ class gameObjects{
 			poweredUp=false;
 		}
 }go;
+//-------------------------------Power up physics------
+void powerUpHandler(){
+	Car enemyCars[3];
+	getEnemyCars(enemyCars);
+	if(go.poweredUp){
+		endPower();
+	}
+
+}
+//-------------------------------POWER UPS -------------
 bool getPowerUp(){
 	return go.poweredUp; 
 }
@@ -62,13 +72,6 @@ void endPower(){
 		go.poweredUp = false;	
 		cout << "here" << endl;
 	}	
-}
-//only calls power up check if powered up
-void powerUpHandler(){
-
-	if(go.poweredUp){
-		endPower();
-	}
 }
 void initPTimer(){
 	if(go.poweredUp && already==false){
@@ -90,7 +93,6 @@ void colWithPowerUP(){
 		initPTimer();
 	}
 }
-
 int temp = 5;
 void spawnCrate(){
 	go.crate.pos[0] = rand()%(X_MAX - X_MIN) + X_MIN;
@@ -181,7 +183,7 @@ void renderPlowOnCar(bool l, bool r){
 		float MC[2];
 		getMainCarCoords(MC);
 		go.plow.pos[0] = MC[0];
-		go.plow.pos[1] = MC[1] + 30;
+		go.plow.pos[1] = MC[1] + 50;
 		int s = go.plow.size;
 		GLfloat color[3];
 		color[0]=color[1]=color[2]=1.0;

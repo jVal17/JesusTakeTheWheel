@@ -41,16 +41,6 @@ GLuint silhouetteMainMenuTexture;
 GLuint silhouetteLivesTexture;
 GLuint silhouetteLivesFrameTexture;
 
-class Car {
-	public:
-		Vec pos;
-		bool invinc;
-		bool powerUp = false;
-		Car() {
-			invinc = false;
-		}
-};
-
 class Heart {
 	public:
 		int size;
@@ -192,7 +182,11 @@ void getMainCarCoords(float (&M)[2]) {
 	M[0] = ga.mainCar.pos[0];
 	M[1] = ga.mainCar.pos[1];
 }
-
+void getEnemyCars(struct Car (&eCar)[3]){
+	eCar[0] = ga.enemyCar[0];
+	eCar[1] = ga.enemyCar[1];
+	eCar[2] = ga.enemyCar[2];
+}
 void carInvincibility() {
 	if (ga.mainCar.invinc) 
 		if (ga.invincTimer == 0.0)

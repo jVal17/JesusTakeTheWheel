@@ -23,6 +23,17 @@ using namespace std;
 #define X_MIN 140
 #define X_MAX 370 
 
+class Car {
+	public:
+		Vec pos;
+		bool invinc;
+		bool powerUp;
+		Car() {
+			invinc = false;
+			powerUp = false;
+		}
+};
+
 //extern Image image;
 //-----------------------------------------------------------------------------
 //Setup of timers
@@ -42,7 +53,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 unsigned char *buildAlphaData(Image *img);
 
 extern bool gameOver;
-
+void getEnemyCars(struct Car (&eCar)[3]);
 void getfyres(float y);
 void getfxres(float x);
 void makeCar();
