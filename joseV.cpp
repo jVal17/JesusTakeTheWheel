@@ -130,7 +130,7 @@ void moveCrate(float src){
 	}
 	go.crate.pos[1] -= (src*600.0);
 }
-int inter = 5;
+int inter = 20;
 void spawnLive(){
 	go.live.pos[0] = rand()%(X_MAX - X_MIN) + X_MIN;
 	go.live.pos[1] = 1024;
@@ -139,7 +139,7 @@ void moveLife(float src){
 	clock_gettime(CLOCK_REALTIME, &ltimeEnd);
 	int diff = timeDiff(&ltimeStart, &ltimeEnd);
 	if(diff > inter){
-		inter+=5;
+		inter+=20;
 		go.contactLive = false;
 		spawnLive();
 	}
