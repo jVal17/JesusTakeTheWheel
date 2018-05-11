@@ -99,7 +99,7 @@ void clearLevel(int newLevel)
 
 void checkpoint (int Score, int &Lev)
 {
-    if(Score >= levelUp){
+    if(Score >= levelUp) {
 	levelUp += 100;
 	Lev += 1;
     }
@@ -110,26 +110,26 @@ void velocityMod(float fyres2, float &scrolling, bool &countDownBool, bool &firs
     checkpoint(Score, lvl);
 
     int cc = checkCollisions(scrolling, countDownBool, firstCountDownBool);
-    if(cc){
-	if(cc==1){
+    if(cc) {
+	if(cc==1) {
 	    scrolling *= .3;
 	    Score -= 50;
-	    //.015 is a bit too fast
-	    //cout << "Score: " << Score << endl;
 	    screenPrint();
 	}
     }
 
-    if(spawnEnemyCars(fyres2)){
+    if(spawnEnemyCars(fyres2)) {
 	Score += 10;
 	scrolling = scrolling + Score*.000001;
+	
 	if(Score < 1000 && scrolling >= .03125)
 	    scrolling = .03125;
+	
 	else if(Score >= 1000 && Score < 2000)
 	    scrolling = .03425;
+	
 	else if(Score >= 2000 && Score < 3000)
 	    scrolling = .03725;
-	//cout << "Score: " << Score << endl;
     }
 
     if(scrolling <=.01125)
