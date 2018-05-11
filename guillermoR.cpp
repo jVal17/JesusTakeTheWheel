@@ -44,6 +44,21 @@ GLuint silhouetteMainMenuTexture;
 GLuint silhouetteLivesTexture;
 GLuint silhouetteLivesFrameTexture;
 
+extern void carExplodeOne();
+extern void carExplodeTwo();
+extern void carExplodeThree();
+extern void carExplodeFour();
+extern void carExplodeFive();
+extern void healthLossOne();
+extern void healthLossTwo();
+extern void healthLossThree();
+extern void healthLossFour();
+extern void healthLossFive();
+extern void playBrake();
+extern void playAccellOne();
+extern void playAccellTwo();
+
+
 class Heart {
 	public:
 		int size;
@@ -154,8 +169,36 @@ int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown) {
 				ga.enemyCar[i].pos[0]+30.0 > ga.mainCar.pos[0]
 		   ){
 			if(ga.mainCar.powerUp) {
-				ga.enemyCar[i].carHit = 1;
+				ga.enemyCar[i].carHit = 6;
 			} else if(!ga.mainCar.invinc) {
+				int randHealthLoss = rand() % 5;
+				int randCarExplosion = rand() % 5;
+#ifdef USE_OPENAL_SOUND
+				switch (randHealthLoss) {
+					case 0:
+						healthLossOne();
+					case 1:
+						healthLossTwo();
+					case 2:
+						healthLossThree();
+					case 3:
+						healthLossFour();
+					case 4:
+						healthLossFive();
+				}
+				switch (randCarExplosion) {
+					case 0:
+						carExplodeOne();
+					case 1:
+						carExplodeTwo();
+					case 2:
+						carExplodeThree();
+					case 3:
+						carExplodeFour();
+					case 4:
+						carExplodeFive();
+				}
+#endif
 				ga.heart[ga.numHearts].pos[0] = -50;
 				ga.numHearts -= 1;
 				ga.mainCar.invinc = true;
@@ -166,10 +209,6 @@ int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown) {
 			if (ga.numHearts < 0) {
 				gameOver = true;
 				resetGame(scr);
-		//		resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
-		//				ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], 
-		//				ga.enemyCar[1].pos[0], ga.enemyCar[1].pos[1], 
-		//				fxres, fyres);
 				countDownBool = true;	
 				firstCountDown = true;	
 				doesHit = 2;				
@@ -256,6 +295,9 @@ bool spawnEnemyCars(float yres) {
 }
 
 void wMovement() {
+#ifdef USE_OPENAL_SOUND
+	playAccellOne();
+#endif
 	ga.mainCar.pos[1] += 8;
 }
 
@@ -268,6 +310,9 @@ void aMovement() {
 }
 
 void sMovement() {
+#ifdef USE_OPENAL_SOUND
+	playBrake();
+#endif
 	ga.mainCar.pos[1] -= 8;
 }
 
@@ -299,37 +344,6 @@ void resetGame(float &scr) {
 		ga.heart[j].pos[0] = (fxres * 1.66) + (j * 30);
 		ga.heart[j].pos[1] = 774;
 	}
-	ga.numHearts = 2;
-}
-
-void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
-		float &ec2X, float &ec2Y, float xres, float yres)
-{
-	//resetGame();
-//resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
-//						ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], 
-//						ga.enemyCar[1].pos[0], ga.enemyCar[1].pos[1], 
-//						fxres, fyres);
-	int randnum = rand() % 2;
-	scr = .01;
-	mcX = xres;
-	mcY = 80.0;
-	ecY = yres+100;
-	ec2Y = fyres + (fyres * 0.35) + 100;
-	if(randnum)
-		ecX = 180.0;
-	else 
-		ecX = 340.0;
-	randnum = rand() % 2;
-	if(randnum)
-		ec2X = 180.0;
-	else 
-		ec2X = 340.0;
-	for (int j = 0; j < 3; j++) {	
-		ga.heart[j].pos[0] = (fxres * 1.66) + (j * 30);
-		ga.heart[j].pos[1] = 774;
-	}
-	ga.enemyCar[2].pos[1] = fyres + ((fyres * .7) + 100);
 	ga.numHearts = 2;
 }
 
