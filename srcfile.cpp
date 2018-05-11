@@ -79,6 +79,11 @@ bool inGame = false;
 bool inPauseMenu = false;
 bool countDown = true;
 bool gameOver = false;
+bool inAudio = false;
+bool inAudio2 = false;
+bool inAudio3 = false;
+bool inTutorial = false;
+bool inTutorial2 = false;
 int menuPosition = 1;
 
 class X11_wrapper {
@@ -358,9 +363,16 @@ int check_keys(XEvent *e)
 #endif
 					inMainMenu = false;
 					inGame = true;
+				} else if (menuPosition == 2) {
+				    inMainMenu = false;
+				    inAudio = true;
+				    menuPosition = 0;
+				} else if (menuPosition == 3) {
+				    inMainMenu = false;
+				    inTutorial = true;
 				}
 			} else if (key == XK_Down || key == XK_s) {
-				if (menuPosition != 2) {
+				if (menuPosition != 3) {
 #ifdef USE_OPENAL_SOUND
 					playMenuSelect();	
 #endif
@@ -397,6 +409,13 @@ int check_keys(XEvent *e)
 #endif
 					inPauseMenu = false;
 					inGame = true;
+				} else if (menuPosition == 2) {
+				    inPauseMenu = false;
+				    inAudio2 = true;
+				    menuPosition = 0;
+				} else if (menuPosition == 3) {
+				    inPauseMenu = false;
+				    inTutorial2 = true;
 				} else if (menuPosition == 4) {
 					return 1;
 				}
@@ -428,6 +447,13 @@ int check_keys(XEvent *e)
 					inGame = true;
 					clearScore(0);
 					clearLevel(1);
+				} else if (menuPosition == 2) {
+				    gameOver = false;
+				    inMainMenu = true;
+				} else if (menuPosition == 3) {
+				    gameOver = false;
+				    inAudio3 = true;
+				    menuPosition = 0;
 				} else if (menuPosition == 4) {
 					return 1;
 				}
@@ -436,15 +462,108 @@ int check_keys(XEvent *e)
 #ifdef USE_OPENAL_SOUND
 					playMenuSelect();
 #endif
-					menuPosition += 3;
+					menuPosition++;
 				}
 			} else if (key == XK_Up || key == XK_w) {
 				if (menuPosition != 1) {
 #ifdef USE_OPENAL_SOUND
 					playMenuSelect();
 #endif
-					menuPosition -= 3;
+					menuPosition--;
 				}
+			}
+		}
+		if (inAudio) {
+			if (key == XK_Return) {
+				if (menuPosition == 1) {
+					audio_on = true;
+				} else if (menuPosition == 2) {
+				    audio_on = false;
+				} 
+			} else if (key == XK_Down || key == XK_s) {
+				if (menuPosition != 2){
+#ifdef USE_OPENAL_SOUND
+					playMenuSelect();
+#endif
+					menuPosition++;
+				}
+			} else if (key == XK_Up || key == XK_w) {
+				if (menuPosition != 1) {
+#ifdef USE_OPENAL_SOUND
+					playMenuSelect();
+#endif
+					menuPosition--;
+				}
+			} else if (key == XK_q) {
+			    inAudio = false;
+			    inMainMenu = true;
+			    menuPosition = 2;
+			}
+		}
+		if (inAudio2) {
+			if (key == XK_Return) {
+				if (menuPosition == 1) {
+					audio_on = true;
+				} else if (menuPosition == 2) {
+				    audio_on = false;
+				} 
+			} else if (key == XK_Down || key == XK_s) {
+				if (menuPosition != 2){
+#ifdef USE_OPENAL_SOUND
+					playMenuSelect();
+#endif
+					menuPosition++;
+				}
+			} else if (key == XK_Up || key == XK_w) {
+				if (menuPosition != 1) {
+#ifdef USE_OPENAL_SOUND
+					playMenuSelect();
+#endif
+					menuPosition--;
+				}
+			} else if (key == XK_q) {
+			    inAudio2 = false;
+			    inPauseMenu = true;
+			    menuPosition = 2;
+			}
+		}
+		if (inAudio3) {
+			if (key == XK_Return) {
+				if (menuPosition == 1) {
+					audio_on = true;
+				} else if (menuPosition == 2) {
+				    audio_on = false;
+				} 
+			} else if (key == XK_Down || key == XK_s) {
+				if (menuPosition != 2){
+#ifdef USE_OPENAL_SOUND
+					playMenuSelect();
+#endif
+					menuPosition++;
+				}
+			} else if (key == XK_Up || key == XK_w) {
+				if (menuPosition != 1) {
+#ifdef USE_OPENAL_SOUND
+					playMenuSelect();
+#endif
+					menuPosition--;
+				}
+			} else if (key == XK_q) {
+			    inAudio3 = false;
+			    gameOver = true;
+			    menuPosition = 3;
+			}
+		}
+		if (inTutorial) {
+		    if (key == XK_q) {
+			    inTutorial = false;
+			    inMainMenu = true;
+			}
+		}
+		if (inTutorial2) {
+		    if (key == XK_q) {
+			    inTutorial2 = false;
+			    inPauseMenu = true;
 			}
 		}
 	}
@@ -530,6 +649,10 @@ void render()
 		mainMenu(g.xres, g.yres);
 	} else if (inPauseMenu) {
 		pauseMenu(g.xres, g.yres);
+	} else if (inAudio || inAudio2 || inAudio3) {
+	   audioMenu(g.xres, g.yres);
+	} else if (inTutorial || inTutorial2) {
+	   tutorial(g.xres, g.yres);
 	} else if (inGame) {
 		glColor3f(1.0, 1.0, 1.0);
 		glBindTexture(GL_TEXTURE_2D, backTexture);

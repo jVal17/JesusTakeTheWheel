@@ -196,15 +196,17 @@ void audioMenu (const int xres, const int yres)
 	m.bot = yres - 200;
 	m.left = xres/2 - 55;
 	m.center = 0;
-	ggprint12(&m, 16, 0x00dddd00, "Enable Audio");
-	ggprint12(&m, 16, 0x00dddd00, "Disable Audio");
+	ggprint12(&m, 16, 0x000000, "Enable Audio");
+	ggprint12(&m, 16, 0x000000, "Disable Audio");
 	ggprint12(&m, 16, 0x000000, " ");
 
 	if (audio_on) {
-		ggprint12(&m, 16, 0x00dddd00, "Audio is enabled.");
+		ggprint12(&m, 16, 0xffffff, "Audio is enabled.");
 	} else {
-		ggprint12(&m, 16, 0x00dddd00, "Audio is disabled.");
+		ggprint12(&m, 16, 0xffffff, "Audio is disabled.");
 	}
+	ggprint12(&m, 16, 0x000000, " ");
+	ggprint12(&m, 16, 0x000000, "q - go back to menu");
 
 	int pointerX = xres/2 - 73;
 	int pointerY = yres - 190;
@@ -216,12 +218,12 @@ void audioMenu (const int xres, const int yres)
 	if (menuPosition == 1) {
 		pointerX = xres/2 - 73;
 		pointerY = yres - 190;
-		ggprint12(&m2, 16, 0x00eeee00, "Enable Audio");
+		ggprint12(&m2, 16, 0xffffff, "Enable Audio");
 	} else if (menuPosition == 2) {
 		pointerX = xres/2 - 73;
 		pointerY = yres - 207;
 		ggprint12(&m2, 16, 0x000000, " ");
-		ggprint12(&m2, 16, 0x00eeee00, "Disable Audio");
+		ggprint12(&m2, 16, 0xffffff, "Disable Audio");
 	}
 
 	float w = 5.0;
@@ -244,10 +246,11 @@ void tutorial (const int xres, const int yres)
 	m.bot = yres - 70;
 	m.left = xres/2 - 200;
 	m.center = 0;
-	ggprint12(&m, 16, 0xffffff, "The main goal of Jesus Take the Wheel is to "
-			"avoid the oncoming traffic");
+	ggprint12(&m, 16, 0xffffff, "The main goal of Jesus Take the Wheel "
+		"is to avoid the oncoming traffic");
 	ggprint12(&m, 16, 0xffffff, "and survive for as long as you can.");
-	ggprint12(&m, 16, 0xffffff, "Your car can withstand 3 hits before it breaks. "
+	ggprint12(&m, 16, 0xffffff, "Your car can withstand 3 hits "
+		"before it breaks. "
 			"See how long you can last.");
 
 	Rect m2;
@@ -259,5 +262,9 @@ void tutorial (const int xres, const int yres)
 	ggprint12(&m2, 16, 0xffffff, "s - moves down");
 	ggprint12(&m2, 16, 0xffffff, "a - moves left");
 	ggprint12(&m2, 16, 0xffffff, "d - moves right");
+	ggprint12(&m2, 16, 0xffffff, "q - quit back to menu");
+	ggprint12(&m2, 16, 0xffffff, "ESC - pause game // double tap to " 
+		"exit game");
+
 }
 
