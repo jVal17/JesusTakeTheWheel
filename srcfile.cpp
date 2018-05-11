@@ -316,6 +316,7 @@ void check_mouse(XEvent *e)
 	}
 }
 
+
 bool firstPause = true;
 int check_keys(XEvent *e)
 {
@@ -415,10 +416,14 @@ int check_keys(XEvent *e)
 				}
 			}
 		}
-		if (gameOver) {
+		if (gameOver) { 		
 			if (key == XK_Return) {
 				if (menuPosition == 1) {
+#ifdef USE_OPENAL_SOUND
+					playInGame();
+#endif 
 					gameOver = false;
+					
 					g.pause = false;
 					inGame = true;
 					clearScore(0);
@@ -427,11 +432,17 @@ int check_keys(XEvent *e)
 					return 1;
 				}
 			} else if (key == XK_Down || key == XK_s) {
-				if (menuPosition != 4) {
+				if (menuPosition != 4){
+#ifdef USE_OPENAL_SOUND
+					playMenuSelect();
+#endif
 					menuPosition += 3;
 				}
 			} else if (key == XK_Up || key == XK_w) {
 				if (menuPosition != 1) {
+#ifdef USE_OPENAL_SOUND
+					playMenuSelect();
+#endif
 					menuPosition -= 3;
 				}
 			}
@@ -508,7 +519,7 @@ void physics()
 		fixCarBoundaries();
 	}
 }
-
+bool firstGameOver = true;
 void render()
 {
 	powerUpHandler();
@@ -530,6 +541,13 @@ void render()
 		glEnd();		
 
 		if (gameOver) {
+#ifdef USE_OPENAL_SOUND
+			stopInGame();
+			if (firstGameOver){
+				playGameOver();
+				firstGameOver = false;
+			}
+#endif
 			renderGameOver();
 			gameOverMenu(g.xres, g.yres);
 			finalScoreTracker();
