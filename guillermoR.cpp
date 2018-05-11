@@ -1,4 +1,4 @@
-// Guillermo Ramire
+// Guillermo Ramirez
 // Software Engineering 3350 Spring 2018 
 // Last Modified: Thursday, May 10, 2018
 // Role: Handle nearly all Textures, Car physics, Collision and Life system
@@ -172,7 +172,9 @@ int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown) {
 				ga.enemyCar[i].carHit = 6;
 			} else if(!ga.mainCar.invinc) {
 				int randHealthLoss = rand() % 5;
+				cout << "Health: " << randHealthLoss << endl;
 				int randCarExplosion = rand() % 5;
+				cout << "Explostion: " << randCarExplosion << endl;
 #ifdef USE_OPENAL_SOUND
 				switch (randHealthLoss) {
 					case 0:
@@ -295,9 +297,6 @@ bool spawnEnemyCars(float yres) {
 }
 
 void wMovement() {
-#ifdef USE_OPENAL_SOUND
-	playAccellOne();
-#endif
 	ga.mainCar.pos[1] += 8;
 }
 

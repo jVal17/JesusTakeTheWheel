@@ -32,6 +32,8 @@ ALuint gameOverSource;
 ALuint inGameSource;
 ALuint holySource;
 ALuint alBuffer;
+float explosionVol = 0.3;
+float healthLossVol = 0.4;
 
 extern void initSounds() 
 {
@@ -132,12 +134,13 @@ extern void playMenuSelect()
 }
 extern void carExplodeOne()
 {
+
     alBuffer = alutCreateBufferFromFile("./sound/CarExplode1.wav"); // INSERT SOUND FILE
     
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, explosionVol);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
@@ -156,7 +159,7 @@ extern void carExplodeTwo()
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, explosionVol);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
@@ -174,7 +177,7 @@ extern void carExplodeThree()
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, explosionVol);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
@@ -192,7 +195,7 @@ extern void carExplodeFour()
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, explosionVol);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
@@ -210,7 +213,7 @@ extern void carExplodeFive()
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, explosionVol);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
@@ -228,7 +231,7 @@ extern void healthLossOne()
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, healthLossVol);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
@@ -246,7 +249,7 @@ extern void healthLossTwo()
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, healthLossVol);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
@@ -264,7 +267,7 @@ extern void healthLossThree()
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, healthLossVol);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
@@ -282,7 +285,7 @@ extern void healthLossFour()
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, healthLossVol);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
@@ -300,7 +303,7 @@ extern void healthLossFive()
     alGenSources(1 , &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, healthLossVol);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
@@ -334,7 +337,7 @@ extern void playInGame()
     alGenSources(1, &inGameSource);
     alSourcei(inGameSource, AL_BUFFER, alBuffer);
 
-    alSourcef(inGameSource, AL_GAIN, .30f);
+    alSourcef(inGameSource, AL_GAIN, 1.0f);
     alSourcef(inGameSource, AL_PITCH, 1.0f);
     alSourcei(inGameSource, AL_LOOPING, AL_TRUE);
         if (alGetError() != AL_NO_ERROR){
@@ -441,7 +444,7 @@ extern void playBrake()
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
 
-    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_GAIN, .1f);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
