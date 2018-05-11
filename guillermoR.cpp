@@ -165,10 +165,11 @@ int checkCollisions(float scr, bool &countDownBool, bool &firstCountDown) {
 				carInvincibility();
 			if (ga.numHearts < 0) {
 				gameOver = true;
-				resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
-						ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], 
-						ga.enemyCar[1].pos[0], ga.enemyCar[1].pos[1], 
-						fxres, fyres);
+				resetGame(scr);
+		//		resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
+		//				ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], 
+		//				ga.enemyCar[1].pos[0], ga.enemyCar[1].pos[1], 
+		//				fxres, fyres);
 				countDownBool = true;	
 				firstCountDown = true;	
 				doesHit = 2;				
@@ -281,9 +282,34 @@ void fixCarBoundaries() {
 		ga.mainCar.pos[1] = 40.0;
 }
 
+void resetGame(float &scr) {
+	int carSpawnPos = rand() % (X_MAX - X_MIN) + X_MIN;
+	scr = .01;
+	ga.mainCar.pos[0] = fxres;
+	ga.mainCar.pos[1] = 80.0;
+	ga.enemyCar[0].pos[0] = carSpawnPos;
+	carSpawnPos = rand() % (X_MAX - X_MIN) + X_MIN;
+	ga.enemyCar[1].pos[0] = carSpawnPos;
+	carSpawnPos = rand() % (X_MAX - X_MIN) + X_MIN;
+	ga.enemyCar[2].pos[0] = carSpawnPos;
+	ga.enemyCar[0].pos[1] = fyres+100;
+	ga.enemyCar[1].pos[1] = fyres + (fyres * 0.35) + 100;
+	ga.enemyCar[2].pos[1] = fyres + ((fyres * .7) + 100);
+	for (int j = 0; j < 3; j++) {	
+		ga.heart[j].pos[0] = (fxres * 1.66) + (j * 30);
+		ga.heart[j].pos[1] = 774;
+	}
+	ga.numHearts = 2;
+}
+
 void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
 		float &ec2X, float &ec2Y, float xres, float yres)
 {
+	//resetGame();
+//resetGame(scr, ga.mainCar.pos[0], ga.mainCar.pos[1],	
+//						ga.enemyCar[0].pos[0], ga.enemyCar[0].pos[1], 
+//						ga.enemyCar[1].pos[0], ga.enemyCar[1].pos[1], 
+//						fxres, fyres);
 	int randnum = rand() % 2;
 	scr = .01;
 	mcX = xres;
