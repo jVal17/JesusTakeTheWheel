@@ -436,7 +436,7 @@ extern void stopHoly()
 
 extern void playBrake()
 {
-    alBuffer = alutCreateBufferFromFile("./sound/brake.wav"); //Insert SOUND
+    alBuffer = alutCreateBufferFromFile("./sound/brake1.wav"); //Insert SOUND
 
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
