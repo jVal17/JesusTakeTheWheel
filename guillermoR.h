@@ -94,6 +94,5 @@ void renderCountDown(bool &);
 void countDownSetTrue(bool &);
 
 //void increaseCarSpeedY(float enemy, float scr);
-void resetGame(float &scr, float &mcX, float &mcY, float &ecX, float &ecY,
-float &ec2X, float &ec2Y, float xres, float yres);
+void resetGame(float &scr);
 #endif
